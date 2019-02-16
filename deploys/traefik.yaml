@@ -1,5 +1,42 @@
-kind: ClusterRole
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefikconf
+  namespace: kube-system
+data:
+  traefik.toml: |
+    defaultEntryPoints = ["http", "https"]
+
+    [entryPoints]
+
+    [entryPoints.http]
+      address = ":80"
+
+    [entryPoints.http.redirect]
+      entryPoint = "https"
+
+    [entryPoints.https]
+      address = ":443"
+
+    [entryPoints.https.tls]
+
+    [acme]
+      caServer = "https://acme-v02.api.letsencrypt.org/directory"
+      email = "tls@seankhliao.com"
+      entryPoint = "https"
+      storage = "acme.json"
+
+    [acme.dnsChallenge]
+      provider = "cloudflare"
+      delayBeforeCheck = 0
+
+    [[acme.domains]]
+      main = "*.seankhliao.com"
+      sans = ["seankhliao.com"]
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
 metadata:
   name: traefik-ingress-controller
 rules:
