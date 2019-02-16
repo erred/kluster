@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: earbug
+  labels:
+    app: earbug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: earbug
+  template:
+    metadata:
+      labels:
+        app: earbug
+    spec:
+      containers:
+        - name: earbug
+          image: gcr.io/com-seankhliao/earbug:latest
+          args:
+            - "-t"
+            - /var/secrets/spotify/token.json
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+            - name: BUCKET
+              value: earbug-store
+            - name: SPOTIFY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: spotify
+                  key: spotify_id
+            - name: SPOTIFY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: spotify
+                  key: spotify_secret
+          resources:
+            requests:
+              cpu: 5m
+            limits:
+              cpu: 50m
+          volumeMounts:
+            - name: service-account-key
+              mountPath: /var/secrets/google
+            - name: spotify-token
+              mountPath: /var/secrets/spotify
+      volumes:
+        - name: service-account-key
+          secret:
+            secretName: storage-admin
+        - name: spotify-token
+          secret:
+            secretName: spotify

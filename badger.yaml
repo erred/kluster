@@ -1,0 +1,71 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: badger
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: badger
+spec:
+  rules:
+    - host: badger.seankhliao.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: badger
+              servicePort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: badger
+  labels:
+    app: badger
+spec:
+  type: ClusterIP
+  selector:
+    app: badger
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+      name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: badger
+  labels:
+    app: badger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: badger
+  template:
+    metadata:
+      labels:
+        app: badger
+    spec:
+      containers:
+        - name: badger
+          image: gcr.io/com-seankhliao/badger:latest
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+          ports:
+            - containerPort: 8080
+              name: http
+          resources:
+            requests:
+              cpu: 5m
+            limits:
+              cpu: 50m
+          volumeMounts:
+            - name: service-account-key
+              mountPath: /var/secrets/google
+      volumes:
+        - name: service-account-key
+          secret:
+            secretName: cloudbuild-viewer

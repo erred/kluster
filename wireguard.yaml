@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wireguard
+spec:
+  type: ClusterIP
+  selector:
+    app: wg
+  ports:
+    - name: wireguard
+      port: 51820
+      protocol: UDP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wireguard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wg
+  template:
+    metadata:
+      labels:
+        app: wg
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: cloud.google.com/gke-os-distribution
+                    operator: In
+                    values:
+                      - ubuntu
+      containers:
+        - name: wireguard
+          image: activeeos/wireguard-docker:latest
+          ports:
+            - containerPort: 51820
+              hostPort: 51820
+              protocol: UDP
+          resources:
+            requests:
+              cpu: 5m
+            limits:
+              cpu: 50m
+          securityContext:
+            runAsUser: 0
+            capabilities:
+              add:
+                - NET_ADMIN
+                - SYS_MODULE
+          volumeMounts:
+            - name: wgconf
+              mountPath: /etc/wireguard
+              readOnly: true
+            - name: libmod
+              mountPath: /lib/modules
+      volumes:
+        - name: wgconf
+          secret:
+            secretName: wireguard
+            defaultMode: 384
+        - name: libmod
+          hostPath:
+            path: /lib/modules

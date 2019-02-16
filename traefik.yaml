@@ -1,0 +1,143 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: traefik-ingress-controller
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - endpoints
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: traefik-ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-controller
+subjects:
+  - kind: ServiceAccount
+    name: traefik-ingress-controller
+    namespace: kube-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-ingress-controller
+  namespace: kube-system
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: traefik-ingress-service
+  namespace: kube-system
+spec:
+  selector:
+    k8s-app: traefik-ingress-lb
+  ports:
+    - protocol: TCP
+      port: 80
+      name: web
+    - protocol: TCP
+      port: 443
+      name: webs
+    - protocol: TCP
+      port: 8080
+      name: admin
+  type: NodePort
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: traefik-ingress-controller
+  namespace: kube-system
+  labels:
+    k8s-app: traefik-ingress-lb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: traefik-ingress-lb
+  template:
+    metadata:
+      labels:
+        k8s-app: traefik-ingress-lb
+        name: traefik-ingress-lb
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
+      initContainers:
+        - image: gcr.io/com-seankhliao/cf-dns-update
+          name: cf-dns-update
+          env:
+            - name: RECORD_NAME
+              value: "kluster.seankhliao.com"
+            - name: RECORD_ID
+              value: "3c4494553e87eee4191c57669cba5d77"
+            - name: ZONE_ID
+              value: "6bac96a6822dc2e0293ad5ce09767e19"
+            - name: X_AUTH_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_email
+            - name: X_AUTH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_key
+      containers:
+        - image: traefik
+          name: traefik-ingress-lb
+          args:
+            - --api
+            - --kubernetes
+            - --logLevel=INFO
+          env:
+            - name: CF_API_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_email
+            - name: CF_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_key
+          ports:
+            - name: http
+              containerPort: 80
+              hostPort: 80
+            - name: https
+              containerPort: 443
+              hostPort: 443
+            - name: admin
+              containerPort: 8080
+          volumeMounts:
+            - name: configvol
+              mountPath: /etc/traefik/
+      volumes:
+        - name: configvol
+          configMap:
+            name: traefikconf
