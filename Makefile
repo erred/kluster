@@ -1,3 +1,5 @@
+include secrets/Makefile
+
 .PHONY: get-creds
 get-creds:
 	gcloud config set project com-seankhliao
@@ -24,32 +26,3 @@ deploy-traefik-ingress:
 	kubectl -n kube-system create secret generic cfemail --from-file secrets/cfemail
 	kubectl -n kube-system create secret generic cfkey --from-file secrets/cfkey
 	kubectl apply -f ./traefik.yaml
-
-.PHONY: secret-cloudflare
-secret-cloudflare:
-	kubectl -n kube-system create secret generic cloudflare \
-		--from-file=cloudflare_email=secrets/cloudflare_email \
-		--from-file=cloudflare_key=secrets/cloudflare_key
-
-.PHONY: secret-wireguard
-secret-wireguard:
-	kubectl create secret generic wireguard\
-		--from-file=wg0.conf=secrets/wg0.conf
-	
-.PHONY: secret-spotify
-secret-spotify:
-	kubectl create secret generic spotify \
-		--from-file=spotify_id=secrets/spotify_id \
-		--from-file=spotify_secret=secrets/spotify_secret \
-		--from-file=token.json=secrets/spotify-token.json
-
-.PHONY: secret-storage-admin
-secret-storage-admin:
-	kubectl create secret generic storage-admin \
-		--from-file=key.json=secrets/storage-admin-key.json
-
-.PHONY: secret-cloudbuild-viewer
-secret-cloudbuild-viewer:
-	kubectl create secret generic cloudbuild-viewer \
-		--from-file=key.json=secrets/cloudbuild-viewer-key.json
-
