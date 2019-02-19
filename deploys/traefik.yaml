@@ -129,11 +129,13 @@ spec:
           name: cf-dns-update
           env:
             - name: RECORD_NAME
-              value: "kluster.seankhliao.com"
-            - name: RECORD_ID
-              value: "3c4494553e87eee4191c57669cba5d77"
-            - name: ZONE_ID
-              value: "6bac96a6822dc2e0293ad5ce09767e19"
+              value: "kluster"
+            - name: RECORD_TYPE
+              value: "A"
+            - name: ZONE_NAME
+              value: "seankhliao.com"
+            - name: REPLICAS
+              value: "1"
             - name: X_AUTH_EMAIL
               valueFrom:
                 secretKeyRef:

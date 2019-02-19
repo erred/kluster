@@ -48,6 +48,28 @@ spec:
       labels:
         app: readss
     spec:
+      initContainers:
+        - image: gcr.io/com-seankhliao/cf-dns-update
+          name: cf-dns-update
+          env:
+            - name: RECORD_NAME
+              value: "readss"
+            - name: RECORD_TYPE
+              value: "CNAME"
+            - name: ZONE_NAME
+              value: "seankhliao.com"
+            - name: CONTENT
+              value: "kluster.seankhliao.com"
+            - name: X_AUTH_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_email
+            - name: X_AUTH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_key
       containers:
         - name: readss
           image: gcr.io/com-seankhliao/readss:latest
