@@ -2,26 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wireguard
+  name: wggo
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wg
+      app: wggo
   template:
     metadata:
       labels:
-        app: wg
+        app: wggo
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: cloud.google.com/gke-os-distribution
-                    operator: In
-                    values:
-                      - ubuntu
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: cloud.google.com/gke-os-distribution
+      #               operator: In
+      #               values:
+      #                 - ubuntu
       initContainers:
         - image: gcr.io/com-seankhliao/cf-dns-update
           name: cf-dns-update
@@ -47,8 +47,8 @@ spec:
                   name: cloudflare
                   key: cloudflare_key
       containers:
-        - name: wireguard
-          image: activeeos/wireguard-docker:latest
+        - name: wggo
+          image: gcr.io/com-seankhliao/wggo:latest
           ports:
             - containerPort: 51820
               hostPort: 51820
@@ -63,18 +63,20 @@ spec:
             capabilities:
               add:
                 - NET_ADMIN
-                - SYS_MODULE
+                # - SYS_MODULE
           volumeMounts:
-            - name: wgconf
+            - name: wggoconf
               mountPath: /etc/wireguard
               readOnly: true
-            - name: libmod
-              mountPath: /lib/modules
+            - name: devtun
+              mountPath: /dev/net/tun
+            # - name: libmod
+            #   mountPath: /lib/modules
       volumes:
-        - name: wgconf
+        - name: wggoconf
           secret:
             secretName: wireguard
             defaultMode: 384
-        - name: libmod
+        - name: devtun
           hostPath:
-            path: /lib/modules
+            path: /dev/net/tun
