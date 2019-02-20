@@ -13,15 +13,6 @@ spec:
       labels:
         app: wggo
     spec:
-      # affinity:
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       nodeSelectorTerms:
-      #         - matchExpressions:
-      #             - key: cloud.google.com/gke-os-distribution
-      #               operator: In
-      #               values:
-      #                 - ubuntu
       initContainers:
         - image: gcr.io/com-seankhliao/cf-dns-update
           name: cf-dns-update

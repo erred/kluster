@@ -1,10 +1,8 @@
-include secrets/Makefile
-
 .PHONY: get-creds
 get-creds:
 	gcloud config set project com-seankhliao
-	gcloud config set compute/zone us-west1-a
-	gcloud container clusters get-credentials cluster6
+	gcloud config set compute/zone us-west1-b
+	gcloud container clusters get-credentials cluster7
 
 .PHONY: init-cluster-rolebind
 init-cluster-rolebind:
