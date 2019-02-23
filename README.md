@@ -6,9 +6,9 @@ Config files for my k8s cluster on GKE
 
 ## About
 
-<!-- Insert descruption / motivation / features -->
-
 kubectl conf files for things I run
+
+necessary secrets in [private repo](https://github.com/seankhliao/kluster-secrets)
 
 #### Customizations
 
