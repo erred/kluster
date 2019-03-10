@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: badger
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: badger
+spec:
+  rules:
+    - host: badger.seankhliao.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: badger
+              servicePort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: badger
+  labels:
+    app: badger
+spec:
+  type: ClusterIP
+  selector:
+    app: badger
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+      name: http

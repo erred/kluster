@@ -1,32 +1,31 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wggo
+  name: readss
+  labels:
+    app: readss
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wggo
+      app: readss
   template:
     metadata:
       labels:
-        app: wggo
+        app: readss
     spec:
       initContainers:
         - image: gcr.io/com-seankhliao/cf-dns-update
           name: cf-dns-update
           env:
             - name: RECORD_NAME
-              value: "wg"
+              value: "readss"
             - name: RECORD_TYPE
               value: "CNAME"
             - name: ZONE_NAME
               value: "seankhliao.com"
             - name: CONTENT
               value: "kluster.seankhliao.com"
-            - name: NO_PROXY
-              value: "true"
             - name: X_AUTH_EMAIL
               valueFrom:
                 secretKeyRef:
@@ -38,36 +37,13 @@ spec:
                   name: cloudflare
                   key: cloudflare_key
       containers:
-        - name: wggo
-          image: gcr.io/com-seankhliao/wggo:latest
+        - name: readss
+          image: gcr.io/com-seankhliao/readss:latest
           ports:
-            - containerPort: 51820
-              hostPort: 51820
-              protocol: UDP
+            - containerPort: 8080
+              name: http
           resources:
             requests:
               cpu: 5m
             limits:
               cpu: 50m
-          securityContext:
-            runAsUser: 0
-            capabilities:
-              add:
-                - NET_ADMIN
-                # - SYS_MODULE
-          volumeMounts:
-            - name: wggoconf
-              mountPath: /etc/wireguard
-              readOnly: true
-            - name: devtun
-              mountPath: /dev/net/tun
-            # - name: libmod
-            #   mountPath: /lib/modules
-      volumes:
-        - name: wggoconf
-          secret:
-            secretName: wireguard
-            defaultMode: 384
-        - name: devtun
-          hostPath:
-            path: /dev/net/tun

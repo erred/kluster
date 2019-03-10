@@ -1,59 +1,25 @@
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: readss
-  annotations:
-    kubernetes.io/ingress.class: traefik
-  labels:
-    app: readss
-spec:
-  rules:
-    - host: readss.seankhliao.com
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: readss
-              servicePort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: readss
-  labels:
-    app: readss
-spec:
-  type: ClusterIP
-  selector:
-    app: readss
-  ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-      name: http
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: readss
+  name: badger
   labels:
-    app: readss
+    app: badger
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: readss
+      app: badger
   template:
     metadata:
       labels:
-        app: readss
+        app: badger
     spec:
       initContainers:
         - image: gcr.io/com-seankhliao/cf-dns-update
           name: cf-dns-update
           env:
             - name: RECORD_NAME
-              value: "readss"
+              value: "badger"
             - name: RECORD_TYPE
               value: "CNAME"
             - name: ZONE_NAME
@@ -71,8 +37,11 @@ spec:
                   name: cloudflare
                   key: cloudflare_key
       containers:
-        - name: readss
-          image: gcr.io/com-seankhliao/readss:latest
+        - name: badger
+          image: gcr.io/com-seankhliao/badger:latest
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
           ports:
             - containerPort: 8080
               name: http
@@ -81,3 +50,10 @@ spec:
               cpu: 5m
             limits:
               cpu: 50m
+          volumeMounts:
+            - name: service-account-key
+              mountPath: /var/secrets/google
+      volumes:
+        - name: service-account-key
+          secret:
+            secretName: cloudbuild-viewer

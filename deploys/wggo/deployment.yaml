@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wggo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wggo
+  template:
+    metadata:
+      labels:
+        app: wggo
+    spec:
+      initContainers:
+        - image: gcr.io/com-seankhliao/cf-dns-update
+          name: cf-dns-update
+          env:
+            - name: RECORD_NAME
+              value: "wg"
+            - name: RECORD_TYPE
+              value: "CNAME"
+            - name: ZONE_NAME
+              value: "seankhliao.com"
+            - name: CONTENT
+              value: "kluster.seankhliao.com"
+            - name: NO_PROXY
+              value: "true"
+            - name: X_AUTH_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_email
+            - name: X_AUTH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_key
+      containers:
+        - name: wggo
+          image: gcr.io/com-seankhliao/wggo:latest
+          ports:
+            - containerPort: 51820
+              hostPort: 51820
+              protocol: UDP
+          resources:
+            requests:
+              cpu: 5m
+            limits:
+              cpu: 50m
+          securityContext:
+            runAsUser: 0
+            capabilities:
+              add:
+                - NET_ADMIN
+                # - SYS_MODULE
+          volumeMounts:
+            - name: wggoconf
+              mountPath: /etc/wireguard
+              readOnly: true
+            - name: devtun
+              mountPath: /dev/net/tun
+      volumes:
+        - name: wggoconf
+          secret:
+            secretName: wireguard
+            defaultMode: 384
+        - name: devtun
+          hostPath:
+            path: /dev/net/tun
