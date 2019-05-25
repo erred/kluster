@@ -5,31 +5,12 @@ metadata:
   namespace: kube-system
 data:
   traefik.toml: |
-    defaultEntryPoints = ["http", "https"]
+    [api]
+      dashboard = true
 
-    [entryPoints]
-
-    [entryPoints.http]
+    [entrypoints.web]
       address = ":80"
-
-    [entryPoints.http.redirect]
-      entryPoint = "https"
-
-    [entryPoints.https]
+    [entrypoints.webs]
       address = ":443"
 
-    [entryPoints.https.tls]
-
-    [acme]
-      caServer = "https://acme-v02.api.letsencrypt.org/directory"
-      email = "tls@seankhliao.com"
-      entryPoint = "https"
-      storage = "acme.json"
-
-    [acme.dnsChallenge]
-      provider = "cloudflare"
-      delayBeforeCheck = 0
-
-    [[acme.domains]]
-      main = "*.seankhliao.com"
-      sans = ["seankhliao.com"]
+    [providers.kubernetes]

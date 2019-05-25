@@ -4,8 +4,8 @@ get-creds:
 	gcloud config set compute/zone us-west1-b
 	gcloud container clusters get-credentials cluster7
 
-.PHONY: init-cluster-rolebind
-init-cluster-rolebind:
+.PHONY: get-cluster-admin
+get-cluster-admin:
 	kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $$(gcloud config get-value account)
 
 .PHONY: limit-resource

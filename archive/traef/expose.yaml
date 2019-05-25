@@ -1,12 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: traefik
+  name: traefik-ingress-service
   namespace: kube-system
 spec:
-  type: ClusterIP
   selector:
-    app: traefik
+    k8s-app: traefik-ingress-lb
   ports:
     - protocol: TCP
       port: 80
@@ -17,3 +16,4 @@ spec:
     - protocol: TCP
       port: 8080
       name: admin
+  type: NodePort
