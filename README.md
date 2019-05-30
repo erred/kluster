@@ -36,14 +36,16 @@ necessary secrets in [private repo](https://github.com/seankhliao/kluster-secret
 
 ## Old Clusters
 
-| Name         | Nodes                                                      | Notes                                                   |
-| ------------ | ---------------------------------------------------------- | ------------------------------------------------------- |
-| cluster8     | 1x custom 1-2048 coos containerd preemtible autoscaled 1-4 | isto + stackdriver has high overhead -> choose more cpu |
-| **cluster7** | 1x custom 1-2048 coos containerd                           |                                                         |
-| cluster6     | 1x custom 1-2048 ubunut                                    | mostly stable                                           |
-| cluster5     | 1x n1-standard-1 ubuntu                                    | memory heavily underutilized                            |
-| cluster4     | 4x f1-micro ubuntu                                         | bin-packing nodes to death                              |
-| cluster3     | 2x f1-micro ubuntu <br /> 2x f1-micro coos containerd      | alternating dead nodes                                  |
-| cluster2     | 1x g1-small ubuntu                                         | 100% cpu                                                |
-| cluster1     | 1x f1-micro ubuntu <br /> 2x f1-micro coos containerd      | alternating dead nodes                                  |
-| cluster0     | 1x g1-small ubuntu                                         | never finished creating system pods                     |
+| Name         | Nodes                                                           | Notes                                                   |
+| ------------ | --------------------------------------------------------------- | ------------------------------------------------------- |
+| cluster10    | 1x c-1-2G coos-d preempt acutoscale 0-3 x 2 zones               |
+| cluster9     | 1x c-1-2G coos-d preempt autoscaled 0-3 <br> 1x f1-micro coos-d | micro pinned @ 100% cpu                                 |
+| cluster8     | 1x c-1-2G coos-d preempt autoscaled 1-4                         | isto + stackdriver has high overhead -> choose more cpu |
+| **cluster7** | 1x c-1-2G coos-d                                                |                                                         |
+| cluster6     | 1x c-1-2G ubunut                                                | mostly stable                                           |
+| cluster5     | 1x n1-standard-1 ubuntu                                         | memory heavily underutilized                            |
+| cluster4     | 4x f1-micro ubuntu                                              | bin-packing nodes to death                              |
+| cluster3     | 2x f1-micro ubuntu <br /> 2x f1-micro coos-d                    | alternating dead nodes                                  |
+| cluster2     | 1x g1-small ubuntu                                              | 100% cpu                                                |
+| cluster1     | 1x f1-micro ubuntu <br /> 2x f1-micro coos-d                    | alternating dead nodes                                  |
+| cluster0     | 1x g1-small ubuntu                                              | never finished creating system pods                     |
