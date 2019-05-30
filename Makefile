@@ -1,8 +1,8 @@
 .PHONY: get-creds
 get-creds:
 	gcloud config set project com-seankhliao
-	gcloud config set compute/zone us-west1-b
-	gcloud container clusters get-credentials cluster7
+	gcloud config set compute/zone us-central1-a
+	gcloud container clusters get-credentials cluster10
 
 .PHONY: get-cluster-admin
 get-cluster-admin:
