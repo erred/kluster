@@ -1,0 +1,79 @@
+--- # ---
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#   name: whoami
+#   annotations:
+#     kubernetes.io/ingress.class: traefik
+#   labels:
+#     app: whoami
+# spec:
+#   rules:
+#     - host: api.seankhliao.com
+#       http:
+#         paths:
+#           - path: /whoami/
+#             backend:
+#               serviceName: whoami
+#               servicePort: 80
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: readss
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`api.seankhliao.com`) && PathPrefix(`/readss.Lister/`)
+      kind: Rule
+      services:
+        - name: readss
+          port: 80
+  tls:
+    secretName: acme-prod-crt-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: readss
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: grpc-web
+      port: 80
+      targetPort: 8090
+  selector:
+    app: readss
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: readss
+  labels:
+    app: readss
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: readss
+  template:
+    metadata:
+      labels:
+        app: readss
+    spec:
+      containers:
+        - name: readss
+          image: gcr.io/com-seankhliao/readss-server
+          resources:
+            requests:
+              cpu: 5m
+            limits:
+              cpu: 50m
+          env:
+            - name: GODEBUG
+              value: tls13=1
+          ports:
+            - name: grpc-web
+              containerPort: 8090
