@@ -28,7 +28,7 @@ metadata:
   labels:
     app: traefik
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: traefik
@@ -43,7 +43,7 @@ spec:
           name: cf-dns-update
           env:
             - name: RECORD
-              value: seankhliao.com:noproxy:api:A:2
+              value: seankhliao.com:noproxy:api:A:1
             - name: X_AUTH_EMAIL
               valueFrom:
                 secretKeyRef:
@@ -75,3 +75,20 @@ spec:
             - name: websecure
               containerPort: 4443
               hostPort: 443
+#           volumeMounts:
+#             - name: config
+#               mountPath: /etc/traefik/
+#       volumes:
+#         - name: config
+#           configMap:
+#             name: traefikconf
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: traefikconf
+# data:
+#   traefik.toml: |
+#     [tcp.routers.Router-1]
+#       rule = "HostSNI(`*`)"
+#       service = "whoami"
