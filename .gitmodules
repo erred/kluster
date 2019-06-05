@@ -1,4 +1,0 @@
-[submodule "secrets"]
-	path = secrets
-	url = git@github.com:seankhliao/kluster-secrets.git
-	branch = master
