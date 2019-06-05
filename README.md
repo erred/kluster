@@ -38,7 +38,8 @@ necessary secrets in [private repo](https://github.com/seankhliao/kluster-secret
 
 | Name         | Nodes                                                           | Notes                                                   |
 | ------------ | --------------------------------------------------------------- | ------------------------------------------------------- |
-| cluster10    | 1x c-1-2G coos-d preempt acutoscale 0-3 x 2 zones               |
+| cluster11    | 1x c-2-2G coos-d preempt                                        |
+| cluster10    | 1x c-1-2G coos-d preempt acutoscale 0-3 x 2 zones               | autoscaling is weird                                    |
 | cluster9     | 1x c-1-2G coos-d preempt autoscaled 0-3 <br> 1x f1-micro coos-d | micro pinned @ 100% cpu                                 |
 | cluster8     | 1x c-1-2G coos-d preempt autoscaled 1-4                         | isto + stackdriver has high overhead -> choose more cpu |
 | **cluster7** | 1x c-1-2G coos-d                                                |                                                         |

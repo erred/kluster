@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: default
+  name: traefik-ingress-controller
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: web
+      port: 8000
+    - protocol: TCP
+      name: websecure
+      port: 4443
+  selector:
+    app: traefik
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: default
+  name: traefik
+  labels:
+    app: traefik
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      initContainers:
+        - image: gcr.io/com-seankhliao/cf-dns-update:latest
+          name: cf-dns-update
+          env:
+            - name: RECORD
+              value: seankhliao.com:noproxy:api:A:2
+            - name: X_AUTH_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_email
+            - name: X_AUTH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare
+                  key: cloudflare_key
+      containers:
+        - name: traefik
+          image: traefik:v2.0
+          resources:
+            requests:
+              cpu: 5m
+            limits:
+              cpu: 50m
+          args:
+            - --accesslog
+            - --entrypoints=Name:web Address::8000
+            - --entrypoints=Name:websecure Address::4443
+            - --global.sendanonymoususage=false
+            - --providers.kubernetescrd
+          ports:
+            - name: web
+              containerPort: 8000
+              hostPort: 80
+            - name: websecure
+              containerPort: 4443
+              hostPort: 443
