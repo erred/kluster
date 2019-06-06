@@ -2,7 +2,7 @@
 get-creds:
 	gcloud config set project com-seankhliao
 	gcloud config set compute/zone us-central1-a
-	gcloud container clusters get-credentials cluster11
+	gcloud container clusters get-credentials cluster12
 	kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $$(gcloud config get-value account)
 
 .PHONY: deploy-coredns
@@ -17,9 +17,9 @@ deploy-cert-manager:
 	kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
 	kubectl apply -f cert-manager-all.yaml
 
-.PHONY: get-acme-certs
-get-acme-certs:
-	kubectl apply -f cert-manager-issuer.yaml
+.PHONY: get-acme-prod
+get-acme-prod:
+	kubectl apply -f cert-manager-issuer-prod.yaml
 
 .PHONY: deploy-traefik
 deploy-traefik:
@@ -29,3 +29,7 @@ deploy-traefik:
 .PHONY: deploy-readss
 deploy-readss:
 	kubectl apply -f readss.yaml
+
+.PHONY: deploy-earbug
+deploy-earbug:
+	kubectl apply -f earbug.yaml

@@ -72,25 +72,25 @@ spec:
             - name: websecure
               containerPort: 4443
               hostPort: 443
-          volumeMounts:
-            - name: config
-              mountPath: /etc/traefik/
-            - name: acme-prod-certs
-              mountPath: /var/secrets/acme/
-      volumes:
-        - name: config
-          configMap:
-            name: traefikconf
-        - name: acme-prod-certs
-          secret:
-            secretName: acme-prod-crt-secret
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: traefikconf
-data:
-  traefik.toml: |
-    [tlsStores.default.defaultCertificate]
-      certFile = "/var/secrets/acme/tls.crt"
-      keyFile  = "/var/secrets/acme/tls.key"
+#           volumeMounts:
+#             - name: config
+#               mountPath: /etc/traefik/
+#             - name: acme-prod-certs
+#               mountPath: /var/secrets/acme/
+#       volumes:
+#         - name: config
+#           configMap:
+#             name: traefikconf
+#         - name: acme-prod-certs
+#           secret:
+#             secretName: acme-prod-crt-secret
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: traefikconf
+# data:
+#   traefik.toml: |
+#     [tlsStores.default.defaultCertificate]
+#       certFile = "/var/secrets/acme/tls.crt"
+#       keyFile  = "/var/secrets/acme/tls.key"
