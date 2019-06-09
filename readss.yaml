@@ -1,21 +1,3 @@
---- # ---
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata:
-#   name: whoami
-#   annotations:
-#     kubernetes.io/ingress.class: traefik
-#   labels:
-#     app: whoami
-# spec:
-#   rules:
-#     - host: api.seankhliao.com
-#       http:
-#         paths:
-#           - path: /whoami/
-#             backend:
-#               serviceName: whoami
-#               servicePort: 80
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -74,6 +56,10 @@ spec:
           env:
             - name: GODEBUG
               value: tls13=1
+            - name: ORIGINS
+              value: "https://seankhliao.com, https://com-seankhliao.web.app, https://com-seankhliao.firebaseapp.com"
+            - name: HEADERS
+              value: "*"
           ports:
             - name: grpc-web
               containerPort: 8090
@@ -88,7 +74,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: traefikconf
+  name: readsssubs
 data:
   subs.csv: |
     "Google Online Security Blog","http://googleonlinesecurity.blogspot.com/atom.xml"
@@ -118,3 +104,4 @@ data:
     "Jessie Frazelle's Blog","https://blog.jessfraz.com/index.xml"
     "Monica Dinculescu","http://meowni.ca/atom.xml"
     "Sirupsen","http://feeds.feedburner.com/sirupsen"
+    "zwischenzugs","https://zwischenzugs.com/feed/"
