@@ -54,7 +54,7 @@ spec:
               weight: 100
       containers:
         - name: authed
-          image: gcr.io/com-seankhliao/authed-server
+          image: gcr.io/com-seankhliao/authed
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/google/key.json
