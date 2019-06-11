@@ -1,0 +1,77 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: authed
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`api.seankhliao.com`) && PathPrefix(`/authed.authed/`)
+      kind: Rule
+      services:
+        - name: authed
+          port: 80
+  tls:
+    secretName: acme-prod-crt-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authed
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: grpc-web
+      port: 80
+      targetPort: 8090
+  selector:
+    app: authed
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: authed
+  labels:
+    app: authed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authed
+  template:
+    metadata:
+      labels:
+        app: authed
+    spec:
+      containers:
+        - name: authed
+          image: gcr.io/com-seankhliao/authed-server
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+          resources:
+            requests:
+              cpu: 5m
+            limits:
+              cpu: 50m
+          env:
+            - name: GODEBUG
+              value: tls13=1
+            - name: ORIGINS
+              value: "https://seankhliao.com, https://com-seankhliao.web.app, https://com-seankhliao.firebaseapp.com"
+            - name: HEADERS
+              value: "*"
+            - name: DEBUG
+              value: "1"
+          ports:
+            - name: grpc-web
+              containerPort: 8090
+          volumeMounts:
+            - name: service-account-key
+              mountPath: /var/secrets/google
+      volumes:
+        - name: service-account-key
+          secret:
+            secretName: firebase-admin
