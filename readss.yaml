@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
         - name: readss
-          image: gcr.io/com-seankhliao/readss-server
+          image: gcr.io/com-seankhliao/readss
           resources:
             requests:
               cpu: 5m
