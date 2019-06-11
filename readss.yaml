@@ -35,7 +35,7 @@ metadata:
   labels:
     app: readss
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: readss
@@ -44,6 +44,14 @@ spec:
       labels:
         app: readss
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: cloud.google.com/gke-preemptible
+                    operator: Exists
+              weight: 100
       containers:
         - name: readss
           image: gcr.io/com-seankhliao/readss

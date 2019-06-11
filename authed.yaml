@@ -35,7 +35,7 @@ metadata:
   labels:
     app: authed
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: authed
@@ -44,6 +44,14 @@ spec:
       labels:
         app: authed
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: cloud.google.com/gke-preemptible
+                    operator: Exists
+              weight: 100
       containers:
         - name: authed
           image: gcr.io/com-seankhliao/authed-server

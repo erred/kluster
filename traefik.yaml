@@ -61,8 +61,6 @@ spec:
           image: traefik:v2.0
           resources:
             requests:
-              cpu: 5m
-            limits:
               cpu: 50m
           args:
             - --accesslog

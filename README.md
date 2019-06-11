@@ -38,7 +38,7 @@ necessary secrets in [private repo](https://github.com/seankhliao/kluster-secret
 
 | Name         | Nodes                                                           | Notes                                                              |
 | ------------ | --------------------------------------------------------------- | ------------------------------------------------------------------ |
-| cluster12    | 1x c-1-2G coos-d preempt autoscaled 0-3                         |
+| cluster12    | 1x c-1-2G coos-d preempt autoscaled 0-3 <br> 1x f1-micro coos-d |
 | cluster11    | 1x c-2-2G coos-d preempt                                        | node pools added later can't have service accounts set through gui |
 | cluster10    | 1x c-1-2G coos-d preempt acutoscale 0-3 x 2 zones               | autoscaling is weird                                               |
 | cluster9     | 1x c-1-2G coos-d preempt autoscaled 0-3 <br> 1x f1-micro coos-d | micro pinned @ 100% cpu                                            |
