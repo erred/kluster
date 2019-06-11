@@ -31,6 +31,14 @@ spec:
       labels:
         app: traefik
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: cloud.google.com/gke-preemptible
+                    operator: DoesNotExist
+              weight: 100
       serviceAccountName: traefik-ingress-controller
       initContainers:
         - image: gcr.io/com-seankhliao/cf-dns-update:latest
