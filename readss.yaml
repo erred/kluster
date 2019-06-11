@@ -4,10 +4,9 @@ metadata:
   name: readss
 spec:
   entryPoints:
-    - web
     - websecure
   routes:
-    - match: Host(`api.seankhliao.com`) && PathPrefix(`/readss.Lister/`)
+    - match: Host(`api.seankhliao.com`) && PathPrefix(`/readss`)
       kind: Rule
       services:
         - name: readss
@@ -22,9 +21,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - protocol: TCP
-      name: grpc-web
+    - name: grpc-web
       port: 80
+      protocol: TCP
       targetPort: 8090
   selector:
     app: readss
@@ -36,7 +35,7 @@ metadata:
   labels:
     app: readss
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: readss
@@ -51,8 +50,6 @@ spec:
           resources:
             requests:
               cpu: 5m
-            limits:
-              cpu: 50m
           env:
             - name: GODEBUG
               value: tls13=1

@@ -4,10 +4,9 @@ metadata:
   name: authed
 spec:
   entryPoints:
-    - web
     - websecure
   routes:
-    - match: Host(`api.seankhliao.com`) && PathPrefix(`/authed.authed/`)
+    - match: Host(`api.seankhliao.com`) && PathPrefix(`/authed`)
       kind: Rule
       services:
         - name: authed
@@ -22,9 +21,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - protocol: TCP
-      name: grpc-web
+    - name: grpc-web
       port: 80
+      protocol: TCP
       targetPort: 8090
   selector:
     app: authed
@@ -36,7 +35,7 @@ metadata:
   labels:
     app: authed
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: authed
@@ -54,8 +53,6 @@ spec:
           resources:
             requests:
               cpu: 5m
-            limits:
-              cpu: 50m
           env:
             - name: GODEBUG
               value: tls13=1
@@ -63,14 +60,12 @@ spec:
               value: "https://seankhliao.com, https://com-seankhliao.web.app, https://com-seankhliao.firebaseapp.com"
             - name: HEADERS
               value: "*"
-            - name: DEBUG
-              value: "1"
           ports:
             - name: grpc-web
               containerPort: 8090
           volumeMounts:
             - name: service-account-key
-              mountPath: /var/secrets/google
+              mountPath: /var/secrets/google/
       volumes:
         - name: service-account-key
           secret:

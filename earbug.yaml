@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
         - name: earbug
-          image: gcr.io/com-seankhliao/earbug:latest
+          image: gcr.io/com-seankhliao/earbug
           args:
-            - "-t"
+            - -t
             - /var/secrets/spotify/token.json
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -37,9 +37,7 @@ spec:
                   key: spotify_secret
           resources:
             requests:
-              cpu: 5m
-            limits:
-              cpu: 50m
+              cpu: 10m
           volumeMounts:
             - name: service-account-key
               mountPath: /var/secrets/google
