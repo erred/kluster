@@ -61,7 +61,7 @@ spec:
           image: traefik:v2.0
           resources:
             requests:
-              cpu: 50m
+              cpu: 150m
           args:
             - --accesslog
             - --entrypoints=Name:web Address::8000
