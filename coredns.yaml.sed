@@ -90,14 +90,8 @@ spec:
       labels:
         k8s-app: kube-dns
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - preference:
-                matchExpressions:
-                  - key: cloud.google.com/gke-preemptible
-                    operator: DoesNotExist
-              weight: 100
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "false"
       priorityClassName: system-cluster-critical
       serviceAccountName: coredns
       tolerations:

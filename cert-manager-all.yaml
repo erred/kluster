@@ -1470,14 +1470,8 @@ spec:
         release: cert-manager
       annotations:
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - preference:
-                matchExpressions:
-                  - key: cloud.google.com/gke-preemptible
-                    operator: DoesNotExist
-              weight: 100
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
       serviceAccountName: cert-manager-cainjector
       containers:
         - name: cainjector
@@ -1520,14 +1514,8 @@ spec:
         release: cert-manager
       annotations:
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - preference:
-                matchExpressions:
-                  - key: cloud.google.com/gke-preemptible
-                    operator: DoesNotExist
-              weight: 100
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
       serviceAccountName: cert-manager-webhook
       containers:
         - name: webhook
@@ -1582,14 +1570,8 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9402'
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - preference:
-                matchExpressions:
-                  - key: cloud.google.com/gke-preemptible
-                    operator: DoesNotExist
-              weight: 100
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
       serviceAccountName: cert-manager
       containers:
         - name: cert-manager

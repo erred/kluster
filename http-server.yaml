@@ -45,14 +45,8 @@ spec:
       labels:
         app: http-server
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - preference:
-                matchExpressions:
-                  - key: cloud.google.com/gke-preemptible
-                    operator: Exists
-              weight: 100
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
       containers:
         - name: http-server
           image: gcr.io/com-seankhliao/http-server

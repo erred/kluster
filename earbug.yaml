@@ -14,14 +14,8 @@ spec:
       labels:
         app: earbug
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - preference:
-                matchExpressions:
-                  - key: cloud.google.com/gke-preemptible
-                    operator: Exists
-              weight: 100
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
       containers:
         - name: earbug
           image: gcr.io/com-seankhliao/earbug

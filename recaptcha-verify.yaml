@@ -1,15 +1,15 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: readss
+  name: recaptcha-verify
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`api.seankhliao.com`) && PathPrefix(`/readss`)
+    - match: Host(`api.seankhliao.com`) && PathPrefix(`/recaptcha`)
       kind: Rule
       services:
-        - name: readss
+        - name: recaptcha-verify
           port: 80
   tls:
     secretName: acme-prod-crt-secret
@@ -17,38 +17,38 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: readss
+  name: recaptcha-verify
 spec:
   type: ClusterIP
   ports:
-    - name: grpc-web
+    - name: http
       port: 80
       protocol: TCP
-      targetPort: 8090
+      targetPort: 8080
   selector:
-    app: readss
+    app: recaptcha-verify
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: readss
+  name: recaptcha-verify
   labels:
-    app: readss
+    app: recaptcha-verify
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: readss
+      app: recaptcha-verify
   template:
     metadata:
       labels:
-        app: readss
+        app: recaptcha-verify
     spec:
       nodeSelector:
         cloud.google.com/gke-preemptible: "true"
       containers:
-        - name: readss
-          image: gcr.io/com-seankhliao/readss
+        - name: recaptcha-verify
+          image: gcr.io/com-seankhliao/recaptcha-verify
           resources:
             requests:
               cpu: 10m
@@ -57,15 +57,11 @@ spec:
               value: tls13=1
             - name: ORIGINS
               value: "https://seankhliao.com, https://com-seankhliao.web.app, https://com-seankhliao.firebaseapp.com"
-            - name: HEADERS
-              value: "*"
+            - name: RECAPTCHA_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: recaptcha
+                  key: recaptcha_server
           ports:
-            - name: grpc-web
-              containerPort: 8090
-          volumeMounts:
-            - name: subs
-              mountPath: /etc/readss/
-      volumes:
-        - name: subs
-          configMap:
-            name: readsssubs
+            - name: http
+              containerPort: 8080
