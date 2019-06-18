@@ -1,33 +1,32 @@
---- # ---
-# apiVersion: traefik.containo.us/v1alpha1
-# kind: IngressRoute
-# metadata:
-#   name: iglog
-# spec:
-#   entryPoints:
-#     - websecure
-#   routes:
-#     - match: Host(`api.seankhliao.com`) && PathPrefix(`/iglog`)
-#       kind: Rule
-#       services:
-#         - name: iglog
-#           port: 80
-#   tls:
-#     secretName: acme-prod-crt-secret
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: iglog
-# spec:
-#   type: ClusterIP
-#   ports:
-#     - name: grpc-web
-#       port: 80
-#       protocol: TCP
-#       targetPort: 8090
-#   selector:
-#     app: iglog
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: iglog
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`api.seankhliao.com`) && PathPrefix(`/iglog`)
+      kind: Rule
+      services:
+        - name: iglog
+          port: http
+  tls:
+    secretName: acme-prod-crt-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iglog
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app: iglog
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -63,16 +62,20 @@ spec:
               value: INFO
             - name: BUCKET
               value: iglog-storage
-            - name: IG_USER
-              valueFrom:
-                secretKeyRef:
-                  name: insta-user
-                  key: user
-            - name: IG_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: insta-user
-                  key: pass
+            - name: ORIGINS
+              value: "https://seankhliao.com, https://com-seankhliao.web.app, https://com-seankhliao.firebaseapp.com"
+            - name: HEADERS
+              value: "*"
+            # - name: IG_USER
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: insta-user
+            #       key: user
+            # - name: IG_PASS
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: insta-user
+            #       key: pass
           livenessProbe:
             initialDelaySeconds: 5
             httpGet:
