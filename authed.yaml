@@ -62,6 +62,8 @@ spec:
               value: "https://seankhliao.com, https://com-seankhliao.web.app, https://com-seankhliao.firebaseapp.com"
             - name: HEADERS
               value: "*"
+            - name: DEBUG
+              value: "1"
           ports:
             - name: grpc-web
               containerPort: 8090
