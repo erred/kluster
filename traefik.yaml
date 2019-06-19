@@ -5,12 +5,12 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - protocol: TCP
-      name: web
-      port: 8000
-    - protocol: TCP
-      name: websecure
-      port: 4443
+    - name: web
+      port: 80
+      targetPort: web
+    - name: websecure
+      port: 443
+      targetPort: websecure
   selector:
     app: traefik
 ---
@@ -57,25 +57,25 @@ spec:
                   key: cloudflare_key
       containers:
         - name: traefik
+          imagePullPolicy: Always
           image: traefik:v2.0
           resources:
             requests:
-              cpu: 150m
+              cpu: 300m
           args:
             - --accesslog
-            - --entrypoints=Name:web Address::8000
-            - --entrypoints=Name:websecure Address::4443
-            - --global.sendanonymoususage=false
+            - --entrypoints=Name:web Address::8080
+            - --entrypoints=Name:websecure Address::8443
             - --providers.kubernetescrd
           env:
             - name: GODEBUG
               value: tls13=1
           ports:
             - name: web
-              containerPort: 8000
+              containerPort: 8080
               hostPort: 80
             - name: websecure
-              containerPort: 4443
+              containerPort: 8443
               hostPort: 443
 #           volumeMounts:
 #             - name: config

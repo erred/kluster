@@ -21,10 +21,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: grpc-web
+    - name: grpc
       port: 80
-      protocol: TCP
-      targetPort: 8090
+      targetPort: grpc
   selector:
     app: authed
 ---
@@ -49,24 +48,27 @@ spec:
       containers:
         - name: authed
           image: gcr.io/com-seankhliao/authed
+          resources:
+            requests:
+              cpu: 20m
+              memory: 20Mi
+            # limits:
+            #   cpu: 40m
+            #   memory: 40Mi
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/google/key.json
-          resources:
-            requests:
-              cpu: 10m
-          env:
             - name: GODEBUG
-              value: tls13=1
+              value: tls13=1,http1debug=2,http2debug=2
             - name: ORIGINS
               value: "https://seankhliao.com, https://com-seankhliao.web.app, https://com-seankhliao.firebaseapp.com"
             - name: HEADERS
               value: "*"
-            - name: DEBUG
-              value: "1"
+            - name: LOG_LEVEL
+              value: INFO
           ports:
-            - name: grpc-web
-              containerPort: 8090
+            - name: grpc
+              containerPort: 8080
           volumeMounts:
             - name: service-account-key
               mountPath: /var/secrets/google/

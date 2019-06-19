@@ -39,7 +39,11 @@ spec:
                   key: spotify_secret
           resources:
             requests:
-              cpu: 10m
+              cpu: 20m
+              memory: 40Mi
+            limits:
+              cpu: 40m
+              memory: 80Mi
           volumeMounts:
             - name: service-account-key
               mountPath: /var/secrets/google

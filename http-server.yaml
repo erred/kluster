@@ -22,10 +22,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: http
+    - name: web
       port: 80
-      protocol: TCP
-      targetPort: 8080
+      targetPort: web
   selector:
     app: http-server
 ---
@@ -49,14 +48,18 @@ spec:
         cloud.google.com/gke-preemptible: "true"
       containers:
         - name: http-server
-          image: gcr.io/com-seankhliao/http-server
+          image: gcr.io/com-seankhliao/http-server:latest
           args:
             - /serve
           resources:
             requests:
-              cpu: 5m
+              cpu: 20m
+              memory: 20M
+            limits:
+              cpu: 40m
+              memory: 40M
           ports:
-            - name: http
+            - name: web
               containerPort: 8080
           volumeMounts:
             - name: httpserve

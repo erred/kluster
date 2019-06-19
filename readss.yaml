@@ -21,10 +21,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: grpc-web
+    - name: web
       port: 80
-      protocol: TCP
-      targetPort: 8090
+      targetPort: web
   selector:
     app: readss
 ---
@@ -51,16 +50,22 @@ spec:
           image: gcr.io/com-seankhliao/readss
           resources:
             requests:
-              cpu: 10m
+              cpu: 20m
+              memory: 40Mi
+            limits:
+              cpu: 40m
+              memory: 80Mi
           env:
             - name: GODEBUG
               value: tls13=1
+            - name: DEBUG
+              value: "1"
             - name: ORIGINS
               value: "https://seankhliao.com, https://com-seankhliao.web.app, https://com-seankhliao.firebaseapp.com"
             - name: HEADERS
               value: "*"
           ports:
-            - name: grpc-web
+            - name: web
               containerPort: 8090
           volumeMounts:
             - name: subs

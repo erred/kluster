@@ -10,7 +10,7 @@ spec:
       kind: Rule
       services:
         - name: iglog
-          port: http
+          port: 80
   tls:
     secretName: acme-prod-crt-secret
 ---
@@ -21,9 +21,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: http
+    - name: web
       port: 80
-      targetPort: http
+      targetPort: web
   selector:
     app: iglog
 ---
@@ -66,6 +66,8 @@ spec:
               value: "https://seankhliao.com, https://com-seankhliao.web.app, https://com-seankhliao.firebaseapp.com"
             - name: HEADERS
               value: "*"
+            - name: EMAILS
+              value: seankhliao@gmail.com
             # - name: IG_USER
             #   valueFrom:
             #     secretKeyRef:
@@ -77,17 +79,19 @@ spec:
             #       name: insta-user
             #       key: pass
           livenessProbe:
-            initialDelaySeconds: 5
+            initialDelaySeconds: 2
+            periodSeconds: 2
             httpGet:
               path: /health
-              port: http
+              port: web
           readinessProbe:
-            initialDelaySeconds: 5
+            initialDelaySeconds: 2
+            periodSeconds: 2
             httpGet:
               path: /ready
-              port: http
+              port: web
           ports:
-            - name: http
+            - name: web
               containerPort: 8080
           volumeMounts:
             - name: service-account-key
@@ -95,4 +99,4 @@ spec:
       volumes:
         - name: service-account-key
           secret:
-            secretName: storage-admin
+            secretName: firebase-admin
