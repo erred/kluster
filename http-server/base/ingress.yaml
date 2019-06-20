@@ -11,7 +11,7 @@ spec:
   routes:
     - kind: Rule
       match: Host(`*`)
-      priority: 100
+      priority: 1
       services:
         - name: http-server
           port: 80
