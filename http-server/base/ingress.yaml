@@ -4,6 +4,7 @@ metadata:
   name: http-server
 spec:
   entryPoints:
+    - web
     - websecure
   tls:
     secretName: tls-prod
