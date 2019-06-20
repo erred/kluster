@@ -1,3 +1,0 @@
-resources:
-  - traefik-definition.yaml
-  - traefik.yaml
