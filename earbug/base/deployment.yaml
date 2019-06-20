@@ -17,6 +17,9 @@ spec:
                 name: earbug-env
             - secretRef:
                 name: spotify
+          volumeMounts:
+            - name: service-account-key
+              mountPath: /var/secrets/google/
       volumes:
         - name: service-account-key
           secret:

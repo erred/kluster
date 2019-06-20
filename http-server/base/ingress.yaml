@@ -13,4 +13,4 @@ spec:
       priority: 100
       services:
         - name: http-server
-          port: 8080
+          port: 80

@@ -1,24 +1,25 @@
-.PHONY: setup
-setup:
+.PHONY: 0-setup
+0-setup:
 	gcloud config set project com-seankhliao
 	gcloud config set compute/zone us-central1-a
 	gcloud container clusters get-credentials cluster13
 	kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $$(gcloud config get-value account)
 
-.PHONY: coredns
-coredns:
+.PHONY: 1-coredns
+1-coredns:
 	kustomize build coredns | kubectl apply -f -
 	kubectl scale --replicas=0 deployment/kube-dns-autoscaler --namespace=kube-system
 	kubectl scale --replicas=0 deployment/kube-dns --namespace=kube-system
 
-.PHONY: certmanager
-certmanager:
+.PHONY: 1-1-certmanager 1-2-certmanager
+1-1-certmanager:
 	kubectl create namespace cert-manager
 	kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
+1-2-certmanager:
 	kustomize build cert-manager | kubectl apply -f -
 
-.PHONY: traefik
-traefik:
+.PHONY: 2-traefik
+2-traefik:
 	kustomize build traefik | kubectl apply -f -
 
 .PHONY: authed earbug http-server iglog readss verify-recaptcha

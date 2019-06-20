@@ -19,6 +19,7 @@ spec:
             - --entrypoints=Name:web Address::8080
             - --entrypoints=Name:websecure Address::8443
             - --providers.kubernetescrd
+            - --log.level=info
           env:
             - name: GODEBUG
               value: tls13=1

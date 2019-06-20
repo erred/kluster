@@ -16,5 +16,5 @@ spec:
           cloudflare:
             email: seankhliao@gmail.com
             apiKeySecretRef:
-              name: cloudflare
-              key: cloudflare_key
+              name: cloudflare-cert-manager
+              key: key

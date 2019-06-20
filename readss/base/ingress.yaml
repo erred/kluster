@@ -13,4 +13,4 @@ spec:
       priority: 10
       services:
         - name: readss
-          port: 8080
+          port: 80

@@ -13,4 +13,4 @@ spec:
       priority: 10
       services:
         - name: authed
-          port: 8080
+          port: 80

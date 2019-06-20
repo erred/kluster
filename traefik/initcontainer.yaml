@@ -12,12 +12,9 @@ spec:
             - name: RECORD
               value: seankhliao.com:noproxy:api:A:1
             - name: X_AUTH_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: cloudflare
-                  key: cloudflare_email
+              value: seankhliao@gmail.com
             - name: X_AUTH_KEY
               valueFrom:
                 secretKeyRef:
-                  name: cloudflare
-                  key: cloudflare_key
+                  name: cloudflare-default
+                  key: key
