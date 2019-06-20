@@ -1,0 +1,26 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: authed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authed
+  template:
+    spec:
+      containers:
+        - name: authed
+          image: gcr.io/com-seankhliao/authed:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: authed-env
+          volumeMounts:
+            - name: service-account-key
+              mountPath: /var/secrets/google/
+      volumes:
+        - name: service-account-key
+          secret:
+            secretName: authed-sa

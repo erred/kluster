@@ -1,0 +1,6 @@
+patchesStrategicMerge:
+  - nonpreemptible.yaml
+  - resources.yaml
+  - initcontainer.yaml
+resources:
+  - base

@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verify-recaptcha
+spec:
+  template:
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"

@@ -1,0 +1,6 @@
+commonLabels:
+  app: http-server
+resources:
+  - ingress.yaml
+  - service.yaml
+  - deployment.yaml

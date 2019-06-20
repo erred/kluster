@@ -1,35 +1,36 @@
-.PHONY: get-creds
-get-creds:
+.PHONY: setup
+setup:
 	gcloud config set project com-seankhliao
 	gcloud config set compute/zone us-central1-a
-	gcloud container clusters get-credentials cluster12
+	gcloud container clusters get-credentials cluster13
 	kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $$(gcloud config get-value account)
 
-.PHONY: deploy-coredns
-deploy-coredns:
-	./coredns-deploy.sh | kubectl apply -f -
+.PHONY: coredns
+coredns:
+	kustomize build coredns | kubectl apply -f -
 	kubectl scale --replicas=0 deployment/kube-dns-autoscaler --namespace=kube-system
 	kubectl scale --replicas=0 deployment/kube-dns --namespace=kube-system
 
-.PHONY: deploy-cert-manager
-deploy-cert-manager:
+.PHONY: certmanager
+certmanager:
 	kubectl create namespace cert-manager
 	kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
-	kubectl apply -f cert-manager-all.yaml
+	kustomize build cert-manager | kubectl apply -f -
 
-.PHONY: get-acme-prod
-get-acme-prod:
-	kubectl apply -f cert-manager-issuer-prod.yaml
+.PHONY: traefik
+traefik:
+	kustomize build traefik | kubectl apply -f -
 
-.PHONY: deploy-traefik
-deploy-traefik:
-	kubectl apply -f traefik-definition.yaml
-	kubectl apply -f traefik.yaml
-
-.PHONY: deploy-readss
-deploy-readss:
-	kubectl apply -f readss.yaml
-
-.PHONY: deploy-earbug
-deploy-earbug:
-	kubectl apply -f earbug.yaml
+.PHONY: authed earbug http-server iglog readss verify-recaptcha
+authed:
+	kustomize build authed | kubectl apply -f -
+earbug:
+	kustomize build earbug | kubectl apply -f -
+http-server:
+	kustomize build http-server | kubectl apply -f -
+iglog:
+	kustomize build iglog | kubectl apply -f -
+readss:
+	kustomize build readss| kubectl apply -f -
+verify-recaptcha:
+	kustomize build verify-recaptcha | kubectl apply -f -

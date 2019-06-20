@@ -1,0 +1,21 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: verify-recaptcha
+spec:
+  template:
+    spec:
+      containers:
+        - name: verify-recaptcha
+          livenessProbe:
+            initialDelaySeconds: 2
+            periodSeconds: 2
+            httpGet:
+              path: /health
+              port: 8080
+          readinessProbe:
+            initialDelaySeconds: 2
+            periodSeconds: 2
+            httpGet:
+              path: /ready
+              port: 8080

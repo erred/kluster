@@ -1,0 +1,15 @@
+commonLabels:
+  app: cert-manager
+resources:
+  - apiservice.yaml
+  - certificate.yaml
+  - clusterrole.yaml
+  - clusterrolebinding.yaml
+  - customresourcedefinition.yaml
+  - deployment.yaml
+  - issuer.yaml
+  - namespave.yaml
+  - rolebinding.yaml
+  - service.yaml
+  - serviceaccount.yaml
+  - validationwebhookconfiguration.yaml

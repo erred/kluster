@@ -1,0 +1,21 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: verify-recaptcha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: verify-recaptcha
+  template:
+    spec:
+      containers:
+        - name: verify-recaptcha
+          image: gcr.io/com-seankhliao/verify-recaptcha:latest
+          envFrom:
+            - configMapRef:
+                name: verify-recaptcha-env
+            - secretRef:
+                name: recaptcha
+          ports:
+            containerPort: 8080

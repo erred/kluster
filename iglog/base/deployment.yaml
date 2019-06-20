@@ -1,0 +1,26 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: iglog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iglog
+  template:
+    spec:
+      containers:
+        - name: iglog
+          image: gcr.io/com-seankhliao/iglog:latest
+          envFrom:
+            - configMapRef:
+                name: iglog-env
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: service-account-key
+              mountPath: /var/secrets/google/
+      volumes:
+        - name: service-account-key
+          secret:
+            secretName: iglog-sa

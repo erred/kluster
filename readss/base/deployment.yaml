@@ -1,0 +1,23 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: readss
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: readss
+          image: gcr.io/com-seankhliao/readss
+          envFrom:
+            - configMapRef:
+                name: readss-env
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: subs
+              mountPath: /etc/readss/
+      volumes:
+        - name: subs
+          configMap:
+            name: readss-subs

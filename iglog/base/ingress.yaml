@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: iglog
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: tls-prod
+  routes:
+    - kind: Rule
+      match: Host(`*`)
+      priority: 10
+      services:
+        - name: iglog
+          port: 8080

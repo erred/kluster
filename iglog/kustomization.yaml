@@ -1,0 +1,14 @@
+patchesStrategicMerge:
+  - preemptible.yaml
+  - resources.yaml
+  - config.yaml
+  - healthcheck.yaml
+patchesJson6902:
+  - path: ingress.yaml
+    target:
+      group: traefik.containo.us
+      kind: IngressRoute
+      name: iglog
+      version: v1alpha1
+resources:
+  - base

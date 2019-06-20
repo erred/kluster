@@ -1,0 +1,29 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: traefik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      containers:
+        - name: traefik
+          imagePullPolicy: Always
+          image: traefik:v2.0
+          args:
+            - --accesslog
+            - --entrypoints=Name:web Address::8080
+            - --entrypoints=Name:websecure Address::8443
+            - --providers.kubernetescrd
+          env:
+            - name: GODEBUG
+              value: tls13=1
+          ports:
+            - name: web
+              containerPort: 8080
+            - name: websecure
+              containerPort: 8443

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: earbug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: earbug
+  template:
+    spec:
+      containers:
+        - name: earbug
+          image: gcr.io/com-seankhliao/earbug:latest
+          envFrom:
+            - configMapRef:
+                name: earbug-env
+            - secretRef:
+                name: spotify
+      volumes:
+        - name: service-account-key
+          secret:
+            secretName: earbug-sa

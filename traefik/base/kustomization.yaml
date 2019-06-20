@@ -1,0 +1,9 @@
+commonLabels:
+  app: traefik
+resources:
+  - clusterrole.yaml
+  - clusterrolebinding.yaml
+  - customresourcedefinition.yaml
+  - deployment.yaml
+  - service.yaml
+  - serviceaccount.yaml
