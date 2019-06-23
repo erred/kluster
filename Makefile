@@ -18,8 +18,8 @@
 1-2-certmanager:
 	kustomize build cert-manager | kubectl apply -f -
 
-.PHONY: 2-traefik
-2-traefik:
+.PHONY: traefik
+traefik:
 	kustomize build traefik | kubectl apply -f -
 
 .PHONY: authed earbug http-server iglog readss verify-recaptcha
