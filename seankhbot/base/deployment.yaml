@@ -1,0 +1,19 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: seankhbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seankhbot
+  template:
+    spec:
+      containers:
+        - name: seankhbot
+          image: gcr.io/com-seankhliao/seankhbot:latest
+          envFrom:
+            - configMapRef:
+                name: seankhbot-env
+          ports:
+            - containerPort: 8080
