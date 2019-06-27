@@ -18,6 +18,10 @@
 1-2-certmanager:
 	kustomize build cert-manager | kubectl apply -f -
 
+.PHONY: nc
+nc:
+	kustomize build nc | kubectl apply -f -
+
 .PHONY: traefik
 traefik:
 	kustomize build traefik | kubectl apply -f -

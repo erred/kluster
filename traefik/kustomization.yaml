@@ -3,9 +3,9 @@ images:
     newName: traefik
     newTag: 2.0.0-alpha4
 patchesStrategicMerge:
-  - nonpreemptible.yaml
+  # - nonpreemptible.yaml
   - resources.yaml
-  - initcontainer.yaml
-  - hostPort.yaml
+  # - initcontainer.yaml
+  # - hostPort.yaml
 resources:
   - base
