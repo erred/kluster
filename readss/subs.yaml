@@ -5,7 +5,6 @@ metadata:
 data:
   subs.csv: |
     "Google Online Security Blog","http://googleonlinesecurity.blogspot.com/atom.xml"
-    "Google Cloud Platform Blog","http://googleappengine.blogspot.com/atom.xml"
     "Google Open Source Blog","http://feeds.feedburner.com/GoogleOpenSourceBlog"
     "Google AI Blog","http://googleaiblog.blogspot.com/atom.xml"
     "The Firebase Blog","http://firebase.googleblog.com/feeds/posts/default"
@@ -13,10 +12,8 @@ data:
     "Project Zero","http://googleprojectzero.blogspot.com/feeds/posts/default"
     "The Go Programming Language Blog","http://blog.golang.org/feeds/posts/default"
     "CloudFlare","https://blog.cloudflare.com/rss/"
-    "Instagram Engineering","http://instagram-engineering.tumblr.com/rss"
     "GitHub Engineering","https://github.blog/engineering.atom"
     "Airbnb Engineering","https://medium.com/feed/airbnb-engineering"
-    "Medium Engineering","https://medium.com/feed/medium-eng"
     "Spotify Labs","https://labs.spotify.com/feed/"
     "Dropbox Tech Blog","https://tech.dropbox.com/feed/"
     "BBC Design & Engineering","https://medium.com/feed/bbc-design-engineering"

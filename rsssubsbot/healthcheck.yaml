@@ -1,0 +1,15 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: rsssubsbot
+spec:
+  template:
+    spec:
+      containers:
+        - name: rsssubsbot
+          livenessProbe:
+            initialDelaySeconds: 2
+            periodSeconds: 2
+            httpGet:
+              path: /health
+              port: 8080

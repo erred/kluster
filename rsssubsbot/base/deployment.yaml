@@ -1,0 +1,19 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: rsssubsbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rsssubsbot
+  template:
+    spec:
+      containers:
+        - name: rsssubsbot
+          image: gcr.io/com-seankhliao/rsssubsbot:latest
+          envFrom:
+            - configMapRef:
+                name: rsssubsbot-env
+            - secretRef:
+                name: telegram-rsssubsbot

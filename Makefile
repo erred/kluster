@@ -26,7 +26,7 @@ nc:
 traefik:
 	kustomize build traefik | kubectl apply -f -
 
-.PHONY: authed earbug http-server iglog readss seankhbot verify-recaptcha
+.PHONY: authed earbug http-server iglog readss rsssubsbot seankhbot verify-recaptcha
 authed:
 	kustomize build authed | kubectl apply -f -
 earbug:
@@ -37,6 +37,8 @@ iglog:
 	kustomize build iglog | kubectl apply -f -
 readss:
 	kustomize build readss | kubectl apply -f -
+rsssubsbot:
+	kustomize build rsssubsbot | kubectl apply -f -
 seankhbot:
 	kustomize build seankhbot | kubectl apply -f -
 verify-recaptcha:
