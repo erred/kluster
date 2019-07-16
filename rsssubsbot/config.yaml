@@ -4,3 +4,4 @@ metadata:
   name: rsssubsbot-env
 data:
   LOG_LEVEL: debug
+  BUCKET: rsssubsbot-storage
