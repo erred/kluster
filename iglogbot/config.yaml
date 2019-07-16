@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: iglogbot-env
+data:
+  LOG_LEVEL: debug
+  BUCKET: iglog-storage

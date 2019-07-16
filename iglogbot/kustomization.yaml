@@ -1,0 +1,6 @@
+patchesStrategicMerge:
+  - preemptible.yaml
+  - resources.yaml
+  - config.yaml
+resources:
+  - base
