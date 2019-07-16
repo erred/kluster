@@ -1,7 +1,0 @@
-commonLabels:
-  app: iglog
-resources:
-  - ingress.yaml
-  - service.yaml
-  - deployment.yaml
-  - config.yaml

@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: seankhbot-env
-data:
-  LOG_LEVEL: debug

@@ -1,7 +1,0 @@
-commonLabels:
-  app: readss
-resources:
-  - ingress.yaml
-  - service.yaml
-  - deployment.yaml
-  - config.yaml

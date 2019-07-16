@@ -1,7 +1,0 @@
-commonLabels:
-  app: seankhbot
-resources:
-  - ingress.yaml
-  - service.yaml
-  - deployment.yaml
-  - config.yaml
