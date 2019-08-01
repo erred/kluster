@@ -6,4 +6,4 @@ metadata:
 spec:
   selector:
     k8s-app: kube-dns
-  clusterIP: 10.85.0.10
+  clusterIP: 10.113.0.10

@@ -2,7 +2,7 @@
 0-setup:
 	gcloud config set project com-seankhliao
 	gcloud config set compute/zone us-central1-a
-	gcloud container clusters get-credentials cluster13
+	gcloud container clusters get-credentials cluster14
 	kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $$(gcloud config get-value account)
 
 .PHONY: 1-coredns
@@ -18,12 +18,9 @@
 1-2-certmanager:
 	kustomize build cert-manager | kubectl apply -f -
 
-.PHONY: nc
-nc:
+.PHONY: 2-ingress
+2-ingress:
 	kustomize build nc | kubectl apply -f -
-
-.PHONY: traefik
-traefik:
 	kustomize build traefik | kubectl apply -f -
 
 .PHONY: earbug http-server iglogbot rsssubsbot verify-recaptcha
