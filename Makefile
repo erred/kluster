@@ -18,12 +18,16 @@
 1-2-certmanager:
 	kustomize build cert-manager | kubectl apply -f -
 
-.PHONY: 2-ingress
-2-ingress:
+.PHONY: 2-1-nc
+2-1-nc:
 	kustomize build nc | kubectl apply -f -
+.PHONY: 2-2-traefik
+2-2-traefik:
 	kustomize build traefik | kubectl apply -f -
 
-.PHONY: earbug http-server iglogbot rsssubsbot verify-recaptcha
+.PHONY: calproxy earbug http-server iglogbot rsssubsbot verify-recaptcha
+calproxy:
+	kustomize build calproxy | kubectl apply -f -
 earbug:
 	kustomize build earbug | kubectl apply -f -
 http-server:

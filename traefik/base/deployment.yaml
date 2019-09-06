@@ -16,8 +16,8 @@ spec:
           image: traefik:v2.0
           args:
             - --accesslog
-            - --entrypoints=Name:web Address::8080
-            - --entrypoints=Name:websecure Address::8443
+            - --entrypoints.web.Address=:8000
+            - --entrypoints.websecure.Address=:8443
             - --providers.kubernetescrd
             - --log.level=info
           env:

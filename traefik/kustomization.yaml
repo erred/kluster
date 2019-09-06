@@ -1,7 +1,3 @@
-images:
-  - name: traefik
-    newName: traefik
-    newTag: 2.0.0-alpha4
 patchesStrategicMerge:
   # - nonpreemptible.yaml
   - resources.yaml
