@@ -1,26 +1,28 @@
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
-  name: earbug
+  name: iglogbot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: earbug
+      app: iglogbot
   template:
     spec:
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
       containers:
-        - name: earbug
-          image: gcr.io/com-seankhliao/earbug:latest
+        - name: iglogbot
+          image: gcr.io/com-seankhliao/iglogbot:latest
           envFrom:
             - configMapRef:
-                name: earbug-env
+                name: iglogbot-env
             - secretRef:
-                name: spotify
+                name: telegram-iglogbot
           volumeMounts:
             - name: service-account-key
               mountPath: /var/secrets/google/
       volumes:
         - name: service-account-key
           secret:
-            secretName: earbug-sa
+            secretName: iglog-sa

@@ -1,5 +1,0 @@
-commonLabels:
-  app: earbug
-resources:
-  - deployment.yaml
-  - config.yaml

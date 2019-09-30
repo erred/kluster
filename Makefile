@@ -19,15 +19,15 @@ KUBECTL=kubectl.1.15
 	$(KUBECTL) kustomize traefik | $(KUBECTL) apply -f -
 
 .PHONY: calproxy earbug http-server iglogbot rsssubsbot verify-recaptcha
-calproxy:
-	kustomize build calproxy | kubectl apply -f -
-earbug:
-	kustomize build earbug | kubectl apply -f -
+# calproxy:
+# 	kustomize build calproxy | kubectl apply -f -
+# earbug:
+# 	kustomize build earbug | kubectl apply -f -
 http-server:
 	$(KUBECTL) kustomize http-server | $(KUBECTL) apply -f -
 iglogbot:
-	kustomize build iglogbot | kubectl apply -f -
+	$(KUBECTL) kustomize iglogbot | $(KUBECTL) apply -f -
 rsssubsbot:
-	kustomize build rsssubsbot | kubectl apply -f -
+	$(KUBECTL) kustomize rsssubsbot | $(KUBECTL) apply -f -
 verify-recaptcha:
 	$(KUBECTL) kustomize verify-recaptcha | $(KUBECTL) apply -f -

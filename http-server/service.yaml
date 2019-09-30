@@ -8,7 +8,7 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`cluster16.seankhliao.com`)
+      match: Host(`cluster16.seankhliao.com`) && PathPrefix(`/`)
       priority: 1
       services:
         - name: http-server

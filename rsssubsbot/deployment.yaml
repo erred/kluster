@@ -3,11 +3,11 @@ apiVersion: apps/v1
 metadata:
   name: rsssubsbot
 spec:
-  replicas: 2
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
+  replicas: 1
+  # strategy:
+  #   type: RollingUpdate
+  #   rollingUpdate:
+  #     maxUnavailable: 1
   selector:
     matchLabels:
       app: rsssubsbot

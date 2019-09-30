@@ -1,6 +1,5 @@
-patchesStrategicMerge:
-  - preemptible.yaml
-  - resources.yaml
-  - config.yaml
+commonLabels:
+  app: iglogbot
 resources:
-  - base
+  - deployment.yaml
+  - config.yaml

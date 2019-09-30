@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: earbug-env
-data:
-  GODEBUG: tls13=1
-  GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
-  LOG_LEVEL: info

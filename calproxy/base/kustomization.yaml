@@ -1,6 +1,0 @@
-commonLabels:
-  app: calproxy
-resources:
-  - ingress.yaml
-  - service.yaml
-  - deployment.yaml
