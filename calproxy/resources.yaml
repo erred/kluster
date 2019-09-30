@@ -1,0 +1,16 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: calproxy
+spec:
+  template:
+    spec:
+      containers:
+        - name: calproxy
+          resources:
+            requests:
+              cpu: 20m
+              memory: 40Mi
+            limits:
+              cpu: 40m
+              memory: 80Mi

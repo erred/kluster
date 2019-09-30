@@ -1,0 +1,16 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: calproxy
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: calproxy
+          image: gcr.io/com-seankhliao/calproxy:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: calproxy
