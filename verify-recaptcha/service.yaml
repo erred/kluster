@@ -7,12 +7,12 @@ spec:
     - web
     - websecure
   routes:
-    # - kind: Rule
-    #   match: Host(`api.seankhliao.com`) && PathPrefix(`/recaptcha`)
-    #   priority: 10
-    #   services:
-    #     - name: verify-recaptcha
-    #       port: 80
+    - kind: Rule
+      match: Host(`api.seankhliao.com`) && PathPrefix(`/recaptcha`)
+      priority: 10
+      services:
+        - name: verify-recaptcha
+          port: 80
     - kind: Rule
       match: Host(`cluster16.seankhliao.com`) && PathPrefix(`/recaptcha`)
       priority: 10
