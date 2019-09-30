@@ -1,4 +1,0 @@
-resources:
-  - base
-  - issuer-prod.yaml
-  - certificate-prod.yaml

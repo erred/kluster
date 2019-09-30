@@ -1,7 +1,4 @@
-patchesStrategicMerge:
-  # - nonpreemptible.yaml
-  - resources.yaml
-  # - initcontainer.yaml
-  # - hostPort.yaml
 resources:
-  - base
+  - customresourcedefinition.yaml
+  - service.yaml
+  - deployment.yaml

@@ -1,4 +1,0 @@
-commonLabels:
-  app: nc
-resources:
-  - daemonset.yaml

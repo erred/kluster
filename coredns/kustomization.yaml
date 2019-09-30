@@ -1,5 +1,0 @@
-patchesStrategicMerge:
-  - serviceip.yaml
-resources:
-  - base
-  - config.yaml

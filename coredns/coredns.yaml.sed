@@ -1,5 +1,75 @@
-kind: Deployment
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: coredns
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:coredns
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  - services
+  - pods
+  - namespaces
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:coredns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:coredns
+subjects:
+- kind: ServiceAccount
+  name: coredns
+  namespace: kube-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health
+        ready
+        kubernetes CLUSTER_DOMAIN REVERSE_CIDRS {
+          pods insecure
+          fallthrough in-addr.arpa ip6.arpa
+        }FEDERATIONS
+        prometheus :9153
+        forward . UPSTREAMNAMESERVER
+        cache 30
+        loop
+        reload
+        loadbalance
+    }STUBDOMAINS
+---
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: coredns
   namespace: kube-system
@@ -20,8 +90,6 @@ spec:
       labels:
         k8s-app: kube-dns
     spec:
-      nodeSelector:
-        cloud.google.com/gke-preemptible: "false"
       priorityClassName: system-cluster-critical
       serviceAccountName: coredns
       tolerations:
@@ -31,15 +99,14 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
       - name: coredns
-        image: coredns/coredns:1.5.0
+        image: coredns/coredns:1.6.2
         imagePullPolicy: IfNotPresent
         resources:
           limits:
-            cpu: 100m
-            memory: 60Mi
+            memory: 170Mi
           requests:
-            cpu: 50m
-            memory: 60Mi
+            cpu: 100m
+            memory: 70Mi
         args: [ "-conf", "/etc/coredns/Corefile" ]
         volumeMounts:
         - name: config-volume
@@ -85,3 +152,30 @@ spec:
             items:
             - key: Corefile
               path: Corefile
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  annotations:
+    prometheus.io/port: "9153"
+    prometheus.io/scrape: "true"
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "CoreDNS"
+spec:
+  selector:
+    k8s-app: kube-dns
+  clusterIP: CLUSTER_DNS_IP
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+  - name: metrics
+    port: 9153
+    protocol: TCP
