@@ -38,6 +38,9 @@ necessary secrets in [private repo](https://github.com/seankhliao/kluster-secret
 
 | Name      | Nodes                                                           | Notes                                                              |
 | --------- | --------------------------------------------------------------- | ------------------------------------------------------------------ |
+| cluster16 | 1x c-1-2G coos-d preempt autoscaled 0-2 <br> 1x f1-micro coos-d |                                                                    |
+| cluster15 |                                                                 | lost to the sands of time                                          |
+| cluster13 | 1x c-1-2G coos-d preempt autoscaled 0-3 <br> 1x f1-micro coos-d |
 | cluster13 | 1x c-1-2G coos-d preempt autoscaled 0-3 <br> 1x f1-micro coos-d |
 | cluster12 | 1x c-1-2G coos-d preempt autoscaled 0-3 <br> 1x f1-micro coos-d |
 | cluster11 | 1x c-2-2G coos-d preempt                                        | node pools added later can't have service accounts set through gui |
