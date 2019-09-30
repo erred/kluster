@@ -2,7 +2,7 @@
 0-setup:
 	gcloud config set project com-seankhliao
 	gcloud config set compute/zone us-central1-a
-	gcloud container clusters get-credentials cluster14
+	gcloud container clusters get-credentials cluster16
 	kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $$(gcloud config get-value account)
 
 .PHONY: 1-coredns
