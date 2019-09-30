@@ -1,7 +1,6 @@
-patchesStrategicMerge:
-  - preemptible.yaml
-  - resources.yaml
-  # - healthcheck.yaml
-  - config.yaml
+commonLabels:
+  app: rsssubsbot
 resources:
-  - base
+  - service.yaml
+  - deployment.yaml
+  - config.yaml

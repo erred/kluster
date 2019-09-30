@@ -5,3 +5,4 @@ metadata:
 data:
   LOG_LEVEL: debug
   BUCKET: rsssubsbot-storage
+  GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json

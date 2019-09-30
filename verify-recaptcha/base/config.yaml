@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: verify-recaptcha-env
-data:
-  GODEBUG: tls13=1
-  LOG_LEVEL: info

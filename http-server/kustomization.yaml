@@ -1,13 +1,6 @@
-patchesStrategicMerge:
-  - preemptible.yaml
-  - resources.yaml
-patchesJson6902:
-  - path: ingress.yaml
-    target:
-      group: traefik.containo.us
-      kind: IngressRoute
-      name: http-server
-      version: v1alpha1
+commonLabels:
+  app: http-server
 resources:
-  - base
+  - service.yaml
+  - deployment.yaml
   - config.yaml

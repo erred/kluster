@@ -1,0 +1,28 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: http-server
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`cluster16.seankhliao.com`)
+      priority: 1
+      services:
+        - name: http-server
+          port: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-server
+spec:
+  type: ClusterIP
+  selector:
+    app: http-server
+  ports:
+    - port: 80
+      targetPort: 8080

@@ -1,9 +1,0 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: rsssubsbot
-spec:
-  template:
-    spec:
-      nodeSelector:
-        cloud.google.com/gke-preemptible: "true"

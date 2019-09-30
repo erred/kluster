@@ -1,5 +1,0 @@
-commonLabels:
-  app: rsssubsbot
-resources:
-  - deployment.yaml
-  - config.yaml

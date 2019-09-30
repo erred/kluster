@@ -3,12 +3,18 @@ apiVersion: apps/v1
 metadata:
   name: rsssubsbot
 spec:
-  replicas: 1
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: rsssubsbot
   template:
     spec:
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
       containers:
         - name: rsssubsbot
           image: gcr.io/com-seankhliao/rsssubsbot:latest
