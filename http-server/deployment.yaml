@@ -19,6 +19,7 @@ spec:
         - name: http-server
           image: gcr.io/com-seankhliao/http-server:latest
           args:
+            - -dir
             - /serve
           ports:
             - containerPort: 8080

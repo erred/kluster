@@ -9,8 +9,14 @@ spec:
       app: iglogbot
   template:
     spec:
-      nodeSelector:
-        cloud.google.com/gke-preemptible: "true"
+      serviceAccountName: iglogbot
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: cloud.google.com/gke-preemptible
+                    operator: Exists
       containers:
         - name: iglogbot
           image: gcr.io/com-seankhliao/iglogbot:latest

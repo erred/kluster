@@ -4,17 +4,12 @@ metadata:
   name: http-server
 spec:
   entryPoints:
-    - web
     - websecure
+  tls:
+    certResolver: default
   routes:
     - kind: Rule
       match: Host(`api.seankhliao.com`) && PathPrefix(`/`)
-      priority: 1
-      services:
-        - name: http-server
-          port: 80
-    - kind: Rule
-      match: Host(`cluster16.seankhliao.com`) && PathPrefix(`/`)
       priority: 1
       services:
         - name: http-server

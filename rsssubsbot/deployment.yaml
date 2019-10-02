@@ -4,17 +4,19 @@ metadata:
   name: rsssubsbot
 spec:
   replicas: 1
-  # strategy:
-  #   type: RollingUpdate
-  #   rollingUpdate:
-  #     maxUnavailable: 1
   selector:
     matchLabels:
       app: rsssubsbot
   template:
     spec:
-      nodeSelector:
-        cloud.google.com/gke-preemptible: "true"
+      serviceAccountName: rsssubsbot
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: cloud.google.com/gke-preemptible
+                    operator: Exists
       containers:
         - name: rsssubsbot
           image: gcr.io/com-seankhliao/rsssubsbot:latest
