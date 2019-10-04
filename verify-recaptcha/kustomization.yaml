@@ -1,5 +1,0 @@
-commonLabels:
-  app: verify-recaptcha
-resources:
-  - deployment.yaml
-  - service.yaml

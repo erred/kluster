@@ -13,21 +13,3 @@ KUBECTL=kubectl.1.15
 	./coredns/deploy.sh | $(KUBECTL) apply -f -
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns-autoscaler --namespace=kube-system
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns --namespace=kube-system
-
-.PHONY: 2-traefik
-2-traefik:
-	$(KUBECTL) kustomize traefik | $(KUBECTL) apply -f -
-
-.PHONY: calproxy earbug http-server iglogbot rsssubsbot verify-recaptcha
-# calproxy:
-# 	kustomize build calproxy | kubectl apply -f -
-# earbug:
-# 	kustomize build earbug | kubectl apply -f -
-http-server:
-	$(KUBECTL) kustomize http-server | $(KUBECTL) apply -f -
-iglogbot:
-	$(KUBECTL) kustomize iglogbot | $(KUBECTL) apply -f -
-rsssubsbot:
-	$(KUBECTL) kustomize rsssubsbot | $(KUBECTL) apply -f -
-verify-recaptcha:
-	$(KUBECTL) kustomize verify-recaptcha | $(KUBECTL) apply -f -
