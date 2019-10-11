@@ -35,18 +35,18 @@ spec:
         - name: traefik
           image: traefik:v2.0
           args:
-            - --api.insecure
+            - --api.insecure=true
             - --accesslog=true
             - --global.sendanonymoususage=false
             - --entrypoints.web.Address=:8000
             - --entrypoints.websecure.Address=:4443
-            - --providers.kubernetescrd
-            - --certificatesresolvers.default.acme.tlschallenge
-            - --certificatesresolvers.default.acme.httpchallenge
-            - --certificatesResolvers.default.acme.httpChallenge.entryPoint=web
-            - --certificatesresolvers.default.acme.keytype=EC256
-            - --certificatesresolvers.default.acme.email=cluster16-letsencrypt@seankhliao.com
-            - --certificatesresolvers.default.acme.storage=acme.json
+            - --providers.kubernetescrd=true
+            # - --certificatesresolvers.default.acme.tlschallenge
+            # - --certificatesresolvers.default.acme.httpchallenge
+            # - --certificatesResolvers.default.acme.httpChallenge.entryPoint=web
+            # - --certificatesresolvers.default.acme.keytype=EC256
+            # - --certificatesresolvers.default.acme.email=cluster16-letsencrypt@seankhliao.com
+            # - --certificatesresolvers.default.acme.storage=acme.json
           ports:
             - name: web
               containerPort: 8000
@@ -63,3 +63,45 @@ spec:
             limits:
               cpu: 60m
               memory: 40Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/traefik/
+            - name: cf-certs
+              mountPath: /var/secrets/cf-certs/
+      volumes:
+        - name: config
+          configMap:
+            name: traefikconf
+        - name: cf-certs
+          secret:
+            secretName: cf-certs
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefikconf
+data:
+  traefik.toml: |
+    [accessLog]
+      format = "json"
+    [api]
+      insecure = true
+    [log]
+      level = "ERROR"
+    [entryPoints]
+      [entryPoints.web]
+        Address = ":8000"
+      [entryPoints.websecure]
+        Address = ":4443"
+    [global]
+      sendAnonymousUsage = false
+    [providers]
+      [providers.kubernetesCRD]
+      [providers.file]
+        filename = "/etc/traefik/dyn.toml"
+  dyn.toml : |
+    [tls.stores]
+      [tls.stores.default]
+        [tls.stores.default.defaultCertificate]
+          certFile = "/var/secrets/cf-certs/tls.crt"
+          keyFile  = "/var/secrets/cf-certs/tls.key"
