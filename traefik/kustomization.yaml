@@ -1,4 +1,0 @@
-resources:
-  - customresourcedefinition.yaml
-  - service.yaml
-  - deployment.yaml
