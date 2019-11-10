@@ -3,7 +3,6 @@ REGION=us-central1
 ZONE=us-central1-a
 CLUSTER=cluster17
 NODES=2
-# --image-type "COS_CONTAINERD" \
 
 GCLOUD=gcloud
 KUBECTL=kubectl
@@ -13,42 +12,37 @@ HELM=helm3
 create-cluster:
 	$(GCLOUD) config set project $(PROJECT)
 	$(GCLOUD) config set compute/zone $(ZONE)
-	$(GCLOUD) beta container clusters create $(CLUSTER) \
-		--zone $(ZONE) \
+	$(GCLOUD) beta container clusters create "cluster17" \
+		--zone "us-central1-a" \
+		--no-enable-basic-auth \
 		--release-channel "rapid" \
-			--machine-type "n1-standard-1" \
-			--image-type "UBUNTU_CONTAINERD" \
-			--disk-type "pd-standard" \
-			--disk-size "30" \
-			--metadata disable-legacy-endpoints=true \
-			--service-account "kluster-compute@$(PROJECT).iam.gserviceaccount.com" \
-			--preemptible \
-			--num-nodes "$(NODES)" \
-			--enable-autoupgrade \
-			--enable-autorepair \
-		--enable-ip-alias \
-		--network "projects/$(PROJECT)/global/networks/default" \
-		--subnetwork "projects/$(PROJECT)/regions/us-central1/subnetworks/default" \
-		--default-max-pods-per-node "110" \
+		--machine-type "custom-1-2048" \
+		--image-type "COS_CONTAINERD" \
+		--disk-type "pd-standard" \
+		--disk-size "20" \
+		--metadata disable-legacy-endpoints=true \
+		--service-account "kluster-compute@com-seankhliao.iam.gserviceaccount.com" \
+		--num-nodes "1" \
 		--no-enable-cloud-logging \
 		--no-enable-cloud-monitoring \
-		--no-enable-basic-auth \
+		--enable-ip-alias \
+		--network "projects/com-seankhliao/global/networks/default" \
+		--subnetwork "projects/com-seankhliao/regions/us-central1/subnetworks/default" \
+		--default-max-pods-per-node "110" \
 		--addons HorizontalPodAutoscaling \
-		--identity-namespace "$(PROJECT).svc.id.goog" \
-		--shielded-secure-boot
+		--enable-autoupgrade \
+		--enable-autorepair
 	$(KUBECTL) create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $$($(GCLOUD) config get-value account)
 
-.PHONY: helm-repo-init
-helm-repo-init:
-	$(HELM) repo add stable https://kubernetes-charts.storage.googleapis.com
-	$(HELM) repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
-
-.PHONY: helm-repo-update
-helm-repo-update:
-	$(HELM) repo update
-
-.PHONY: coredns-install
-coredns-install:
-	$(HELM) install --generate-name --namespace=kube-system stable/coredns
+.PHONY: scale-kube-dns
+scale-kube-dns: coredns
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns-autoscaler --namespace=kube-system
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns --namespace=kube-system
+
+.PHONY: coredns
+coredns:
+	$(KUBECTL) apply -k coredns
+
+.PHONY: ambassador
+ambassador:
+	$(KUBECTL) apply -k ambassador
