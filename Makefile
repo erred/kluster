@@ -18,7 +18,7 @@ DEPLOYS := 	kube-system \
 			default/calproxy \
 			default/http-server
 
-.PHONY: $(DEPLOYS) create-cluster scale-kube-dns
+.PHONY: $(DEPLOYS) create-cluster scale-kube-dns status
 $(DEPLOYS):
 	$(KUBECTL) apply -k $@
 
@@ -50,3 +50,8 @@ create-cluster:
 scale-kube-dns: coredns
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns-autoscaler --namespace=kube-system
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns --namespace=kube-system
+
+status:
+	$(KUBECTL) get --all-namespaces po,deploy,sts,ds,svc,mapping,ing
+	$(KUBECTL) top node
+	$(KUBECTL) top pod --all-namespaces
