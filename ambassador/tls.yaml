@@ -1,0 +1,7 @@
+apiVersion: getambassador.io/v1
+kind: TLSContext
+metadata:
+  name: cf-tls
+spec:
+  hosts: ["*"]
+  secret: cf-certs-tls-secret

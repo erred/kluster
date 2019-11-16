@@ -1,3 +1,6 @@
-namespace: default
+namespace: ambassador
 bases:
   - ambassador
+resources:
+  - namespace.yaml
+  - tls.yaml

@@ -1,9 +1,7 @@
-namespace: ambassador
 commonLabels:
   app: ambassador
 resources:
   - crd.yaml
   - deployment.yaml
-  - namespace.yaml
   - rbac.yaml
   - service.yaml
