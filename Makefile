@@ -46,3 +46,7 @@ coredns:
 .PHONY: ambassador
 ambassador:
 	$(KUBECTL) apply -k ambassador
+
+.PHONY: prometheus
+prometheus:
+	$(KUBECTL) apply -k prometheus
