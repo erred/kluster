@@ -10,9 +10,10 @@ KUBECTL=kubectl
 DEPLOYS := 	kube-system \
 			kube-system/coredns \
 			monitoring \
-			monitoring/ambassador \
-			default \
-			default/ambassador
+			monitoring/grafana \
+			monitoring/prometheus \
+			ambassador \
+			ambassador/ambassador
 
 .PHONY: $(DEPLOYS) create-cluster scale-kube-dns
 $(DEPLOYS):

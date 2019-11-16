@@ -1,0 +1,10 @@
+resources:
+  - cluster-role-binding.yaml
+  - cluster-role.yaml
+  - grafana-crd.yaml
+  - grafanadashboard-crd.yaml
+  - grafanadatasource-crd.yaml
+  - operator.yaml
+  - role-binding.yaml
+  - role.yaml
+  - service-account.yaml
