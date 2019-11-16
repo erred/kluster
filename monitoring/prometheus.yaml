@@ -4,6 +4,7 @@ metadata:
   name: prometheus
   labels:
     prometheus: prometheus
+    app: prometheus
 spec:
   replicas: 1
   retention: 15d

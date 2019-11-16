@@ -1,8 +1,9 @@
-namespace: monitoring
 resources:
   - alertmanager.crd.yaml
-  - namespace.yaml
   - podmonitor.crd.yaml
+  - prometheus.crd.yaml
+  - prometheusrule.crd.yaml
+  - servicemonitor.crd.yaml
   - prometheus-cluster-role-binding.yaml
   - prometheus-cluster-role.yaml
   - prometheus-operator-cluster-role-binding.yaml
@@ -13,7 +14,3 @@ resources:
   - prometheus-operator-service-monitor.yaml
   - prometheus-operator-service.yaml
   - prometheus-service-account.yaml
-  - prometheus.crd.yaml
-  - prometheus.yaml
-  - prometheusrule.crd.yaml
-  - servicemonitor.crd.yaml
