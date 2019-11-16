@@ -6,7 +6,13 @@ NODES=2
 
 GCLOUD=gcloud
 KUBECTL=kubectl
-HELM=helm3
+
+DEPLOYS := 	kube-system \
+			kube-system/coredns \
+			monitoring \
+			monitoring/ambassador \
+			default \
+			default/ambassador
 
 .PHONY: create-cluster
 create-cluster:
@@ -39,22 +45,6 @@ scale-kube-dns: coredns
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns-autoscaler --namespace=kube-system
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns --namespace=kube-system
 
-.PHONY: kube-system
-kube-system:
-	$(KUBECTL) apply -k kube-system
-
-.PHONY: coredns
-coredns:
-	$(KUBECTL) apply -k kube-system/coredns
-
-.PHONY: ambassador
-ambassador:
-	$(KUBECTL) apply -k ambassador
-
-.PHONY: monitoring
-monitoring:
-	$(KUBECTL) apply -k monitoring
-
-.PHONY: prometheus
-prometheus:
-	$(KUBECTL) apply -k monitoring/prometheus
+.PHONY: $(DEPLOYS)
+$(DEPLOYS):
+	$(KUBECTL) apply -k $@
