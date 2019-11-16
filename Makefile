@@ -14,7 +14,10 @@ DEPLOYS := 	kube-system \
 			default \
 			default/ambassador
 
-.PHONY: create-cluster
+.PHONY: $(DEPLOYS) create-cluster scale-kube-dns
+$(DEPLOYS):
+	$(KUBECTL) apply -k $@
+
 create-cluster:
 	$(GCLOUD) config set project $(PROJECT)
 	$(GCLOUD) config set compute/zone $(ZONE)
@@ -40,11 +43,6 @@ create-cluster:
 		--enable-autorepair
 	$(KUBECTL) create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $$($(GCLOUD) config get-value account)
 
-.PHONY: scale-kube-dns
 scale-kube-dns: coredns
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns-autoscaler --namespace=kube-system
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns --namespace=kube-system
-
-.PHONY: $(DEPLOYS)
-$(DEPLOYS):
-	$(KUBECTL) apply -k $@
