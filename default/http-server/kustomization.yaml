@@ -1,0 +1,6 @@
+commonLabels:
+  app: http-server
+resources:
+  - service.yaml
+  - deployment.yaml
+  - config.yaml

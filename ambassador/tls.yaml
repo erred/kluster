@@ -5,3 +5,4 @@ metadata:
 spec:
   hosts: ["*"]
   secret: cf-certs-tls-secret
+  redirect_cleartext_from: 8080

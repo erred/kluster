@@ -13,7 +13,10 @@ DEPLOYS := 	kube-system \
 			monitoring/grafana \
 			monitoring/prometheus \
 			ambassador \
-			ambassador/ambassador
+			ambassador/ambassador \
+			default \
+			default/calproxy \
+			default/http-server
 
 .PHONY: $(DEPLOYS) create-cluster scale-kube-dns
 $(DEPLOYS):
