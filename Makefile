@@ -39,14 +39,22 @@ scale-kube-dns: coredns
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns-autoscaler --namespace=kube-system
 	$(KUBECTL) scale --replicas=0 deployment/kube-dns --namespace=kube-system
 
+.PHONY: kube-system
+kube-system:
+	$(KUBECTL) apply -k kube-system
+
 .PHONY: coredns
 coredns:
-	$(KUBECTL) apply -k coredns
+	$(KUBECTL) apply -k kube-system/coredns
 
 .PHONY: ambassador
 ambassador:
 	$(KUBECTL) apply -k ambassador
 
+.PHONY: monitoring
+monitoring:
+	$(KUBECTL) apply -k monitoring
+
 .PHONY: prometheus
 prometheus:
-	$(KUBECTL) apply -k prometheus
+	$(KUBECTL) apply -k monitoring/prometheus
