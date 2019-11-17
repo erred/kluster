@@ -1,0 +1,6 @@
+commonLabels:
+  app: prometheus
+resources:
+  - service-account.yaml
+  - service.yaml
+  - statefulset.yaml

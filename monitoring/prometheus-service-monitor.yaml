@@ -1,12 +1,11 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
+  name: prometheus-operator
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: prometheus-operator
     app.kubernetes.io/version: v0.34.0
-  name: prometheus-operator
-  namespace: monitoring
 spec:
   endpoints:
     - honorLabels: true
@@ -16,3 +15,29 @@ spec:
       app.kubernetes.io/component: controller
       app.kubernetes.io/name: prometheus-operator
       app.kubernetes.io/version: v0.34.0
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+spec:
+  endpoints:
+    - port: http
+  selector:
+    matchLabels:
+      app: prometheus
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: grafana
+  labels:
+    app: grafana
+spec:
+  endpoints:
+    - port: http
+  selector:
+    matchLabels:
+      app: grafana

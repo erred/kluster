@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+      name: prometheus
+    spec:
+      containers:
+        - args:
+            - --web.console.templates=/etc/prometheus/consoles
+            - --web.console.libraries=/etc/prometheus/console_libraries
+            - --config.file=/etc/prometheus/config_out/prometheus.env.yaml
+            - --storage.tsdb.path=/prometheus
+            - --storage.tsdb.retention.time=15d
+            - --web.enable-lifecycle
+            - --storage.tsdb.no-lockfile
+            - --web.route-prefix=/
+          image: prom/prometheus
+          livenessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /-/healthy
+              port: web
+              scheme: HTTP
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          name: prometheus
+          ports:
+            - containerPort: 9090
+              name: http
+          readinessProbe:
+            failureThreshold: 120
+            httpGet:
+              path: /-/ready
+              port: web
+              scheme: HTTP
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          volumeMounts:
+            - mountPath: /etc/prometheus/config_out
+              name: config-out
+              readOnly: true
+            - mountPath: /etc/prometheus/certs
+              name: tls-assets
+              readOnly: true
+            - mountPath: /prometheus
+              name: prometheus-storage
+              subPath: prometheus-db
+            - mountPath: /etc/prometheus/rules/prometheus-prometheus-rulefiles-0
+              name: prometheus-prometheus-rulefiles-0
+      securityContext:
+        fsGroup: 0
+        runAsNonRoot: false
+        runAsUser: 0
+      serviceAccountName: prometheus
+      volumes:
+        - name: config
+          secret:
+            defaultMode: 420
+            secretName: prometheus-prometheus
+        - name: tls-assets
+          secret:
+            defaultMode: 420
+            secretName: prometheus-prometheus-tls-assets
+        - emptyDir: {}
+          name: config-out
+        - configMap:
+            defaultMode: 420
+            name: prometheus-prometheus-rulefiles-0
+          name: prometheus-prometheus-rulefiles-0
+  volumeClaimTemplates:
+    - metadata:
+        creationTimestamp: null
+        name: prometheus-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        volumeMode: Filesystem
+      status:
+        phase: Pending

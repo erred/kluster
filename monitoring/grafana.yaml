@@ -21,6 +21,8 @@ spec:
       enabled: False
     auth.anonymous:
       enabled: True
+    metrics:
+      enabled: true
   dashboardLabelSelector:
     - matchExpressions:
         - key: app

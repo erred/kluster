@@ -7,3 +7,4 @@ resources:
   - grafana-role-binding.yaml
   - grafana-role.yaml
   - grafana-service-account.yaml
+  - grafana-service.yaml

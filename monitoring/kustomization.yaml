@@ -5,6 +5,7 @@ bases:
 resources:
   - namespace.yaml
   - prometheus.yaml
+  - prometheus-service-monitor.yaml
   - grafana.yaml
   - grafana-datasource.yaml
   - grafana-expose.yaml

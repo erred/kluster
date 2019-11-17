@@ -1,0 +1,6 @@
+namespace: monitor
+bases:
+  - grafana
+  - prometheus
+resources:
+  - namespace.yaml

@@ -8,7 +8,6 @@ metadata:
   name: prometheus-operator
   namespace: monitoring
 spec:
-  clusterIP: None
   ports:
     - name: http
       port: 8080

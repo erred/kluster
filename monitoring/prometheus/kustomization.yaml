@@ -8,6 +8,6 @@ resources:
   - prometheus-operator-crd-cluster-roles.yaml
   - prometheus-operator-deployment.yaml
   - prometheus-operator-service-account.yaml
-  - prometheus-operator-service-monitor.yaml
   - prometheus-operator-service.yaml
   - prometheus-service-account.yaml
+  - prometheus-service.yaml
