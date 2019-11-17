@@ -7,3 +7,4 @@ resources:
   - prometheus.yaml
   - grafana.yaml
   - grafana-datasource.yaml
+  - grafana-expose.yaml

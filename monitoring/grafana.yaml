@@ -4,9 +4,13 @@ metadata:
   name: grafana
 spec:
   config:
+    server:
+      root_url: https://dash.seankhliao.com
+      enable_gzip: true
+      router_logging: true
     log:
       mode: "console"
-      level: "warn"
+      level: "info"
     security:
       admin_user: "admin"
       admin_password: "supersecretpassword"
