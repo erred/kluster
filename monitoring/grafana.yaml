@@ -3,17 +3,13 @@ kind: Grafana
 metadata:
   name: grafana
 spec:
-  # service:
-  #   labels:
-  #     app: grafana
-  #   type: ClusterIP
   config:
     log:
       mode: "console"
       level: "warn"
     security:
-      admin_user: "root"
-      admin_password: "secret"
+      admin_user: "admin"
+      admin_password: "supersecretpassword"
     auth:
       disable_login_form: False
       disable_signout_menu: True
@@ -23,4 +19,7 @@ spec:
       enabled: True
   dashboardLabelSelector:
     - matchExpressions:
-        - { key: app, operator: In, values: [grafana] }
+        - key: app
+          operator: In
+          values:
+            - grafana

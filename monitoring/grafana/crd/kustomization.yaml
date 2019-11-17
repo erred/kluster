@@ -1,0 +1,4 @@
+resources:
+  - grafana-crd.yaml
+  - grafanadashboard-crd.yaml
+  - grafanadatasource-crd.yaml

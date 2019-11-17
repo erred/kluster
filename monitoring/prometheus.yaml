@@ -1,3 +1,4 @@
+# https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitorspec
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
@@ -9,6 +10,10 @@ spec:
   replicas: 1
   retention: 15d
   serviceAccountName: prometheus
+  service:
+    labels:
+      app: prometheus
+    type: ClusterIP
   # serviceMonitorNamespaceSelector:
   #   matchLabels:
   # podMonitorNamespaceSelector:
@@ -19,11 +24,11 @@ spec:
   #     - namespace: monitoring
   #       name: alertmanager
   #       port: web
+
   securityContext:
     runAsNonRoot: false
     runAsUser: 0
     fsGroup: 0
-
   storage:
     volumeClaimTemplate:
       metadata:
