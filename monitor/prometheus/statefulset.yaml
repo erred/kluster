@@ -9,29 +9,29 @@ spec:
   selector:
     matchLabels:
       app: prometheus
+  serviceName: prometheus
   template:
     metadata:
       labels:
         app: prometheus
+      annotations:
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "9090"
+        prometheus.io/scrape: "true"
       name: prometheus
     spec:
       containers:
         - args:
-            - --web.console.templates=/etc/prometheus/consoles
-            - --web.console.libraries=/etc/prometheus/console_libraries
-            - --config.file=/etc/prometheus/config_out/prometheus.env.yaml
+            - --config.file=/etc/prometheus/prometheus.yaml
             - --storage.tsdb.path=/prometheus
             - --storage.tsdb.retention.time=15d
-            - --web.enable-lifecycle
             - --storage.tsdb.no-lockfile
-            - --web.route-prefix=/
           image: prom/prometheus
           livenessProbe:
             failureThreshold: 6
             httpGet:
               path: /-/healthy
-              port: web
-              scheme: HTTP
+              port: http
             periodSeconds: 5
             successThreshold: 1
             timeoutSeconds: 3
@@ -43,46 +43,26 @@ spec:
             failureThreshold: 120
             httpGet:
               path: /-/ready
-              port: web
-              scheme: HTTP
+              port: http
             periodSeconds: 5
             successThreshold: 1
             timeoutSeconds: 3
           volumeMounts:
-            - mountPath: /etc/prometheus/config_out
-              name: config-out
-              readOnly: true
-            - mountPath: /etc/prometheus/certs
-              name: tls-assets
-              readOnly: true
+            - mountPath: /etc/prometheus
+              name: prometheus-config
             - mountPath: /prometheus
               name: prometheus-storage
-              subPath: prometheus-db
-            - mountPath: /etc/prometheus/rules/prometheus-prometheus-rulefiles-0
-              name: prometheus-prometheus-rulefiles-0
       securityContext:
         fsGroup: 0
         runAsNonRoot: false
         runAsUser: 0
       serviceAccountName: prometheus
       volumes:
-        - name: config
+        - name: prometheus-config
           secret:
-            defaultMode: 420
-            secretName: prometheus-prometheus
-        - name: tls-assets
-          secret:
-            defaultMode: 420
-            secretName: prometheus-prometheus-tls-assets
-        - emptyDir: {}
-          name: config-out
-        - configMap:
-            defaultMode: 420
-            name: prometheus-prometheus-rulefiles-0
-          name: prometheus-prometheus-rulefiles-0
+            secretName: prometheus-config
   volumeClaimTemplates:
     - metadata:
-        creationTimestamp: null
         name: prometheus-storage
       spec:
         accessModes:
@@ -90,6 +70,3 @@ spec:
         resources:
           requests:
             storage: 10Gi
-        volumeMode: Filesystem
-      status:
-        phase: Pending

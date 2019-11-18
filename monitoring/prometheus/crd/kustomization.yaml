@@ -1,6 +1,0 @@
-resources:
-  - alertmanager-crd.yaml
-  - podmonitor-crd.yaml
-  - prometheus-crd.yaml
-  - prometheusrule-crd.yaml
-  - servicemonitor-crd.yaml

@@ -9,9 +9,9 @@ KUBECTL=kubectl
 
 DEPLOYS := 	kube-system \
 			kube-system/coredns \
-			monitoring \
-			monitoring/grafana \
-			monitoring/prometheus \
+			monitor \
+			monitor/grafana \
+			monitor/prometheus \
 			ambassador \
 			ambassador/ambassador \
 			default \
