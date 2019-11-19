@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  default-timeout-minutes: "60"
+  default-service-account: tekton-runner
+kind: ConfigMap
+metadata:
+  name: config-defaults

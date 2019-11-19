@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  metrics.backend-destination: prometheus
+kind: ConfigMap
+metadata:
+  name: config-observability-triggers
+  namespace: tekton-pipelines

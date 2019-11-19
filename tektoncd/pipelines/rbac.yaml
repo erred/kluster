@@ -175,4 +175,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: tekton-pipelines-controller
-    namespace: tekton-pipelines
+    namespace: tektoncd

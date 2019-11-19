@@ -1,0 +1,12 @@
+commonLabels:
+  app: tekton-triggers
+bases:
+  - crd
+resources:
+  - config-logging-triggers.yaml
+  - config-observability-triggers.yaml
+  - deployment.yaml
+  - pod-security-policy.yaml
+  - rbac.yaml
+  - service-account.yaml
+  - service.yaml

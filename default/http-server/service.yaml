@@ -15,5 +15,6 @@ kind: Mapping
 metadata:
   name: http-server
 spec:
+  # host: api.seankhliao.com
   prefix: /
   service: http://http-server.default

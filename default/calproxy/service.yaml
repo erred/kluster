@@ -15,6 +15,7 @@ kind: Mapping
 metadata:
   name: calproxy
 spec:
+  host: api.seankhliao.com
   prefix: /calproxy
   rewrite: /calproxy
   timeout_ms: 30000

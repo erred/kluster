@@ -1,0 +1,8 @@
+namespace: tektoncd
+bases:
+  - pipelines
+  - triggers
+  - dashboard
+resources:
+  - namespace.yaml
+  - service-account.yaml
