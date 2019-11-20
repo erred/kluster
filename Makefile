@@ -58,9 +58,6 @@ workload-id-tekton-gcs:
   		--member "serviceAccount:com-seankhliao.svc.id.goog[tektoncd/tekton-gcs]" \
   		tekton-gcs@com-seankhliao.iam.gserviceaccount.com
 
-.PHONY: setup-githooks
-setup-githooks:
-	ln -sf ../../.githooks/pre-commit .git/hooks
 .PHONY: decrypt encrypt
 decrypt:
 	find . -name 'secret*.yaml.enc' -exec sh -c 'f={}; openssl enc -d -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $${f%.enc}' ';'
