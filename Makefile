@@ -61,4 +61,8 @@ workload-id-tekton-gcs:
 .PHONY: setup-githooks
 setup-githooks:
 	ln -sf ../../.githooks/pre-commit .git/hooks
-	ln -sf ../../.githooks/post-merge .git/hooks
+.PHONY: decrypt encrypt
+decrypt:
+	find . -name 'secret*.yaml.enc' -exec sh -c 'f={}; openssl enc -d -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $${f%.enc}' ';'
+encrypt:
+	find . -name 'secret*.yaml' -exec sh -c 'f={}; openssl enc -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $$f.enc' ';'
