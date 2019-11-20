@@ -8,15 +8,10 @@ GCLOUD=gcloud
 KUBECTL=kubectl
 
 DEPLOYS := 	kube-system \
-			kube-system/coredns \
 			monitor \
-			monitor/grafana \
-			monitor/prometheus \
+			tekton \
 			ambassador \
-			ambassador/ambassador \
-			default \
-			default/calproxy \
-			default/http-server
+			default
 
 .PHONY: $(DEPLOYS) create-cluster scale-kube-dns status
 $(DEPLOYS):
@@ -55,3 +50,10 @@ status:
 	$(KUBECTL) get --all-namespaces po,deploy,sts,ds,svc,mapping,ing
 	$(KUBECTL) top node
 	$(KUBECTL) top pod --all-namespaces
+
+.PHONY: workload-id-tekton-gcs
+workload-id-tekton-gcs:
+	gcloud iam service-accounts add-iam-policy-binding \
+  		--role roles/iam.workloadIdentityUser \
+  		--member "serviceAccount:com-seankhliao.svc.id.goog[tektoncd/tekton-gcs]" \
+  		tekton-gcs@com-seankhliao.iam.gserviceaccount.com
