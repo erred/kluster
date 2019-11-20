@@ -1,0 +1,7 @@
+namespace: cert-manager
+bases:
+  - cert-manager
+resources:
+  - namespace.yaml
+  - cluster-issuer.yaml
+  - certificate.yaml

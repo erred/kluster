@@ -1,0 +1,7 @@
+resources:
+  - certificaterequests.yaml
+  - certificates.yaml
+  - challenges.yaml
+  - clusterissuers.yaml
+  - issuers.yaml
+  - orders.yaml

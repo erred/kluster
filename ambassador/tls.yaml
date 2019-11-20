@@ -6,3 +6,13 @@ spec:
   hosts: ["*"]
   secret: cf-certs-tls-secret
   redirect_cleartext_from: 8080
+---
+apiVersion: getambassador.io/v1
+kind: TLSContext
+metadata:
+  name: le-tls
+spec:
+  hosts: ["*.seankhliao.com"]
+  # secret: cf-certs-tls-secret
+  secret: letsencrypt-cert.cert-manager
+  redirect_cleartext_from: 8080
