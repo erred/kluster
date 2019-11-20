@@ -57,3 +57,8 @@ workload-id-tekton-gcs:
   		--role roles/iam.workloadIdentityUser \
   		--member "serviceAccount:com-seankhliao.svc.id.goog[tektoncd/tekton-gcs]" \
   		tekton-gcs@com-seankhliao.iam.gserviceaccount.com
+
+.PHONY: setup-githooks
+setup-githooks:
+	ln -sf ../../.githooks/pre-commit .git/hooks
+	ln -sf ../../.githooks/post-merge .git/hooks

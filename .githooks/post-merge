@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+[[ -z $KLUSTER_ENCRYPT ]] && exit 1
+
+for f in $(find . -name '*.enc.yaml'); do
+    openssl enc -chacha20 -in $f -out ${f%.enc.yaml}.dec.yaml -pbkdf2 -k $KLUSTER_ENCRYPT
+done
