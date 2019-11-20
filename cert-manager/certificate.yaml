@@ -1,12 +1,26 @@
+# apiVersion: cert-manager.io/v1alpha2
+# kind: Certificate
+# metadata:
+#   name: le-cert
+# spec:
+#   secretName: le-cert
+#   issuerRef:
+#     name: le-issuer
+#     kind: ClusterIssuer
+#   commonName: "*.seankhliao.com"
+#   dnsNames:
+#     - api.seankhliao.com
+---
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: letsencrypt-cert
+  name: le-cert-staging
 spec:
-  secretName: letsencrypt-cert
+  secretName: le-cert-staging
   issuerRef:
-    name: letsencrypt-issuer
+    name: le-issuer-staging
     kind: ClusterIssuer
   commonName: "*.seankhliao.com"
   dnsNames:
+    - "*.seankhliao.com"
     - api.seankhliao.com

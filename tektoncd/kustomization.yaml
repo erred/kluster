@@ -6,3 +6,4 @@ bases:
 resources:
   - namespace.yaml
   - service-account.yaml
+  - tekton-gcs.dec.yaml

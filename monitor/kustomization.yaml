@@ -4,3 +4,5 @@ bases:
   - prometheus
 resources:
   - namespace.yaml
+  - grafana-config.dec.yaml
+  - prometheus-config.dec.yaml

@@ -5,3 +5,4 @@ resources:
   - namespace.yaml
   - cluster-issuer.yaml
   - certificate.yaml
+  - cloudflare.dec.yaml

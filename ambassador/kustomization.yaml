@@ -4,3 +4,4 @@ bases:
 resources:
   - namespace.yaml
   - tls.yaml
+  - cf-tls.dec.yaml
