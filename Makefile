@@ -7,11 +7,12 @@ NODES=2
 GCLOUD=gcloud
 KUBECTL=kubectl
 
-DEPLOYS := 	kube-system \
+DEPLOYS := 	ambassador \
+			cert-manager \
+			default \
+			kube-system \
 			monitor \
-			tekton \
-			ambassador \
-			default
+			tektoncd
 
 .PHONY: $(DEPLOYS) create-cluster scale-kube-dns status
 $(DEPLOYS):
