@@ -4,13 +4,11 @@ Config files for my k8s cluster on GKE
 
 [![License](https://img.shields.io/github/license/seankhliao/kluster.svg?style=for-the-badge&maxAge=31536000)](LICENSE)
 
-notes: run `make setup-githooks` (for auto encrypt)
-
 ## (Old) Clusters
 
 | Name          | Nodes                                                       | Notes                                                              |
 | ------------- | ----------------------------------------------------------- | ------------------------------------------------------------------ |
-| **cluster17** | 1x c-1-2G cosd                                              |                                                                    |
+| **cluster17** | 1x c-1-2G cosd                                              | kustomize is okay, i guess                                         |
 | cluster16     | 1x c-1-2G cosd preempt autoscaled 0-2 <br> 1x f1-micro cosd |                                                                    |
 | cluster15     |                                                             | lost to the sands of time                                          |
 | cluster13     | 1x c-1-2G cosd preempt autoscaled 0-3 <br> 1x f1-micro cosd |                                                                    |
