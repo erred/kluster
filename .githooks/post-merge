@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-[[ -z $KLUSTER_ENCRYPT ]] && exit 1
+nopass() {
+    echo KLUSTER_ENCRYPT not set
+    exit 1
+}
+[[ -z $KLUSTER_ENCRYPT ]] && nopass
 
 for f in $(find . -name '*.enc.yaml'); do
-    openssl enc -chacha20 -in $f -out ${f%.enc.yaml}.dec.yaml -pbkdf2 -k $KLUSTER_ENCRYPT
+    openssl enc -d -chacha20 -in $f -out ${f%.enc.yaml}.dec.yaml -pbkdf2 -k $KLUSTER_ENCRYPT
 done
