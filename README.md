@@ -4,7 +4,7 @@ Config files for my k8s cluster on GKE
 
 [![License](https://img.shields.io/github/license/seankhliao/kluster.svg?style=for-the-badge&maxAge=31536000)](LICENSE)
 
-notes: run `make setup-githooks`
+notes: run `make setup-githooks` (for auto encrypt)
 
 ## (Old) Clusters
 
