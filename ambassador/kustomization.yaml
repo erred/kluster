@@ -1,7 +1,0 @@
-namespace: ambassador
-bases:
-  - ambassador
-resources:
-  - namespace.yaml
-  - tls.yaml
-  - cf-tls.dec.yaml

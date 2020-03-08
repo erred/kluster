@@ -1,6 +1,0 @@
-namespace: kube-system
-bases:
-  - coredns
-resources:
-  - cert-manager-role-binding.yaml
-  - cert-manager-role.yaml

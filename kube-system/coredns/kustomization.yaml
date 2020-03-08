@@ -1,7 +1,0 @@
-commonLabels:
-  app: coredns
-resources:
-  - config.yaml
-  - deployment.yaml
-  - rbac.yaml
-  - service.yaml
