@@ -51,11 +51,11 @@ spec:
               containerPort: 9000
               protocol: TCP
             - name: http
-              containerPort: 8000
+              containerPort: 80
               protocol: TCP
               hostPort: 80
             - name: https
-              containerPort: 8443
+              containerPort: 443
               protocol: TCP
               hostPort: 443
           volumeMounts:

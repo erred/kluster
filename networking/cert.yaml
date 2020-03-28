@@ -10,5 +10,20 @@ spec:
     - api.seankhliao.com
     - "*.api.seankhliao.com"
   issuerRef:
-    name: le-staging-issuer
+    name: le-issuer
     kind: ClusterIssuer
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: TLSStore
+metadata:
+  name: default
+spec:
+  defaultCertificate:
+    secretName: api-seankhliao-com-tls
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: TLSOption
+metadata:
+  name: tlsoption
+spec:
+  minVersion: VersionTLS13

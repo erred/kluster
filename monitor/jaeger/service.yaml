@@ -1,3 +1,20 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jaeger
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`jaeger.api.seankhliao.com`)
+      services:
+        - kind: Service
+          name: jaeger-query
+          port: 80
+  tls:
+    secretName: api-seankhliao-com-tls
+---
 apiVersion: v1
 kind: Service
 metadata:

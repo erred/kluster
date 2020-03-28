@@ -1,3 +1,20 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tekton
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`tekton.api.seankhliao.com`)
+      services:
+        - kind: Service
+          name: tekton-dashboard
+          port: 80
+  tls:
+    secretName: api-seankhliao-com-tls
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +24,7 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 9097
+      port: 80
       protocol: TCP
       targetPort: 9097
   selector:

@@ -76,7 +76,7 @@ spec:
           image: "quay.io/jetstack/cert-manager-controller:v0.14.0"
           imagePullPolicy: IfNotPresent
           args:
-            - --v=2
+            - --v=1
             - --cluster-resource-namespace=$(POD_NAMESPACE)
             - --leader-election-namespace=kube-system
             - --webhook-namespace=$(POD_NAMESPACE)

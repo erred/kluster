@@ -50,7 +50,7 @@ data:
     tls:
       certificates:
         - certFile: /var/certificates/tls.crt
-          keyFile: /var/certficates/tls.key
+          keyFile: /var/certificates/tls.key
       options:
         default:
           minVersion: VersionTLS13

@@ -40,4 +40,4 @@ data:
       - name: Prometheus
         type: prometheus
         access: proxy
-        url: http://prometheus-server:9090
+        url: http://prometheus-server:80

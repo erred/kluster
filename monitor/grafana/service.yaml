@@ -1,3 +1,21 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`grafana.api.seankhliao.com`)
+      services:
+        - kind: Service
+          name: grafana
+          namespace: monitor
+          port: 80
+  tls:
+    secretName: api-seankhliao-com-tls
+---
 apiVersion: v1
 kind: Service
 metadata:
