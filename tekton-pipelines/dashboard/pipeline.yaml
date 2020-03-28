@@ -1,0 +1,70 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: pipeline0
+spec:
+  params:
+    - default: /workspace/git-source
+      description: The path to the resource files to apply
+      name: pathToResourceFiles
+      type: string
+    - default: .
+      description: The directory from which resources are to be applied
+      name: apply-directory
+      type: string
+    - default: tekton-pipelines
+      description: The namespace in which to create the resources being imported
+      name: target-namespace
+      type: string
+  resources:
+    - name: git-source
+      type: git
+  tasks:
+    - name: pipeline0-task
+      params:
+        - name: pathToResourceFiles
+          value: $(params.pathToResourceFiles)
+        - name: apply-directory
+          value: $(params.apply-directory)
+        - name: target-namespace
+          value: $(params.target-namespace)
+      resources:
+        inputs:
+          - name: git-source
+            resource: git-source
+      taskRef:
+        name: pipeline0-task
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: pipeline0-task
+spec:
+  inputs:
+    params:
+      - default: /workspace/git-source
+        description: The path to the resource files to apply
+        name: pathToResourceFiles
+        type: string
+      - default: .
+        description: The directory from which resources are to be applied
+        name: apply-directory
+        type: string
+      - default: tekton-pipelines
+        description: The namespace where created resources will go
+        name: target-namespace
+        type: string
+    resources:
+      - name: git-source
+        type: git
+  steps:
+    - args:
+        - apply
+        - -f
+        - $(inputs.params.pathToResourceFiles)/$(inputs.params.apply-directory)
+        - -n
+        - $(inputs.params.target-namespace)
+      command:
+        - kubectl
+      image: lachlanevenson/k8s-kubectl@sha256:429bf937e48c868caaf9525b88cf3a2f564ca59b43379e67a6b0747300b06a17
+      name: kubectl-apply

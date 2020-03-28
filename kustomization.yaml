@@ -1,0 +1,5 @@
+bases:
+  - cert-manager
+  - monitor
+  - networking
+  - tekton-pipelines

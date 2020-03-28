@@ -1,0 +1,6 @@
+namespace: tekton-pipelines
+bases:
+  - pipeline
+  - dashboard
+resources:
+  - namespace.yaml

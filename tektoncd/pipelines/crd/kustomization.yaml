@@ -1,9 +1,0 @@
-resources:
-  - clustertasks.yaml
-  - conditions.yaml
-  - knative.yaml
-  - pipelineresources.yaml
-  - pipelineruns.yaml
-  - pipelines.yaml
-  - tasks.yaml
-  - teskruns.yaml

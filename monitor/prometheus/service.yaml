@@ -1,14 +1,94 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: prometheus-kube-state-metrics
+  labels:
+    app: kube-state-metrics
+  annotations:
+    prometheus.io/scrape: "true"
+spec:
+  type: "ClusterIP"
+  ports:
+    - name: "http"
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: kube-state-metrics
+---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     component: "alertmanager"
+#     app: prometheus
+#     release: prometheus
+#     chart: prometheus-11.0.4
+#     heritage: Helm
+#   name: prometheus-alertmanager
+# spec:
+#   ports:
+#     - name: http
+#       port: 80
+#       protocol: TCP
+#       targetPort: 9093
+#   selector:
+#     component: "alertmanager"
+#     app: prometheus
+#     release: prometheus
+#   sessionAffinity: None
+#   type: "ClusterIP"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+  labels:
+    app: node-exporter
+  name: prometheus-node-exporter
+spec:
+  clusterIP: None
+  ports:
+    - name: metrics
+      port: 9100
+      protocol: TCP
+      targetPort: 9100
+  selector:
+    app: node-exporter
+  type: "ClusterIP"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/probe: pushgateway
+  labels:
+    app: pushgateway
+  name: prometheus-pushgateway
+spec:
+  ports:
+    - name: http
+      port: 9091
+      protocol: TCP
+      targetPort: 9091
+  selector:
+    app: pushgateway
+  type: "ClusterIP"
+---
+apiVersion: v1
+kind: Service
+metadata:
   labels:
     app: prometheus
-  name: prometheus
+  name: prometheus-server
 spec:
   ports:
     - name: http
       port: 80
-      targetPort: http
+      protocol: TCP
+      targetPort: 9090
   selector:
     app: prometheus
-  type: ClusterIP
+  sessionAffinity: None
+  type: "ClusterIP"

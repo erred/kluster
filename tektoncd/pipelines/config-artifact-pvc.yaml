@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config-artifact-pvc
-data:
-  null
-  # size: 5Gi
-  # storageClass: pd-standard

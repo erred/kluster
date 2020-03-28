@@ -1,7 +1,0 @@
-namespace: traefik
-resources:
-  - crd.yaml
-  - rbac.yaml
-  - namespace.yaml
-  - deploy.yaml
-  - secret-cloudflare.yaml

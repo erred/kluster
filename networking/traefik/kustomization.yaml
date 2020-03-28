@@ -1,7 +1,8 @@
+commonLabels:
+  app: traefik
 resources:
   - config.yaml
+  - crd.yaml
   - deployment.yaml
   - rbac.yaml
-  - secret.yaml
-  - security.yaml
   - service.yaml

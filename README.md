@@ -8,6 +8,7 @@ Config files for my k8s cluster on GKE
 
 | Name      | Nodes                                                   | Notes                                                              |
 | --------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
+| cluster19 | 1x e2-standard-2                                        |                                                                    |
 | cluster18 | 1x c-1-2G cosd                                          |
 | cluster17 | 1x c-1-2G cosd                                          | kustomize is okay, i guess                                         |
 | cluster16 | 1x c-1-2G cosd preempt scaled 0-2 <br> 1x f1-micro cosd |                                                                    |

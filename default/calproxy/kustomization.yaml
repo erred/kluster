@@ -1,6 +1,0 @@
-commonLabels:
-  app: calproxy
-resources:
-  - service.yaml
-  - deployment.yaml
-  - secret.dec.yaml

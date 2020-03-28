@@ -1,9 +1,0 @@
-commonLabels:
-  app: tekton-dashboard
-bases:
-  - crd
-resources:
-  - deployment.yaml
-  - rbac.yaml
-  - service-account.yaml
-  - service.yaml

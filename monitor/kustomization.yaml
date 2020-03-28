@@ -1,8 +1,9 @@
 namespace: monitor
 bases:
   - grafana
+  - jaeger
+  - loki
   - prometheus
+  - promtail
 resources:
   - namespace.yaml
-  - grafana-config.dec.yaml
-  - prometheus-config.dec.yaml

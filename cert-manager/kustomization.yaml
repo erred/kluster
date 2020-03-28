@@ -1,0 +1,8 @@
+# some resources are created in kube-system
+# namespace: cert-manager
+bases:
+  - cert-manager
+resources:
+  - namespace.yaml
+  - cluster-issuer.yaml
+  - secret-cloudflare.yaml

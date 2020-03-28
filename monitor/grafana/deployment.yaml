@@ -1,61 +1,73 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: grafana
   labels:
     app: grafana
-  name: grafana
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: grafana
+  strategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
         app: grafana
-      annotations:
-        prometheus.io/path: "/metrics"
-        prometheus.io/port: "3000"
-        prometheus.io/scrape: "true"
-      name: grafana
     spec:
+      serviceAccountName: grafana
+      securityContext:
+        fsGroup: 472
+        runAsUser: 472
       containers:
-        - args:
-            - -config=/etc/grafana/grafana.ini
-          image: grafana/grafana
+        - name: grafana
+          image: "grafana/grafana:6.7.1"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/grafana/grafana.ini"
+              subPath: grafana.ini
+            - name: datasources
+              mountPath: /etc/grafana/provisioning/datasources
+            - name: storage
+              mountPath: "/var/lib/grafana"
+          ports:
+            - name: service
+              containerPort: 80
+              protocol: TCP
+            - name: grafana
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: grafana
+                  key: admin-user
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana
+                  key: admin-password
           livenessProbe:
             failureThreshold: 10
             httpGet:
               path: /api/health
               port: 3000
-              scheme: HTTP
             initialDelaySeconds: 60
-            periodSeconds: 10
-            successThreshold: 1
             timeoutSeconds: 30
-          name: grafana
-          ports:
-            - containerPort: 3000
-              name: http
           readinessProbe:
-            failureThreshold: 10
             httpGet:
               path: /api/health
               port: 3000
-              scheme: HTTP
-            periodSeconds: 5
-            successThreshold: 1
-            timeoutSeconds: 3
-          volumeMounts:
-            - mountPath: /etc/grafana/
-              name: grafana-config
-            - mountPath: /etc/grafana/provisioning/datasources
-              name: grafana-datasource
-      serviceAccountName: grafana
+          resources: {}
       volumes:
-        - name: grafana-config
-          secret:
-            secretName: grafana-config
-        - name: grafana-datasource
-          secret:
-            secretName: grafana-datasource
+        - name: config
+          configMap:
+            name: grafana
+        - name: storage
+          emptyDir: {}
+        - name: datasources
+          configMap:
+            name: grafana-provisioning-datasources

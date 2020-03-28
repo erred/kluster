@@ -1,7 +1,9 @@
 resources:
   - config.yaml
+  - crd.yaml
   - deployment.yaml
   - rbac.yaml
-  - secret.yaml
+  - secret-kluster-tekton-sa.yaml
   - security.yaml
   - service.yaml
+  - webhook.yaml
