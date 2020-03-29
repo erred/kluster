@@ -38,6 +38,6 @@ create-cluster:
 
 .PHONY: decrypt encrypt
 decrypt:
-	find . -name 'secret*.yaml.enc' -exec sh -c 'f={}; openssl enc -d -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $${f%.enc}' ';'
+	find . -name 'secret*.enc' -exec sh -c 'f={}; openssl enc -d -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $${f%.enc}' ';'
 encrypt:
-	find . -name 'secret*.yaml' -exec sh -c 'f={}; openssl enc -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $$f.enc' ';'
+	find . -name 'secret*' -exec sh -c 'f={}; openssl enc -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $$f.enc' ';'

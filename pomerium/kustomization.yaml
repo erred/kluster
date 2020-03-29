@@ -1,5 +1,8 @@
 namespace: networking
 resources:
   - deployment.yaml
-  - secret-config.yaml
   - service.yaml
+secretGenerator:
+  - name: pomerium-config
+    files:
+      - config.yaml=secret-config.yaml

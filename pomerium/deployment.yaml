@@ -26,17 +26,6 @@ spec:
             - containerPort: 80
               name: https
               protocol: TCP
-          env:
-            - name: SHARED_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: pomerium-config
-                  key: shared-secret
-            - name: COOKIE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: pomerium-config
-                  key: cookie-secret
           readinessProbe:
             httpGet:
               path: /ping

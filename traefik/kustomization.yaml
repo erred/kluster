@@ -2,8 +2,11 @@ namespace: networking
 commonLabels:
   app: traefik
 resources:
-  - config.yaml
   - crd.yaml
   - deployment.yaml
   - rbac.yaml
   - service.yaml
+configMapGenerator:
+  - name: traefik-config
+    files:
+      - traefik.yaml

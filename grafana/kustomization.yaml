@@ -1,9 +1,15 @@
 namespace: monitor
 resources:
-  - config.yaml
   - deployment.yaml
   - rbac.yaml
-  - secret.yaml
   - security.yaml
   - service.yaml
   - volume.yaml
+configMapGenerator:
+  - name: grafana
+    files:
+      - grafana.ini
+  - name: grafana-provisioning-datasources
+    files:
+      - loki.yaml
+      - prometheus.yaml

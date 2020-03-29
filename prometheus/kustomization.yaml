@@ -1,8 +1,11 @@
 namespace: monitor
 resources:
-  - config.yaml
   - daemonset.yaml
   - deployment.yaml
   - rbac.yaml
   - service.yaml
   - volume.yaml
+configMapGenerator:
+  - name: prometheus-server
+    files:
+      - prometheus.yml

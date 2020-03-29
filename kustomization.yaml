@@ -12,4 +12,8 @@ bases:
 resources:
   - cluster-issuer.yaml
   - namespace.yaml
-  - secret-cloudflare.yaml
+secretGenerator:
+  - name: cloudflare
+    namespace: cert-manager
+    files:
+      - token=secret-cloudflare

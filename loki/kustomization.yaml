@@ -1,8 +1,11 @@
 namespace: monitor
 resources:
-  - config.yaml
   - rbac.yaml
   - security.yaml
   - service.yaml
   - statefulset.yaml
   - volume.yaml
+configMapGenerator:
+  - name: loki-config
+    files:
+      - loki.yaml

@@ -61,13 +61,7 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/traefik
-            # - name: certs
-            #   mountPath: /var/certificates
-            #   readOnly: true
       volumes:
         - name: config
           configMap:
-            name: traefik
-        # - name: certs
-        #   secret:
-        #     secretName: api-seankhliao-com-tls
+            name: traefik-config
