@@ -40,4 +40,5 @@ create-cluster:
 decrypt:
 	find . -name 'secret*.enc' -exec sh -c 'f={}; openssl enc -d -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $${f%.enc}' ';'
 encrypt:
+	find . -name 'secret*.enc' -delete
 	find . -name 'secret*' -exec sh -c 'f={}; openssl enc -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $$f.enc' ';'
