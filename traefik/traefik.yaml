@@ -14,8 +14,6 @@ entrypoints:
           permanent: true
   https:
     address: ":443"
-    # forwardedHeaders:
-    #   insecure: true
 providers:
   kubernetesCRD: {}
 metrics:

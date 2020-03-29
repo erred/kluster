@@ -2,6 +2,7 @@ namespace: networking
 commonLabels:
   app: traefik
 resources:
+  - cert.yaml
   - crd.yaml
   - deployment.yaml
   - rbac.yaml
