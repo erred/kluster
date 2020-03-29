@@ -1,6 +1,5 @@
+namespace: networking
 resources:
-  - crd.yaml
   - deployment.yaml
-  - rbac.yaml
+  - secret-config.yaml
   - service.yaml
-  - webhook.yaml

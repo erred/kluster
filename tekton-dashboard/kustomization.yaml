@@ -1,6 +1,7 @@
+namespace: tekton-pipelines
 resources:
   - crd.yaml
   - deployment.yaml
+  - pipeline.yaml
   - rbac.yaml
   - service.yaml
-  - webhook.yaml

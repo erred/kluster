@@ -1,0 +1,8 @@
+namespace: monitor
+resources:
+  - config.yaml
+  - rbac.yaml
+  - security.yaml
+  - service.yaml
+  - statefulset.yaml
+  - volume.yaml

@@ -1,5 +1,15 @@
 bases:
   - cert-manager
-  - monitor
-  - networking
-  - tekton-pipelines
+  - grafana
+  - jaeger
+  - loki
+  - pomerium
+  - prometheus
+  - promtail
+  - tekton-dashboard
+  - tekton-pipeline
+  - traefik
+resources:
+  - cluster-issuer.yaml
+  - namespace.yaml
+  - secret-cloudflare.yaml

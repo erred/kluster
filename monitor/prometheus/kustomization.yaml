@@ -1,7 +1,0 @@
-resources:
-  - config.yaml
-  - daemonset.yaml
-  - deployment.yaml
-  - rbac.yaml
-  - service.yaml
-  - volume.yaml

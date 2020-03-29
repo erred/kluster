@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik
+  labels:
+    app: traefik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: traefik
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9000"
+    spec:
+      serviceAccountName: traefik
+      terminationGracePeriodSeconds: 60
+      containers:
+        - image: traefik:2.2.0
+          name: traefik
+          resources:
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 9000
+            failureThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 9000
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          ports:
+            - name: traefik
+              containerPort: 9000
+              protocol: TCP
+            - name: http
+              containerPort: 80
+              protocol: TCP
+              hostPort: 80
+            - name: https
+              containerPort: 443
+              protocol: TCP
+              hostPort: 443
+          volumeMounts:
+            - name: config
+              mountPath: /etc/traefik
+            # - name: certs
+            #   mountPath: /var/certificates
+            #   readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: traefik
+        # - name: certs
+        #   secret:
+        #     secretName: api-seankhliao-com-tls

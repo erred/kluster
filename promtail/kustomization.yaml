@@ -1,0 +1,6 @@
+namespace: monitor
+resources:
+  - config.yaml
+  - daemonset.yaml
+  - rbac.yaml
+  - security.yaml

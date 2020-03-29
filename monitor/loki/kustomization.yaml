@@ -1,6 +1,0 @@
-resources:
-  - rbac.yaml
-  - secret.yaml
-  - security.yaml
-  - service.yaml
-  - statefulset.yaml

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pomerium
+  labels:
+    app: pomerium
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pomerium
+  template:
+    metadata:
+      labels:
+        app: pomerium
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      containers:
+        - image: pomerium/pomerium
+          name: pomerium
+          args:
+            - --config=/etc/pomerium/config.yaml
+          ports:
+            - containerPort: 80
+              name: https
+              protocol: TCP
+          env:
+            - name: SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pomerium-config
+                  key: shared-secret
+            - name: COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pomerium-config
+                  key: cookie-secret
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 80
+              scheme: HTTP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          volumeMounts:
+            - mountPath: /etc/pomerium/
+              name: config
+      volumes:
+        - name: config
+          secret:
+            secretName: pomerium-config

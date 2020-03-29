@@ -1,6 +1,0 @@
-namespace: networking
-bases:
-  - traefik
-resources:
-  - namespace.yaml
-  - cert.yaml

@@ -1,6 +1,0 @@
-resources:
-  - crd.yaml
-  - deployment.yaml
-  - rbac.yaml
-  - service.yaml
-  - webhook.yaml

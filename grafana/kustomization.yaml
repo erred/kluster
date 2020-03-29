@@ -1,0 +1,9 @@
+namespace: monitor
+resources:
+  - config.yaml
+  - deployment.yaml
+  - rbac.yaml
+  - secret.yaml
+  - security.yaml
+  - service.yaml
+  - volume.yaml
