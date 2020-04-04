@@ -6,7 +6,6 @@ resources:
   - crd.yaml
   - deployment.yaml
   - rbac.yaml
-  - service.yaml
 configMapGenerator:
   - name: traefik-config
     files:

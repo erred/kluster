@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jaeger
+  labels:
+    app: jaeger
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+  serviceName: jaeger
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: jaeger
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "16686"
+    spec:
+      containers:
+        - env:
+            - name: SPAN_STORAGE_TYPE
+              value: "badger"
+            - name: BADGER_EPHEMERAL
+              value: "false"
+            - name: BADGER_DIRECTORY_VALUE
+              value: /badger/data
+            - name: BADGER_DIRECTORY_KEY
+              value: /badger/key
+          image: jaegertracing/all-in-one
+          name: jaeger
+          args:
+            - --sampling.strategies-file=/config/sampling.json
+          ports:
+            - name: conf-sample
+              containerPort: 5778
+              protocol: TCP
+            - name: agent-compact
+              containerPort: 6831
+              protocol: UDP
+            - name: agent-bin
+              containerPort: 6832
+              protocol: UDP
+            - name: collect-bin
+              containerPort: 14268
+              protocol: TCP
+            - name: jaeger-ui
+              containerPort: 16686
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: 14269
+            initialDelaySeconds: 5
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: storage
+              mountPath: /badger
+      volumes:
+        - name: config
+          configMap:
+            name: jaeger-config
+        - name: storage
+          persistentVolumeClaim:
+            claimName: jaeger-storage

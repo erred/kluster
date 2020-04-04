@@ -7,7 +7,7 @@ spec:
     - https
   routes:
     - kind: Rule
-      match: Host(`tekton.api.seankhliao.com`)
+      match: Host(`tekton.seankhliao.com`)
       middlewares:
         - name: auth-tekton
       services:
@@ -22,7 +22,7 @@ metadata:
   name: auth-tekton
 spec:
   forwardAuth:
-    address: http://pomerium.networking.svc.cluster.local/?uri=https://tekton.api.seankhliao.com
+    address: http://pomerium.networking.svc.cluster.local/?uri=https://tekton.seankhliao.com
 ---
 apiVersion: v1
 kind: Service

@@ -10,7 +10,7 @@ create-cluster:
 	$(GCLOUD) config set compute/region $(REGION)
 	$(GCLOUD) config set compute/zone $(ZONE)
 	$(GCLOUD) beta container  \
-		--project "com-seankhliao" clusters create "cluster19"  \
+		--project "com-seankhliao" clusters create "cluster20"  \
 		--zone "us-central1-a"  \
 		--no-enable-basic-auth  \
 		--release-channel "rapid"  \

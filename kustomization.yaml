@@ -1,4 +1,5 @@
 bases:
+  - calproxy
   - cert-manager
   - grafana
   - jaeger
@@ -12,8 +13,4 @@ bases:
 resources:
   - cluster-issuer.yaml
   - namespace.yaml
-secretGenerator:
-  - name: cloudflare
-    namespace: cert-manager
-    files:
-      - token=secret-cloudflare
+  - secret-cloudflare.yaml

@@ -7,7 +7,7 @@ spec:
     - https
   routes:
     - kind: Rule
-      match: Host(`jaeger.api.seankhliao.com`)
+      match: Host(`jaeger.seankhliao.com`)
       middlewares:
         - name: auth-jaeger
       services:
@@ -22,7 +22,7 @@ metadata:
   name: auth-jaeger
 spec:
   forwardAuth:
-    address: http://pomerium.networking.svc.cluster.local/?uri=https://jaeger.api.seankhliao.com
+    address: http://pomerium.networking.svc.cluster.local/?uri=https://jaeger.seankhliao.com
 ---
 apiVersion: v1
 kind: Service
@@ -34,8 +34,8 @@ spec:
   ports:
     - name: query-http
       port: 80
+      targetPort: jaeger-ui
       protocol: TCP
-      targetPort: 16686
   selector:
     app: jaeger
   type: ClusterIP
@@ -43,67 +43,27 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: jaeger-collector
+  name: jaeger-ingest
   labels:
-    app: jaeger-collector
+    app: jaeger-ingest
 spec:
   ports:
-    - name: jaeger-collector-tchannel
-      port: 14267
+    - name: conf-sample
+      port: 5778
+      targetPort: conf-sample
       protocol: TCP
-      targetPort: 14267
-    - name: jaeger-collector-http
-      port: 14268
-      protocol: TCP
-      targetPort: 14268
-    - name: jaeger-collector-zipkin
-      port: 9411
-      protocol: TCP
-      targetPort: 9411
-  selector:
-    app: jaeger
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: jaeger-agent
-  labels:
-    app: jaeger-agent
-spec:
-  ports:
-    - name: agent-zipkin-thrift
-      port: 5775
-      protocol: UDP
-      targetPort: 5775
     - name: agent-compact
       port: 6831
+      targetPort: agent-compact
       protocol: UDP
-      targetPort: 6831
-    - name: agent-binary
+    - name: agent-bin
       port: 6832
+      targetPort: agent-bin
       protocol: UDP
-      targetPort: 6832
-    - name: agent-configs
-      port: 5778
+    - name: collect-bin
+      port: 14268
+      targetPort: collect-bin
       protocol: TCP
-      targetPort: 5778
-  clusterIP: None
   selector:
     app: jaeger
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: zipkin
-  labels:
-    app: jaeger-zipkin
-spec:
-  ports:
-    - name: jaeger-collector-zipkin
-      port: 9411
-      protocol: TCP
-      targetPort: 9411
-  clusterIP: None
-  selector:
-    app: jaeger
+  type: ClusterIP

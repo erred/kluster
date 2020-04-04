@@ -4,7 +4,7 @@ metadata:
   name: le-issuer
 spec:
   acme:
-    email: cluster19@seankhliao.com
+    email: cluster20@seankhliao.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: le-issuer-account

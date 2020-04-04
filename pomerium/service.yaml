@@ -7,7 +7,7 @@ spec:
     - https
   routes:
     - kind: Rule
-      match: Host(`auth.api.seankhliao.com`)
+      match: Host(`auth.seankhliao.com`)
       services:
         - kind: Service
           name: pomerium

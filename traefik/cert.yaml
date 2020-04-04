@@ -1,14 +1,13 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: api.seankhliao.com
+  name: le-default-cert
 spec:
-  secretName: api-seankhliao-com-tls
+  secretName: le-default-cert
   duration: 2160h
   renewBefore: 360h
   dnsNames:
-    - api.seankhliao.com
-    - "*.api.seankhliao.com"
+    - "*.seankhliao.com"
   issuerRef:
     name: le-issuer
     kind: ClusterIssuer
@@ -19,7 +18,7 @@ metadata:
   name: default
 spec:
   defaultCertificate:
-    secretName: api-seankhliao-com-tls
+    secretName: le-default-cert
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: TLSOption

@@ -1,0 +1,30 @@
+{
+  "service_strategies": [
+    {
+      "service": "traefik",
+      "operation_strategies": [
+        {
+          "operation": "forward ping@internal/ping@internal",
+          "type": "probabilistic",
+          "param": 0.0
+        }
+      ]
+    }
+  ],
+  "default_strategy": {
+    "type": "ratelimiting",
+    "param": 5,
+    "operation_strategies": [
+      {
+        "operation": "/health",
+        "type": "probabilistic",
+        "param": 0.0
+      },
+      {
+        "operation": "/metrics",
+        "type": "probabilistic",
+        "param": 0.0
+      }
+    ]
+  }
+}

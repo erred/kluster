@@ -31,7 +31,7 @@ spec:
           image: "quay.io/jetstack/cert-manager-cainjector:v0.14.0"
           imagePullPolicy: IfNotPresent
           args:
-            - --v=2
+            - --v=0
             - --leader-election-namespace=kube-system
           env:
             - name: POD_NAMESPACE
@@ -76,7 +76,7 @@ spec:
           image: "quay.io/jetstack/cert-manager-controller:v0.14.0"
           imagePullPolicy: IfNotPresent
           args:
-            - --v=1
+            - --v=0
             - --cluster-resource-namespace=$(POD_NAMESPACE)
             - --leader-election-namespace=kube-system
             - --webhook-namespace=$(POD_NAMESPACE)
@@ -126,7 +126,7 @@ spec:
           image: "quay.io/jetstack/cert-manager-webhook:v0.14.0"
           imagePullPolicy: IfNotPresent
           args:
-            - --v=2
+            - --v=0
             - --secure-port=10250
             - --tls-cert-file=/certs/tls.crt
             - --tls-private-key-file=/certs/tls.key

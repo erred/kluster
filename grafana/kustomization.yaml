@@ -4,7 +4,6 @@ resources:
   - rbac.yaml
   - security.yaml
   - service.yaml
-  - volume.yaml
 configMapGenerator:
   - name: grafana
     files:

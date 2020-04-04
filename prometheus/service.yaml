@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: prometheus-kube-state-metrics
+  name: kube-state-metrics
   labels:
     app: kube-state-metrics
   annotations:
@@ -58,23 +58,23 @@ spec:
     app: node-exporter
   type: "ClusterIP"
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    prometheus.io/probe: pushgateway
-  labels:
-    app: pushgateway
-  name: prometheus-pushgateway
-spec:
-  ports:
-    - name: http
-      port: 9091
-      protocol: TCP
-      targetPort: 9091
-  selector:
-    app: pushgateway
-  type: "ClusterIP"
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   annotations:
+#     prometheus.io/probe: pushgateway
+#   labels:
+#     app: pushgateway
+#   name: prometheus-pushgateway
+# spec:
+#   ports:
+#     - name: http
+#       port: 9091
+#       protocol: TCP
+#       targetPort: 9091
+#   selector:
+#     app: pushgateway
+#   type: "ClusterIP"
 ---
 apiVersion: v1
 kind: Service

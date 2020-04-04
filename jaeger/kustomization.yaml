@@ -1,4 +1,9 @@
 namespace: monitor
 resources:
-  - deployment.yaml
   - service.yaml
+  - statefulset.yaml
+  - volume.yaml
+configMapGenerator:
+  - name: jaeger-config
+    files:
+      - sampling.json

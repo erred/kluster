@@ -27,7 +27,6 @@ spec:
             - name: metrics
               containerPort: 9100
               hostPort: 9100
-          resources: {}
           volumeMounts:
             - name: proc
               mountPath: /host/proc

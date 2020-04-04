@@ -1,0 +1,30 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: calproxy
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`calproxy.seankhliao.com`)
+      services:
+        - kind: Service
+          name: calproxy
+          port: 80
+  tls: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: calproxy
+  labels:
+    app: calproxy
+spec:
+  type: ClusterIP
+  selector:
+    app: calproxy
+  ports:
+    - port: 80
+      targetPort: 80
