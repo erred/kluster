@@ -3,6 +3,7 @@
 Config files for my k8s cluster on GKE
 
 [![License](https://img.shields.io/github/license/seankhliao/kluster.svg?style=for-the-badge&maxAge=31536000)](LICENSE)
+![Version](https://img.shields.io/github/v/tag/seankhliao/com-seankhliao?sort=semver&style=flat-square)
 
 ## (Old) Clusters
 
