@@ -4,7 +4,7 @@ ZONE=$(REGION)-a
 
 GCLOUD=gcloud
 KUBECTL=kubectl
-
+.PHONY: *
 create-cluster:
 	$(GCLOUD) config set project $(PROJECT)
 	$(GCLOUD) config set compute/region $(REGION)
@@ -36,9 +36,11 @@ create-cluster:
 	$(KUBECTL) create clusterrolebinding cluster-admin-binding \
 		--clusterrole cluster-admin --user $$($(GCLOUD) config get-value account)
 
-# .PHONY: decrypt encrypt
-# decrypt:
-# 	find . -name 'secret*.enc' -exec sh -c 'f={}; openssl enc -d -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $${f%.enc}' ';'
-# encrypt:
-# 	find . -name 'secret*.enc' -delete
-# 	find . -name 'secret*' -exec sh -c 'f={}; openssl enc -chacha20 -pbkdf2 -k $$KLUSTER_ENCRYPT -in $$f -out $$f.enc' ';'
+PUBAGE=age14mg08panez45c6lj2cut2l8nqja0k5vm2vxmv5zvc4ufqgptgy2qcjfmuu
+PRIVAGE=$HOME/.ssh/age.key
+
+decrypt:
+	find . -name 'secret*.age' -exec sh -c 'age -d -i ${PRIVAGE} -o $${0%.age} {}' {} ';'
+encrypt:
+	find . -name 'secret*.age' -delete
+	find . -name 'secret*' -exec age -r ${PUBAGE} -o {}.age {} ';'
