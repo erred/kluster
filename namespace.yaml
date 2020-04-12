@@ -18,9 +18,9 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: networking
+  name: tekton-pipelines
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: tekton-pipelines
+  name: traefik

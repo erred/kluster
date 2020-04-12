@@ -5,29 +5,6 @@ metadata:
     app: grafana
   name: grafana
 ---
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  labels:
-    app: grafana
-  name: grafana-clusterrole
-rules: []
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: grafana-clusterrolebinding
-  labels:
-    app: grafana
-subjects:
-  - kind: ServiceAccount
-    name: grafana
-    namespace: monitor
-roleRef:
-  kind: ClusterRole
-  name: grafana-clusterrole
-  apiGroup: rbac.authorization.k8s.io
----
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:

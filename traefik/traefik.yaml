@@ -26,9 +26,3 @@ accessLog: {}
 api:
   insecure: true
   dashboard: true
-# tracing:
-#   jaeger:
-#     samplingServerURL: "http://jaeger-ingest.monitor.svc.cluster.local:5778/sampling"
-#     gen128Bit: true
-#     collector:
-#       Endpoint: "http://jaeger-ingest.monitor.svc.cluster.local:14268/api/traces"

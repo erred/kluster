@@ -4,14 +4,13 @@ metadata:
   name: traefik
 ---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: traefik
+  name: traefik-ingress-controller
 rules:
   - apiGroups:
       - ""
     resources:
-      - pods
       - services
       - endpoints
       - secrets
@@ -36,27 +35,28 @@ rules:
   - apiGroups:
       - traefik.containo.us
     resources:
+      - middlewares
       - ingressroutes
+      - traefikservices
       - ingressroutetcps
       - ingressrouteudps
-      - middlewares
       - tlsoptions
       - tlsstores
-      - traefikservices
     verbs:
       - get
       - list
       - watch
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  name: traefik
+  name: traefik-ingress-controller
+
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: traefik
+  name: traefik-ingress-controller
 subjects:
   - kind: ServiceAccount
-    name: traefik
-    namespace: networking
+    name: traefik-ingress-controller
+    namespace: traefik
