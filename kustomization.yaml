@@ -3,15 +3,14 @@ bases:
   - cert-manager
   - grafana
   - ipfs
-  - jaeger
-  # - loki
+  - kube-state-metrics
   - pomerium
-  # - prometheus
-  # - promtail
+  - prometheus
+  - statslogger
   - tekton-dashboard
   - tekton-pipeline
+  - tekton-triggers
   - traefik
+  - vanity
 resources:
-  - cluster-issuer.yaml
   - namespace.yaml
-  - secret-cloudflare.yaml

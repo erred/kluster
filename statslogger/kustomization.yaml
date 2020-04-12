@@ -1,9 +1,9 @@
 commonLabels:
-  app: calproxy
+  app: statslogger
 resources:
   - service.yaml
   - deployment.yaml
-  - secret.yaml
+  - volume.yaml
 images:
-  - name: gcr.io/com-seankhliao/calproxy
+  - name: gcr.io/com-seankhliao/statslogger
     newTag: v0.2.1

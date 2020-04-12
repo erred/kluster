@@ -2,11 +2,11 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: com-seankhliao-log
-  name: com-seankhliao-log
+    app: statslogger
+  name: statslogger
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: "2Gi"
+      storage: 5Gi

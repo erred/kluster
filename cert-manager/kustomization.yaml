@@ -1,6 +1,8 @@
 resources:
+  - cluster-issuer.yaml
   - crd.yaml
   - deployment.yaml
   - rbac.yaml
+  - secret.yaml
   - service.yaml
   - webhook.yaml

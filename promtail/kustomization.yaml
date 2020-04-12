@@ -1,9 +1,0 @@
-namespace: monitor
-resources:
-  - daemonset.yaml
-  - rbac.yaml
-  - security.yaml
-configMapGenerator:
-  - name: promtail
-    files:
-      - promtail.yaml

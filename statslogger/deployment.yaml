@@ -1,14 +1,14 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: com-seankhliao-log
+  name: statslogger
   labels:
-    app: com-seankhliao-log
+    app: statslogger
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: com-seankhliao-log
+      app: statslogger
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -16,14 +16,14 @@ spec:
   template:
     metadata:
       labels:
-        app: com-seankhliao-log
+        app: statslogger
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "80"
     spec:
       containers:
-        - name: com-seankhliao-log
-          image: gcr.io/com-seankhliao/com-seankhliao-log:v0.1.2
+        - name: statslogger
+          image: gcr.io/com-seankhliao/statslogger:latest
           args:
             - -addr=:80
           ports:
@@ -44,4 +44,4 @@ spec:
       volumes:
         - name: storage
           persistentVolumeClaim:
-            claimName: com-seankhliao-log
+            claimName: statslogger

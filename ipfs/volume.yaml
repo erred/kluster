@@ -3,10 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   labels:
     app: ipfs
-  name: ipfs-storage
+  name: ipfs
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: "5Gi"
+      storage: 10Gi

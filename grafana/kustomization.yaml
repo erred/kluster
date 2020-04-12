@@ -10,7 +10,9 @@ configMapGenerator:
   - name: grafana
     files:
       - grafana.ini
-  - name: grafana-provisioning-datasources
+  - name: grafana-datasources
     files:
-      - loki.yaml
       - prometheus.yaml
+images:
+  - name: grafana/grafana
+    newTag: 6.7.2

@@ -1,0 +1,9 @@
+namespace: monitor
+commonLabels:
+  app: node-exporter
+resources:
+  - daemonset.yaml
+  - rbac.yaml
+images:
+  - name: prom/node-exporter
+    newTag: v1.0.0-rc.0

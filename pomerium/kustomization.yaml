@@ -1,8 +1,14 @@
-namespace: networking
+namespace: auth
+commonLabels:
+  app: pomerium
 resources:
   - deployment.yaml
   - service.yaml
-secretGenerator:
-  - name: pomerium-config
+  - secret.yaml
+configMapGenerator:
+  - name: pomerium
     files:
-      - config.yaml=secret-config.yaml
+      - config.yaml
+images:
+  - name: pomerium/pomerium
+    newTag: v0.7.0

@@ -13,7 +13,6 @@ spec:
           name: calproxy
           port: 80
   tls: {}
-
 ---
 apiVersion: v1
 kind: Service

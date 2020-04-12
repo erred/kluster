@@ -3,7 +3,7 @@ kind: DaemonSet
 metadata:
   labels:
     app: node-exporter
-  name: prometheus-node-exporter
+  name: node-exporter
 spec:
   selector:
     matchLabels:
@@ -14,12 +14,14 @@ spec:
     metadata:
       labels:
         app: node-exporter
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9100"
     spec:
-      serviceAccountName: prometheus-node-exporter
+      serviceAccountName: node-exporter
       containers:
-        - name: prometheus-node-exporter
-          image: "prom/node-exporter:v0.18.1"
-          imagePullPolicy: "IfNotPresent"
+        - name: node-exporter
+          image: prom/node-exporter:latest
           args:
             - --path.procfs=/host/proc
             - --path.sysfs=/host/sys

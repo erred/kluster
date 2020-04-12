@@ -1,16 +1,16 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: com-seankhliao-log
+  name: statslogger
 spec:
   entryPoints:
     - https
   routes:
     - kind: Rule
-      match: Host(`log.seankhliao.com`)
+      match: Host(`statslogger.seankhliao.com`)
       services:
         - kind: Service
-          name: com-seankhliao-log
+          name: statslogger
           port: 80
   tls: {}
 
@@ -18,13 +18,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: com-seankhliao-log
+  name: statslogger
   labels:
-    app: com-seankhliao-log
+    app: statslogger
 spec:
   type: ClusterIP
   selector:
-    app: com-seankhliao-log
+    app: statslogger
   ports:
     - port: 80
       targetPort: 80

@@ -1,5 +1,9 @@
-# note: need a way to set Swarm.EnableAutoNATService
+commonLabels:
+  app: ipfs
 resources:
+  - deployment.yaml
   - service.yaml
-  - statefulset.yaml
   - volume.yaml
+images:
+  - name: ipfs/go-ipfs
+    newTag: v0.5.0-rc1

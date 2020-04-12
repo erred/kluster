@@ -1,0 +1,9 @@
+namespace: monitor
+commonLabels:
+  app: kube-state-metrics
+resources:
+  - deployment.yaml
+  - rbac.yaml
+images:
+  - name: bitnami/kube-state-metrics
+    newTag: 1.9.5

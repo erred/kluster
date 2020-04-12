@@ -18,30 +18,29 @@ spec:
         prometheus.io/port: "9090"
     spec:
       containers:
-        - image: pomerium/pomerium
+        - image: pomerium/pomerium:latest
           name: pomerium
+          envFrom:
+            - secretRef:
+                name: pomerium
           args:
             - --config=/etc/pomerium/config.yaml
           ports:
             - containerPort: 80
-              name: https
+              name: http
               protocol: TCP
           readinessProbe:
             httpGet:
               path: /ping
               port: 80
-              scheme: HTTP
           livenessProbe:
             httpGet:
               path: /ping
               port: 80
-              scheme: HTTP
-            initialDelaySeconds: 5
-            timeoutSeconds: 1
           volumeMounts:
             - mountPath: /etc/pomerium/
               name: config
       volumes:
         - name: config
-          secret:
-            secretName: pomerium-config
+          configMap:
+            name: pomerium

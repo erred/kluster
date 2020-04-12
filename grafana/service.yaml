@@ -24,7 +24,7 @@ metadata:
   name: auth-grafana
 spec:
   forwardAuth:
-    address: http://pomerium.networking.svc.cluster.local/?uri=https://grafana.seankhliao.com
+    address: http://pomerium.auth.svc/?uri=https://grafana.seankhliao.com
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -33,7 +33,7 @@ metadata:
 spec:
   headers:
     customRequestHeaders:
-      X-User-Email: cluster20-pomerium@seankhliao.com
+      X-User-Email: cluster21-pomerium@seankhliao.com
 ---
 apiVersion: v1
 kind: Service

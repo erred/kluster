@@ -1,12 +1,15 @@
 namespace: monitor
+commonLabels:
+  app: prometheus
 resources:
-  - daemonset.yaml
   - deployment.yaml
   - rbac.yaml
   - service.yaml
-  - statefulset.yaml
   - volume.yaml
 configMapGenerator:
   - name: prometheus-server
     files:
       - prometheus.yml
+images:
+  - name: prom/prometheus
+    newTag: v2.17.1

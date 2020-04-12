@@ -11,6 +11,9 @@ spec:
       app: grafana
   strategy:
     type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   template:
     metadata:
       labels:
@@ -25,42 +28,29 @@ spec:
         runAsUser: 472
       containers:
         - name: grafana
-          image: "grafana/grafana:6.7.1"
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: JAEGER_SAMPLER_MANAGER_HOST_PORT
-              value: jaeger-ingest:5778
-            - name: JAEGER_ENDPOINT
-              value: http://jaeger-ingest:14268/api/traces
-            - name: JAEGER_RPC_METRICS
-              value: "true"
-            - name: GF_INSTALL_PLUGINS
-              value: cloudflare-app,grafana-googlesheets-datasource,grafana-kubernetes-app,grafana-piechart-panel,grafana-worldmap-panel
-          volumeMounts:
-            - name: config
-              mountPath: "/etc/grafana/grafana.ini"
-              subPath: grafana.ini
-            - name: datasources
-              mountPath: /etc/grafana/provisioning/datasources
+          image: grafana/grafana:latest
           ports:
             - name: grafana
               containerPort: 3000
               protocol: TCP
           livenessProbe:
-            failureThreshold: 10
             httpGet:
               path: /api/health
               port: 3000
-            initialDelaySeconds: 60
-            timeoutSeconds: 30
           readinessProbe:
             httpGet:
               path: /api/health
               port: 3000
+          volumeMounts:
+            - name: config
+              mountPath: /etc/grafana/grafana.ini
+              subPath: grafana.ini
+            - name: datasources
+              mountPath: /etc/grafana/provisioning/datasources
       volumes:
         - name: config
           configMap:
             name: grafana
         - name: datasources
           configMap:
-            name: grafana-provisioning-datasources
+            name: grafana-datasources

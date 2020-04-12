@@ -22,7 +22,7 @@ metadata:
   name: auth-tekton
 spec:
   forwardAuth:
-    address: http://pomerium.networking.svc.cluster.local/?uri=https://tekton.seankhliao.com
+    address: http://pomerium.auth.svc/?uri=https://tekton.seankhliao.com
 ---
 apiVersion: v1
 kind: Service

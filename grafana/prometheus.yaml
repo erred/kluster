@@ -3,4 +3,4 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: http://prometheus-server:80
+    url: http://prometheus.monitor.svc:80

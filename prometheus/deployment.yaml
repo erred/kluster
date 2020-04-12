@@ -1,101 +1,60 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kube-state-metrics
   labels:
-    app: kube-state-metrics
+    app: prometheus
+  name: prometheus
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: kube-state-metrics
-  replicas: 1
+      app: prometheus
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   template:
     metadata:
       labels:
-        app: kube-state-metrics
+        app: prometheus
     spec:
-      serviceAccountName: prometheus-kube-state-metrics
-      securityContext:
-        fsGroup: 65534
-        runAsUser: 65534
+      serviceAccountName: prometheus
       containers:
-        - name: kube-state-metrics
+        - name: prometheus-server
+          image: prom/prometheus:latest
           args:
-            - --collectors=certificatesigningrequests
-            - --collectors=configmaps
-            - --collectors=cronjobs
-            - --collectors=daemonsets
-            - --collectors=deployments
-            - --collectors=endpoints
-            - --collectors=horizontalpodautoscalers
-            - --collectors=ingresses
-            - --collectors=jobs
-            - --collectors=limitranges
-            - --collectors=namespaces
-            - --collectors=nodes
-            - --collectors=persistentvolumeclaims
-            - --collectors=persistentvolumes
-            - --collectors=poddisruptionbudgets
-            - --collectors=pods
-            - --collectors=replicasets
-            - --collectors=replicationcontrollers
-            - --collectors=resourcequotas
-            - --collectors=secrets
-            - --collectors=services
-            - --collectors=statefulsets
-            - --collectors=storageclasses
-          imagePullPolicy: IfNotPresent
-          image: "quay.io/coreos/kube-state-metrics:v1.9.5"
+            - --storage.tsdb.retention.time=15d
+            - --config.file=/etc/config/prometheus.yml
+            - --storage.tsdb.path=/data
+            - --web.console.libraries=/etc/prometheus/console_libraries
+            - --web.console.templates=/etc/prometheus/consoles
+            - --web.enable-lifecycle
           ports:
-            - containerPort: 8080
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
+            - containerPort: 9090
           readinessProbe:
             httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 5
-            timeoutSeconds: 5
----
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   labels:
-#     app: pushgateway
-#   name: prometheus-pushgateway
-# spec:
-#   selector:
-#     matchLabels:
-#       app: pushgateway
-#   replicas: 1
-#   template:
-#     metadata:
-#       labels:
-#         app: pushgateway
-#     spec:
-#       serviceAccountName: prometheus-pushgateway
-#       containers:
-#         - name: prometheus-pushgateway
-#           image: "prom/pushgateway:v1.0.1"
-#           imagePullPolicy: "IfNotPresent"
-#           ports:
-#             - containerPort: 9091
-#           livenessProbe:
-#             httpGet:
-#               path: /-/healthy
-#               port: 9091
-#             initialDelaySeconds: 10
-#             timeoutSeconds: 10
-#           readinessProbe:
-#             httpGet:
-#               path: /-/ready
-#               port: 9091
-#             initialDelaySeconds: 10
-#             timeoutSeconds: 10
-#       securityContext:
-#         runAsNonRoot: true
-#         runAsUser: 65534
+              path: /-/ready
+              port: 9090
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: 9090
+          volumeMounts:
+            - name: config
+              mountPath: /etc/config
+            - name: storage
+              mountPath: /data
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus
+        - name: storage
+          persistentVolumeClaim:
+            claimName: prometheus

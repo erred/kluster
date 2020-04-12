@@ -2,180 +2,23 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app: kube-state-metrics
-  name: prometheus-kube-state-metrics
+    app: prometheus
+  name: prometheus
 ---
-# apiVersion: v1
-# kind: ServiceAccount
-# metadata:
-#   labels:
-#     app: prometheus
-#     component: "alertmanager"
-#   name: prometheus-alertmanager
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app: node-exporter
-  name: prometheus-node-exporter
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app: pushgateway
-  name: prometheus-pushgateway
----
-# Source: prometheus/templates/server-serviceaccount.yaml
-apiVersion: v1
-kind: ServiceAccount
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
 metadata:
   labels:
     app: prometheus
-  name: prometheus-server
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  labels:
-    app: kube-state-metrics
-  name: prometheus-kube-state-metrics
-rules:
-  - apiGroups: ["certificates.k8s.io"]
-    resources:
-      - certificatesigningrequests
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - configmaps
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["batch"]
-    resources:
-      - cronjobs
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["extensions", "apps"]
-    resources:
-      - daemonsets
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["extensions", "apps"]
-    resources:
-      - deployments
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - endpoints
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["autoscaling"]
-    resources:
-      - horizontalpodautoscalers
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["extensions", "networking.k8s.io"]
-    resources:
-      - ingresses
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["batch"]
-    resources:
-      - jobs
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - limitranges
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - namespaces
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - nodes
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - persistentvolumeclaims
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - persistentvolumes
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["policy"]
-    resources:
-      - poddisruptionbudgets
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - pods
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["extensions", "apps"]
-    resources:
-      - replicasets
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - replicationcontrollers
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - resourcequotas
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - secrets
-    verbs: ["list", "watch"]
-
-  - apiGroups: [""]
-    resources:
-      - services
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["apps"]
-    resources:
-      - statefulsets
-    verbs: ["list", "watch"]
-
-  - apiGroups: ["storage.k8s.io"]
-    resources:
-      - storageclasses
-    verbs: ["list", "watch"]
----
-# apiVersion: rbac.authorization.k8s.io/v1beta1
-# kind: ClusterRole
-# metadata:
-#   labels:
-#     component: "alertmanager"
-#     app: prometheus
-#     release: prometheus
-#     chart: prometheus-11.0.4
-#     heritage: Helm
-#   name: prometheus-alertmanager
-# rules: []
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  labels:
-    app: pushgateway
-  name: prometheus-pushgateway
-rules: []
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: monitor
 ---
 # Source: prometheus/templates/server-clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -183,7 +26,7 @@ kind: ClusterRole
 metadata:
   labels:
     app: prometheus
-  name: prometheus-server
+  name: prometheus
 rules:
   - apiGroups:
       - ""
@@ -213,67 +56,3 @@ rules:
       - "/metrics"
     verbs:
       - get
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app: kube-state-metrics
-  name: prometheus-kube-state-metrics
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: prometheus-kube-state-metrics
-subjects:
-  - kind: ServiceAccount
-    name: prometheus-kube-state-metrics
-    namespace: monitor
----
-# apiVersion: rbac.authorization.k8s.io/v1beta1
-# kind: ClusterRoleBinding
-# metadata:
-#   labels:
-#     component: "alertmanager"
-#     app: prometheus
-#     release: prometheus
-#     chart: prometheus-11.0.4
-#     heritage: Helm
-#   name: prometheus-alertmanager
-# subjects:
-#   - kind: ServiceAccount
-#     name: prometheus-alertmanager
-#     namespace: default
-# roleRef:
-#   apiGroup: rbac.authorization.k8s.io
-#   kind: ClusterRole
-#   name: prometheus-alertmanager
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app: pushgateway
-  name: prometheus-pushgateway
-subjects:
-  - kind: ServiceAccount
-    name: prometheus-pushgateway
-    namespace: monitor
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: prometheus-pushgateway
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app: prometheus
-  name: prometheus-server
-subjects:
-  - kind: ServiceAccount
-    name: prometheus-server
-    namespace: monitor
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: prometheus-server

@@ -1,9 +1,12 @@
 commonLabels:
-  app: com-seankhliao-go
+  app: vanity
 resources:
   - service.yaml
   - deployment.yaml
 configMapGenerator:
-  - name: com-seankhliao-go
+  - name: vanity
     files:
       - template.gohtml
+images:
+  - name: gcr.io/com-seankhliao/vanity
+    newTag: v0.2.1

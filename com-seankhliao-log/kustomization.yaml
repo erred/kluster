@@ -1,6 +1,0 @@
-commonLabels:
-  app: com-seankhliao-log
-resources:
-  - service.yaml
-  - deployment.yaml
-  - volume.yaml
