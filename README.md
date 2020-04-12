@@ -8,7 +8,7 @@ Config files for my k8s cluster on GKE
 
 | Name      | Nodes                                                   | Notes                                                              |
 | --------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
-| cluster20 | 1x e2-standard-2                                        | less monitoring, back to deployments                               |
+| cluster21 | 1x e2-standard-2                                        | less monitoring, back to deployments                               |
 | cluster20 | 1x e2-standard-2                                        | statefulsets for data                                              |
 | cluster19 | 1x e2-standard-2                                        | kustomize is rad                                                   |
 | cluster18 | 1x c-1-2G cosd                                          |                                                                    |
