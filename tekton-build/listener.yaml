@@ -1,0 +1,50 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tekton-builds
+spec:
+  entryPoints:
+    - https
+  tls: {}
+  routes:
+    - kind: Rule
+      match: Host(`tekton-builds.seankhliao.com`)
+      services:
+        - kind: Service
+          name: el-tekton-builds
+          port: 80
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: tekton-builds
+spec:
+  serviceAccountName: tekton-triggers-admin
+  triggers:
+    - name: ""
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github
+              secretKey: webhook
+            eventTypes:
+              - create # branch or tag
+              - push
+              - pull_request
+        - cel:
+            # body.repository.name
+            # body.repository.full_name
+            #
+            # create
+            # body.ref_type == branch|tag
+            # body.ref
+            # body.ref.matches("v*.*.*")
+            #
+            # push
+            # body.ref
+            # body.head
+            filter: body.repository.name == 'repo' && body.ref == 'refs/heads/master'
+      bindings:
+        - name: ""
+      template:
+        name: ""

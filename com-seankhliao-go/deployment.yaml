@@ -1,0 +1,48 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: com-seankhliao-go
+  labels:
+    app: com-seankhliao-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: com-seankhliao-go
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: com-seankhliao-go
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+    spec:
+      containers:
+        - name: com-seankhliao-go
+          image: gcr.io/com-seankhliao/com-seankhliao-go:v0.1.2
+          args:
+            - -addr=:80
+            - -tmpl=/data/template.gohtml
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+          volumeMounts:
+            - name: config
+              mountPath: /data
+      terminationGracePeriodSeconds: 300
+      volumes:
+        - name: config
+          configMap:
+            name: com-seankhliao-go

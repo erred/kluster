@@ -2,11 +2,12 @@ bases:
   - calproxy
   - cert-manager
   - grafana
+  - ipfs
   - jaeger
-  - loki
+  # - loki
   - pomerium
-  - prometheus
-  - promtail
+  # - prometheus
+  # - promtail
   - tekton-dashboard
   - tekton-pipeline
   - traefik

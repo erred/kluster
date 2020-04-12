@@ -1,0 +1,5 @@
+# note: need a way to set Swarm.EnableAutoNATService
+resources:
+  - service.yaml
+  - statefulset.yaml
+  - volume.yaml

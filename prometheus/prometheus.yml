@@ -1,6 +1,6 @@
 global:
   evaluation_interval: 1m
-  scrape_interval: 1m
+  scrape_interval: 10s
   scrape_timeout: 10s
 rule_files:
   - /etc/config/recording_rules.yml
@@ -12,10 +12,16 @@ scrape_configs:
     static_configs:
       - targets:
           - localhost:9090
-  - job_name: nevers
+  - job_name: hardware
     static_configs:
       - targets:
           - sne.seankhliao.com:9100
+        labels:
+          host: nevers
+      - targets:
+          - sne.seankhliao.com:9101
+        labels:
+          host: eevee
   - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
     job_name: kubernetes-apiservers
     kubernetes_sd_configs:

@@ -1,0 +1,30 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: com-seankhliao-go
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`go.seankhliao.com`)
+      services:
+        - kind: Service
+          name: com-seankhliao-go
+          port: 80
+  tls: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: com-seankhliao-go
+  labels:
+    app: com-seankhliao-go
+spec:
+  type: ClusterIP
+  selector:
+    app: com-seankhliao-go
+  ports:
+    - port: 80
+      targetPort: 80

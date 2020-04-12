@@ -25,12 +25,12 @@ spec:
         - name: calproxy
           image: gcr.io/com-seankhliao/calproxy:v0.2.1
           env:
-            - name: JAEGER_SAMPLER_MANAGER_HOST_PORT
-              value: jaeger-ingest.monitor.svc.cluster.local:5778
-            - name: JAEGER_ENDPOINT
-              value: http://jaeger-ingest.monitor.svc.cluster.local:14268/api/traces
-            - name: JAEGER_RPC_METRICS
-              value: "true"
+            # - name: JAEGER_SAMPLER_MANAGER_HOST_PORT
+            #   value: jaeger-ingest.monitor.svc.cluster.local:5778
+            # - name: JAEGER_ENDPOINT
+            #   value: http://jaeger-ingest.monitor.svc.cluster.local:14268/api/traces
+            # - name: JAEGER_RPC_METRICS
+            #   value: "true"
             - name: PORT
               value: "80"
           envFrom:

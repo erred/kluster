@@ -1,0 +1,47 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: com-seankhliao-log
+  labels:
+    app: com-seankhliao-log
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: com-seankhliao-log
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: com-seankhliao-log
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+    spec:
+      containers:
+        - name: com-seankhliao-log
+          image: gcr.io/com-seankhliao/com-seankhliao-log:v0.1.2
+          args:
+            - -addr=:80
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+          volumeMounts:
+            - name: storage
+              mountPath: /data
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: com-seankhliao-log

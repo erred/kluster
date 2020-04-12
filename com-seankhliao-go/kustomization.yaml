@@ -1,0 +1,9 @@
+commonLabels:
+  app: com-seankhliao-go
+resources:
+  - service.yaml
+  - deployment.yaml
+configMapGenerator:
+  - name: com-seankhliao-go
+    files:
+      - template.gohtml

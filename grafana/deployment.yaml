@@ -34,6 +34,8 @@ spec:
               value: http://jaeger-ingest:14268/api/traces
             - name: JAEGER_RPC_METRICS
               value: "true"
+            - name: GF_INSTALL_PLUGINS
+              value: cloudflare-app,grafana-googlesheets-datasource,grafana-kubernetes-app,grafana-piechart-panel,grafana-worldmap-panel
           volumeMounts:
             - name: config
               mountPath: "/etc/grafana/grafana.ini"

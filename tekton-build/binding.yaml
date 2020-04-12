@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: github-push
+spec:
+  params:
+    - name: repo
+      value: $(body.repository.name)
+    - name: repofull
+      value: $(body.repository.full_name)
+    - name: commit
+      value: $(body.head)
+---
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: github-tag
+spec:
+  params:
+    - name: repo
+      value: $(body.repository.name)
+    - name: repofull
+      value: $(body.repository.full_name)
+    - name: tag
+      value: $(body.ref)

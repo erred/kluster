@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: ipfs
+  name: ipfs
+spec:
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      app: ipfs
+  replicas: 1
+  serviceName: ipfs
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ipfs
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5001"
+        prometheus.io/path: "debug/metrics/prometheus"
+    spec:
+      containers:
+        - name: ipfs
+          image: "ipfs/go-ipfs:v0.4.23"
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: IPFS_PATH
+              value: /data
+            - name: IPFS_PROFILE
+              value: server
+          ports:
+            - name: swarm
+              containerPort: 4001
+            - name: api
+              containerPort: 5001
+            - name: gateway
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /debug/metrics/prometheus
+              port: api
+            initialDelaySeconds: 15
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /debug/metrics/prometheus
+              port: api
+            initialDelaySeconds: 15
+            periodSeconds: 3
+          volumeMounts:
+            - name: storage
+              mountPath: /data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: ipfs-storage
