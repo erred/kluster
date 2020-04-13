@@ -9,4 +9,4 @@ configMapGenerator:
       - template.gohtml
 images:
   - name: gcr.io/com-seankhliao/vanity
-    newTag: v0.2.1
+    newTag: v0.3.2

@@ -7,9 +7,6 @@ bases:
   - pomerium
   - prometheus
   - statslogger
-  - tekton-dashboard
-  - tekton-pipeline
-  - tekton-triggers
   - traefik
   - vanity
 resources:

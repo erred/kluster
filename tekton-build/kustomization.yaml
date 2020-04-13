@@ -1,9 +1,0 @@
-namespace: tekton-build
-resources:
-  # pipeline
-  # triggertemplate
-  # task
-  - binding.yaml
-  - listener.yaml
-  - namespace.yaml
-  - rbac.yaml

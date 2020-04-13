@@ -6,4 +6,4 @@ resources:
   - volume.yaml
 images:
   - name: gcr.io/com-seankhliao/statslogger
-    newTag: v0.2.1
+    newTag: v0.3.1
