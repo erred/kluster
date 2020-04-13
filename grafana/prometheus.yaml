@@ -4,3 +4,4 @@ datasources:
     type: prometheus
     access: proxy
     url: http://prometheus.monitor.svc:80
+    isDefault: true

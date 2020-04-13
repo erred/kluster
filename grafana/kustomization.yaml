@@ -10,9 +10,15 @@ configMapGenerator:
   - name: grafana
     files:
       - grafana.ini
-  - name: grafana-datasources
+  - name: grafana-provisioning-datasources
     files:
       - prometheus.yaml
+  - name: grafana-provisioning-dashboards
+    files:
+      - dashboards.yaml
+  - name: grafana-dashboards
+    files:
+      - glass.json
 images:
   - name: grafana/grafana
     newTag: 6.7.2

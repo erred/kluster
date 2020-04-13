@@ -1,0 +1,9 @@
+apiVersion: 1
+providers:
+  - name: "Provisioned Provider"
+    folder: "Provisioned"
+    type: "file"
+    editable: true
+    allowUIUpdates: true
+    options:
+      path: /etc/grafana/dashboards
