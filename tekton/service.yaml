@@ -1,0 +1,25 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tekton
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`tekton.seankhliao.com`)
+      middlewares:
+        - name: auth-tekton
+      services:
+        - kind: Service
+          name: tekton-dashboard
+          port: 9097
+  tls: {}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: auth-tekton
+spec:
+  forwardAuth:
+    address: http://pomerium.auth.svc/?uri=https://tekton.seankhliao.com

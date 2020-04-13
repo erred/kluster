@@ -5,6 +5,7 @@ resources:
   - cert.yaml
   - crd.yaml
   - deployment.yaml
+  - namespace.yaml
   - rbac.yaml
 configMapGenerator:
   - name: traefik

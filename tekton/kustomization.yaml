@@ -1,0 +1,7 @@
+namespace: tekton-pipelines
+resources:
+  - service.yaml
+  - tekton-dashboard-v0.6.1.yaml
+  - tekton-pipelines-v0.11.1.yaml
+  - tekton-triggers-v0.4.0.yaml
+  - tekton-webhooks-v0.6.1.yaml

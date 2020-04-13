@@ -2,6 +2,7 @@ resources:
   - cluster-issuer.yaml
   - crd.yaml
   - deployment.yaml
+  - namespace.yaml
   - rbac.yaml
   - secret.yaml
   - service.yaml
