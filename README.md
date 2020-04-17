@@ -9,6 +9,7 @@ Config files for my k8s cluster on GKE
 
 | Name      | Nodes                                                   | Notes                                                              |
 | --------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
+| cluster22 | 1x e2-standard-2                                        | 10GiB was not enough for kubelet/node                              |
 | cluster21 | 1x e2-standard-2                                        | less monitoring, back to deployments                               |
 | cluster20 | 1x e2-standard-2                                        | statefulsets for data                                              |
 | cluster19 | 1x e2-standard-2                                        | kustomize is rad                                                   |

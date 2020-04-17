@@ -22,4 +22,4 @@ metadata:
   name: auth-tekton
 spec:
   forwardAuth:
-    address: http://pomerium.auth.svc/?uri=https://tekton.seankhliao.com
+    address: http://pomerium.pomerium.svc/?uri=https://tekton.seankhliao.com

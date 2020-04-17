@@ -10,14 +10,14 @@ create-cluster:
 	$(GCLOUD) config set compute/region $(REGION)
 	$(GCLOUD) config set compute/zone $(ZONE)
 	$(GCLOUD) beta container  \
-		--project "com-seankhliao" clusters create "cluster21"  \
+		--project "com-seankhliao" clusters create "cluster22"  \
 		--zone "us-central1-a"  \
 		--no-enable-basic-auth  \
 		--release-channel "rapid"  \
 		--machine-type "e2-standard-2"  \
 		--image-type "COS"  \
 		--disk-type "pd-standard"  \
-		--disk-size "10"  \
+		--disk-size "40"  \
 		--metadata disable-legacy-endpoints=true  \
 		--service-account "kluster-compute@com-seankhliao.iam.gserviceaccount.com"  \
 		--num-nodes "1"  \

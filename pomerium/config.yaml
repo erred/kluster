@@ -3,7 +3,7 @@ grpc_insecure: true
 address: :80
 
 authenticate_service_url: https://auth.seankhliao.com
-forward_auth_url: http://pomerium.auth.svc
+forward_auth_url: http://pomerium.pomerium.svc
 
 metrics_address: ":9090"
 

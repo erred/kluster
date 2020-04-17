@@ -1,15 +1,17 @@
-namespace: auth
+namespace: pomerium
 commonLabels:
   app: pomerium
 resources:
-  - deployment.yaml
-  - namespace.yaml
-  - service.yaml
-  - secret.yaml
+- deployment.yaml
+- namespace.yaml
+- service.yaml
+- secret.yaml
 configMapGenerator:
-  - name: pomerium
-    files:
-      - config.yaml
+- files:
+  - config.yaml
+  name: pomerium
 images:
-  - name: pomerium/pomerium
-    newTag: v0.7.0
+- name: pomerium/pomerium
+  newTag: v0.7.0
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization

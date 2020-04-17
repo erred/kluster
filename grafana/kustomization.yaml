@@ -2,23 +2,23 @@ kind: Kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 namespace: monitor
 resources:
-  - deployment.yaml
-  - rbac.yaml
-  - security.yaml
-  - service.yaml
+- deployment.yaml
+- rbac.yaml
+- security.yaml
+- service.yaml
 configMapGenerator:
-  - name: grafana
-    files:
-      - grafana.ini
-  - name: grafana-provisioning-datasources
-    files:
-      - prometheus.yaml
-  - name: grafana-provisioning-dashboards
-    files:
-      - dashboards.yaml
-  - name: grafana-dashboards
-    files:
-      - glass.json
+- files:
+  - grafana.ini
+  name: grafana
+- files:
+  - prometheus.yaml
+  name: grafana-provisioning-datasources
+- files:
+  - dashboards.yaml
+  name: grafana-provisioning-dashboards
+- files:
+  - glass.json
+  name: grafana-dashboards
 images:
-  - name: grafana/grafana
-    newTag: 6.7.2
+- name: grafana/grafana
+  newTag: 6.7.2

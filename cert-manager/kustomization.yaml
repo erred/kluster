@@ -1,9 +1,11 @@
 resources:
-  - cluster-issuer.yaml
-  - crd.yaml
-  - deployment.yaml
-  - namespace.yaml
-  - rbac.yaml
-  - secret.yaml
-  - service.yaml
-  - webhook.yaml
+- cluster-issuer.yaml
+- crd.yaml
+- deployment.yaml
+- namespace.yaml
+- rbac.yaml
+- secret.yaml
+- service.yaml
+- webhook.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
