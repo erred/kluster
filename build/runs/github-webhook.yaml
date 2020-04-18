@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: create-webhook-4
+  namespace: build
+spec:
+  taskRef:
+    name: github-webhook
+  params:
+    - name: repo
+      value: testrepo-84

@@ -1,0 +1,44 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: git-clone
+spec:
+  workspaces:
+    - name: src
+      description: The git repo will be cloned onto the volume backing this workspace
+  params:
+    - name: url
+      description: git url to clone
+      type: string
+    - name: revision
+      description: git revision to checkout (branch, tag, sha, ref…)
+      type: string
+      default: master
+    - name: recurse
+      description: recurse into submodules
+      default: "true"
+    - name: depth
+      description: shallow clone
+      type: string
+      default: "1"
+  results:
+    - name: commit
+      description: The precise commit SHA that was fetched by this Task
+  steps:
+    - name: clone
+      image: gcr.io/cloud-builders/git
+      workingDir: $(workspaces.src.path)
+      script: |
+        #!/usr/bin/env bash
+        set -euxo pipefail
+
+        [[ $(params.recurse) == true ]] && recurse=--recurse-submodules=yes
+        [[ $(params.depth) != 0 ]] && depth=--depth=$(params.depth)
+
+        # bash rm annoyingly complains about . ..
+        rm -rf ..?* .[!.]* *
+        git init
+        git remote add origin $(params.url)
+        git fetch ${recurse} ${depth} origin $(params.revision)
+        git reset --hard FETCH_HEAD
+        git rev-parse HEAD > /tekton/results/commit
