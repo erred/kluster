@@ -12,6 +12,7 @@ resources:
   - binding-simple-container.yaml
   - pipeline-simple-container.yaml
   - trigger-calproxy.yaml
+  - trigger-ci.yaml
   - trigger-http-server.yaml
   - trigger-statslogger.yaml
   - trigger-vanity.yaml

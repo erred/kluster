@@ -22,6 +22,23 @@ metadata:
 spec:
   serviceAccountName: tekton-triggers-admin
   triggers:
+    - name: ci
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-webhook-token
+              secretKey: shared
+            eventTypes:
+        - cel:
+            filter: "header.match('X-GitHub-Event', 'push') && (body.repository.name.startsWith('ci-'))"
+            overlays:
+              - key: extensions.tag_name
+                expression: "body.head_commit.id"
+      bindings:
+        - name: simple-container
+      template:
+        name: calproxy
+    # simple containers
     - name: calproxy
       interceptors:
         - github:

@@ -1,0 +1,45 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: ci
+spec:
+  params:
+    - name: url
+      description: The git repository url
+    - name: revision
+      description: The git revision
+    - name: image
+      description: container image name
+    - name: registry
+      description: container registry
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: $(params.image)-$(uid)
+      spec:
+        serviceAccountName: build-bot
+        pipelineRef:
+          name: simple-container
+        params:
+          - name: url
+            value: $(params.url)
+          - name: revision
+            value: $(params.revision)
+          - name: image
+            value: $(params.registry)/$(params.image)
+        workspaces:
+          - name: src
+            persistentVolumeClaim:
+              claimName: ci
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ci
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
