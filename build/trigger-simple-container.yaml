@@ -24,12 +24,12 @@ spec:
     - name: revision
       description: The git revision
       default: master
-    # - name: registry
-    #   description: docker registry
-    #   default: docker.io
+    - name: registry
+      description: docker registry
+      default: us.gcr.io
     - name: repo
       description: docker repo in registry
-      default: seankhliao
+      default: com-seankhliao
     - name: image
       description: docker image name
   resourcetemplates:
@@ -47,7 +47,7 @@ spec:
           - name: revision
             value: $(params.revision)
           - name: image
-            value: $(params.repo)/$(params.image)
+            value: $(params.registry)/$(params.repo)/$(params.image)
         workspaces:
           - name: src
             persistentVolumeClaim:

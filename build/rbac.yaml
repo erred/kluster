@@ -5,6 +5,7 @@ metadata:
 secrets:
   - name: github-ssh
   - name: dockerhub-basic
+  - name: gcr-dockerconfigjson
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1

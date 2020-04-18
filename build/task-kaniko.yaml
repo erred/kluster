@@ -25,12 +25,12 @@ spec:
         - name: DOCKER_CONFIG
           value: /tekton/home/.docker
       args:
-        - --cache
         - --context=$(workspaces.src.path)/$(params.context)
         - --destination=$(params.image):$(params.tag)
         - --destination=$(params.image):latest
         - --dockerfile=$(params.dockerfile)
         - --reproducible
-        # - --single-snapshot
+        - --cleanup
+        - --single-snapshot
       # securityContext:
       #   runAsUser: 0
