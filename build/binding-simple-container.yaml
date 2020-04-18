@@ -7,10 +7,25 @@ spec:
     # https://developer.github.com/v3/activity/events/types/#pushevent
     - name: url
       value: $(body.repository.clone_url)
-      # value: $(body.repository.git_url)
     - name: revision
       value: $(body.extensions.tag_name)
     - name: image
       value: $(body.repository.name)
+    - name: registry
+      value: seankhliao
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: simple-container-cron
+spec:
+  params:
+    # https://developer.github.com/v3/activity/events/types/#pushevent
+    - name: url
+      value: $(body.url)
+    - name: revision
+      value: master
+    - name: image
+      value: $(body.name)
     - name: registry
       value: seankhliao

@@ -1,0 +1,43 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: ci-cron-firebase
+spec:
+  schedule: "0 0 */7 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: curl
+              image: curlimages/curl
+              args:
+                - -Lv
+                - -H
+                - "Content-Type: application/json"
+                - -d
+                - '{"url": "https://github.com/seankhliao/ci-firebase", "name":"ci-firebase"}'
+                - http://el-cron-el:8080
+          restartPolicy: Never
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: ci-cron-imagemagick
+spec:
+  schedule: "5 0 */7 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: curl
+              image: curlimages/curl
+              args:
+                - -Lv
+                - -H
+                - "Content-Type: application/json"
+                - -d
+                - '{"url": "https://github.com/seankhliao/ci-imagemagick", "name":"ci-imagemagick"}'
+                - http://el-cron-el:8080
+          restartPolicy: Never

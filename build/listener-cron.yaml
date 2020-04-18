@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: cron-el
+spec:
+  serviceAccountName: tekton-triggers-admin
+  triggers:
+    - name: ci
+      bindings:
+        - name: simple-container-cron
+      template:
+        name: ci

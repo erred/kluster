@@ -37,7 +37,7 @@ spec:
       bindings:
         - name: simple-container
       template:
-        name: calproxy
+        name: ci
     # simple containers
     - name: calproxy
       interceptors:

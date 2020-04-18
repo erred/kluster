@@ -7,7 +7,9 @@ resources:
   - rbac.yaml
   - secret.yaml
   # webhooks
-  - listener.yaml
+  - listener-external.yaml
+  - listener-cron.yaml
+  - cron.yaml
   # trigger: simple containers
   - binding-simple-container.yaml
   - pipeline-simple-container.yaml
