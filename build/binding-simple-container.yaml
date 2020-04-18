@@ -12,3 +12,5 @@ spec:
       value: $(body.extensions.tag_name)
     - name: image
       value: $(body.repository.name)
+    - name: registry
+      value: seankhliao

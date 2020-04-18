@@ -9,7 +9,9 @@ spec:
     - name: revision
       description: The git revision
     - name: image
-      description: docker image name
+      description: container image name
+    - name: registry
+      description: container registry
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -25,7 +27,7 @@ spec:
           - name: revision
             value: $(params.revision)
           - name: image
-            value: us.gcr.io/com-seankhliao/$(params.image)
+            value: $(params.registry)/$(params.image)
         workspaces:
           - name: src
             persistentVolumeClaim:
