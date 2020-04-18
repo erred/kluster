@@ -1,42 +1,20 @@
 apiVersion: triggers.tekton.dev/v1alpha1
-kind: TriggerBinding
-metadata:
-  name: github-push
-spec:
-  params:
-    # https://developer.github.com/v3/activity/events/types/#pushevent
-    - name: url
-      value: $(body.repository.clone_url)
-      # value: $(body.repository.git_url)
-    - name: revision
-      value: $(body.extensions.tag_name)
-    - name: image
-      value: $(body.repository.name)
----
-apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: simple-container
+  name: wggo
 spec:
   params:
     - name: url
       description: The git repository url
     - name: revision
       description: The git revision
-      default: master
-    - name: registry
-      description: docker registry
-      default: us.gcr.io
-    - name: repo
-      description: docker repo in registry
-      default: com-seankhliao
     - name: image
       description: docker image name
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        name: simple-container-el-run-$(uid)
+        name: $(params.image)-$(uid)
       spec:
         serviceAccountName: build-bot
         pipelineRef:
@@ -47,16 +25,16 @@ spec:
           - name: revision
             value: $(params.revision)
           - name: image
-            value: $(params.registry)/$(params.repo)/$(params.image)
+            value: us.gcr.io/com-seankhliao/$(params.image)
         workspaces:
           - name: src
             persistentVolumeClaim:
-              claimName: simple-container-el-run
+              claimName: wggo
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: simple-container-el-run
+  name: wggo
 spec:
   accessModes:
     - ReadWriteOnce

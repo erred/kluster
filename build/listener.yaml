@@ -22,7 +22,7 @@ metadata:
 spec:
   serviceAccountName: tekton-triggers-admin
   triggers:
-    - name: simple-container
+    - name: calproxy
       interceptors:
         - github:
             secretRef:
@@ -30,11 +30,91 @@ spec:
               secretKey: shared
             eventTypes:
         - cel:
-            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags')"
+            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'calproxy')"
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"
       bindings:
-        - name: github-push
+        - name: simple-container
       template:
-        name: simple-container
+        name: calproxy
+    - name: http-server
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-webhook-token
+              secretKey: shared
+            eventTypes:
+        - cel:
+            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'http-server')"
+            overlays:
+              - key: extensions.tag_name
+                expression: "split(body.ref, '/')[2]"
+      bindings:
+        - name: simple-container
+      template:
+        name: http-server
+    - name: statslogger
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-webhook-token
+              secretKey: shared
+            eventTypes:
+        - cel:
+            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'statslogger')"
+            overlays:
+              - key: extensions.tag_name
+                expression: "split(body.ref, '/')[2]"
+      bindings:
+        - name: simple-container
+      template:
+        name: statslogger
+    - name: vanity
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-webhook-token
+              secretKey: shared
+            eventTypes:
+        - cel:
+            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'vanity')"
+            overlays:
+              - key: extensions.tag_name
+                expression: "split(body.ref, '/')[2]"
+      bindings:
+        - name: simple-container
+      template:
+        name: vanity
+    - name: webstyle
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-webhook-token
+              secretKey: shared
+            eventTypes:
+        - cel:
+            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'webstyle')"
+            overlays:
+              - key: extensions.tag_name
+                expression: "split(body.ref, '/')[2]"
+      bindings:
+        - name: simple-container
+      template:
+        name: webstyle
+    - name: wggo
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-webhook-token
+              secretKey: shared
+            eventTypes:
+        - cel:
+            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'wggo')"
+            overlays:
+              - key: extensions.tag_name
+                expression: "split(body.ref, '/')[2]"
+      bindings:
+        - name: simple-container
+      template:
+        name: wggo

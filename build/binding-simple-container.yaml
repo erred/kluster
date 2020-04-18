@@ -1,0 +1,14 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: simple-container
+spec:
+  params:
+    # https://developer.github.com/v3/activity/events/types/#pushevent
+    - name: url
+      value: $(body.repository.clone_url)
+      # value: $(body.repository.git_url)
+    - name: revision
+      value: $(body.extensions.tag_name)
+    - name: image
+      value: $(body.repository.name)
