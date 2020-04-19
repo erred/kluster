@@ -19,7 +19,7 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        name: $(params.image)-$(params.mangledtag)
+        name: pr-$(params.image)-$(params.mangledtag)
       spec:
         serviceAccountName: build-bot
         pipelineRef:
