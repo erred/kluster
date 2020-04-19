@@ -16,7 +16,7 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        name: $(params.image)-$(uid)
+        name: $(params.image)-$(params.revision)
       spec:
         serviceAccountName: build-bot
         pipelineRef:

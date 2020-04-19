@@ -19,29 +19,27 @@ spec:
         app: statslogger
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "80"
+        prometheus.io/port: "8080"
     spec:
       containers:
         - name: statslogger
-          image: gcr.io/com-seankhliao/statslogger:latest
-          args:
-            - -addr=:80
+          image: seankhliao/statslogger:latest
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
           readinessProbe:
             httpGet:
               path: /health
-              port: 80
+              port: 8080
           livenessProbe:
             httpGet:
               path: /health
-              port: 80
+              port: 8080
           volumeMounts:
-            - name: storage
-              mountPath: /data
-      terminationGracePeriodSeconds: 30
+            - name: sa
+              mountPath: /var/secrets/google
       volumes:
-        - name: storage
-          persistentVolumeClaim:
-            claimName: statslogger
+        - name: sa
+          secret:
+            secretName: statslogger
+      terminationGracePeriodSeconds: 30

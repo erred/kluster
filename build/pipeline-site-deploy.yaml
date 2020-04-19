@@ -1,0 +1,54 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: com-seankhliao-deploy
+spec:
+  params:
+    - name: url
+      description: url of repo to clone
+    - name: revision
+      description: revision of repo to clone
+  workspaces:
+    - name: src
+  tasks:
+    - name: clone
+      taskRef:
+        name: git-clone
+      params:
+        - name: url
+          value: $(params.url)
+        - name: revision
+          value: $(params.revision)
+      workspaces:
+        - name: src
+          workspace: src
+    - name: render
+      taskRef:
+        name: webstyle
+      runAfter:
+        - clone
+      workspaces:
+        - name: src
+          workspace: src
+    - name: images
+      taskRef:
+        name: site-imagemagick
+      runAfter:
+        - clone
+      workspaces:
+        - name: src
+          workspaces: src
+    - name: upload
+      taskRef:
+        name: firebase-upload
+      runAfter:
+        - render
+        - images
+      workspaces:
+        - name: src
+          workspace: src
+    - name: flush-caches
+      taskRef:
+        name: cloudflare-cache
+      runAfter:
+        - upload
