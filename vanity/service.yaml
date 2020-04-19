@@ -11,7 +11,7 @@ spec:
       services:
         - kind: Service
           name: vanity
-          port: 80
+          port: 8080
   tls: {}
 
 ---
@@ -26,5 +26,5 @@ spec:
   selector:
     app: vanity
   ports:
-    - port: 80
-      targetPort: 80
+    - port: 8080
+      targetPort: 8080

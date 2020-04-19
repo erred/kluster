@@ -19,25 +19,25 @@ spec:
         app: calproxy
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "80"
+        prometheus.io/port: "8080"
     spec:
       containers:
         - name: calproxy
-          image: gcr.io/com-seankhliao/calproxy:latest
+          image: seankhliao/calproxy:latest
           env:
             - name: PORT
-              value: "80"
+              value: "8080"
           envFrom:
             - secretRef:
                 name: calproxy-config
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /ping
-              port: 80
+              path: /health
+              port: 8080
           livenessProbe:
             httpGet:
-              path: /ping
-              port: 80
+              path: /health
+              port: 8080

@@ -1,14 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 commonLabels:
   app: vanity
 resources:
-- service.yaml
-- deployment.yaml
-configMapGenerator:
-- files:
-  - template.gohtml
-  name: vanity
+  - service.yaml
+  - deployment.yaml
+# configMapGenerator:
+#   - files:
+#       - template.gohtml
+#     name: vanity
 images:
-- name: gcr.io/com-seankhliao/vanity
-  newTag: v0.3.2
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
+  - name: seankhliao/vanity
+    newTag: v0.3.7

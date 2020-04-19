@@ -34,6 +34,8 @@ spec:
             overlays:
               - key: extensions.tag_name
                 expression: "body.head_commit.id"
+              - key: extensions.mangledtag
+                expression: "truncate(body.head_commit.id, 7)"
       bindings:
         - name: simple-container
       template:
@@ -51,6 +53,8 @@ spec:
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"
+              - key: extensions.mangledtag
+                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
       bindings:
         - name: simple-container
       template:
@@ -67,6 +71,8 @@ spec:
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"
+              - key: extensions.mangledtag
+                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
       bindings:
         - name: simple-container
       template:
@@ -83,6 +89,8 @@ spec:
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"
+              - key: extensions.mangledtag
+                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
       bindings:
         - name: simple-container
       template:
@@ -99,6 +107,8 @@ spec:
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"
+              - key: extensions.mangledtag
+                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
       bindings:
         - name: simple-container
       template:
@@ -115,6 +125,8 @@ spec:
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"
+              - key: extensions.mangledtag
+                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
       bindings:
         - name: simple-container
       template:
@@ -131,6 +143,8 @@ spec:
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"
+              - key: extensions.mangledtag
+                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
       bindings:
         - name: simple-container
       template:

@@ -6,6 +6,11 @@ spec:
   serviceAccountName: tekton-triggers-admin
   triggers:
     - name: ci
+      interceptors:
+        - cel:
+            overlays:
+              - key: extensions.mangledtag
+                expression: "truncate(body.head_commit.id, 7)"
       bindings:
         - name: simple-container-cron
       template:

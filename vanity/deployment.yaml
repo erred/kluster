@@ -19,30 +19,29 @@ spec:
         app: vanity
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "80"
+        prometheus.io/port: "8080"
     spec:
       containers:
         - name: vanity
-          image: gcr.io/com-seankhliao/vanity:v0.1.2
-          args:
-            - -addr=:80
-            - -tmpl=/data/template.gohtml
+          image: seankhliao/vanity:latest
+          # args:
+          #   - -tmpl=/data/template.gohtml
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
           readinessProbe:
             httpGet:
               path: /health
-              port: 80
+              port: 8080
           livenessProbe:
             httpGet:
               path: /health
-              port: 80
-          volumeMounts:
-            - name: config
-              mountPath: /data
+              port: 8080
+          # volumeMounts:
+          #   - name: config
+          #     mountPath: /data
       terminationGracePeriodSeconds: 300
-      volumes:
-        - name: config
-          configMap:
-            name: vanity
+      # volumes:
+      #   - name: config
+      #     configMap:
+      #       name: vanity
