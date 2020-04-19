@@ -41,7 +41,7 @@ spec:
       template:
         name: ci
     # simple containers
-    - name: calproxy
+    - name: simple-container
       interceptors:
         - github:
             secretRef:
@@ -49,7 +49,7 @@ spec:
               secretKey: shared
             eventTypes:
         - cel:
-            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'calproxy')"
+            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name, ['calproxy', 'http-server', 'statslogger', 'vanity', 'webstyle', 'wggo'])"
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"
@@ -58,94 +58,4 @@ spec:
       bindings:
         - name: simple-container
       template:
-        name: calproxy
-    - name: http-server
-      interceptors:
-        - github:
-            secretRef:
-              secretName: github-webhook-token
-              secretKey: shared
-            eventTypes:
-        - cel:
-            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'http-server')"
-            overlays:
-              - key: extensions.tag_name
-                expression: "split(body.ref, '/')[2]"
-              - key: extensions.mangledtag
-                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
-      bindings:
-        - name: simple-container
-      template:
-        name: http-server
-    - name: statslogger
-      interceptors:
-        - github:
-            secretRef:
-              secretName: github-webhook-token
-              secretKey: shared
-            eventTypes:
-        - cel:
-            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'statslogger')"
-            overlays:
-              - key: extensions.tag_name
-                expression: "split(body.ref, '/')[2]"
-              - key: extensions.mangledtag
-                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
-      bindings:
-        - name: simple-container
-      template:
-        name: statslogger
-    - name: vanity
-      interceptors:
-        - github:
-            secretRef:
-              secretName: github-webhook-token
-              secretKey: shared
-            eventTypes:
-        - cel:
-            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'vanity')"
-            overlays:
-              - key: extensions.tag_name
-                expression: "split(body.ref, '/')[2]"
-              - key: extensions.mangledtag
-                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
-      bindings:
-        - name: simple-container
-      template:
-        name: vanity
-    - name: webstyle
-      interceptors:
-        - github:
-            secretRef:
-              secretName: github-webhook-token
-              secretKey: shared
-            eventTypes:
-        - cel:
-            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'webstyle')"
-            overlays:
-              - key: extensions.tag_name
-                expression: "split(body.ref, '/')[2]"
-              - key: extensions.mangledtag
-                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
-      bindings:
-        - name: simple-container
-      template:
-        name: webstyle
-    - name: wggo
-      interceptors:
-        - github:
-            secretRef:
-              secretName: github-webhook-token
-              secretKey: shared
-            eventTypes:
-        - cel:
-            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name == 'wggo')"
-            overlays:
-              - key: extensions.tag_name
-                expression: "split(body.ref, '/')[2]"
-              - key: extensions.mangledtag
-                expression: "split(split(body.ref, '/')[2], '.')[0]+'-'+split(split(body.ref, '/')[2], '.')[1]+'-'+split(split(body.ref, '/')[2], '.')[2]"
-      bindings:
-        - name: simple-container
-      template:
-        name: wggo
+        name: simple-container

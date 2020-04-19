@@ -13,13 +13,8 @@ resources:
   # trigger: simple containers
   - binding-simple-container.yaml
   - pipeline-simple-container.yaml
-  - trigger-calproxy.yaml
+  - trigger-simple-container.yaml
   - trigger-ci.yaml
-  - trigger-http-server.yaml
-  - trigger-statslogger.yaml
-  - trigger-vanity.yaml
-  - trigger-webstyle.yaml
-  - trigger-wggo.yaml
   # tasks
   - task-github-webhook.yaml
   - task-git-clone.yaml

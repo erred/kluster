@@ -1,7 +1,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: http-server
+  name: simple-container
 spec:
   params:
     - name: url
@@ -34,12 +34,12 @@ spec:
         workspaces:
           - name: src
             persistentVolumeClaim:
-              claimName: http-server
+              claimName: simple-container
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: http-server
+  name: simple-container
 spec:
   accessModes:
     - ReadWriteOnce
