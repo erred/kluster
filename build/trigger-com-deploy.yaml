@@ -18,13 +18,69 @@ spec:
         name: pr-com-seankhliao-$(params.mangledtag)
       spec:
         serviceAccountName: build-bot
-        pipelineRef:
-          name: com-deploy
-        params:
-          - name: url
-            value: $(params.url)
-          - name: revision
-            value: $(params.revision)
+        pipelineSpec:
+          workspaces:
+            - name: src
+          tasks:
+            - name: clone
+              taskRef:
+                name: git-clone
+              params:
+                - name: url
+                  value: $(params.url)
+                - name: revision
+                  value: $(params.revision)
+              workspaces:
+                - name: src
+                  workspace: src
+            - name: render-upload
+              taskSpec:
+                workspaces:
+                  - name: src
+                steps:
+                  - name: render
+                    image: seankhliao/webstyle
+                    workingDir: $(workspaces.src.path)
+                  - name: upload
+                    image: seankhliao/ci-firebase
+                    workingDir: $(workspaces.src.path)
+                    env:
+                      - name: FIREBASE_TOKEN
+                        valueFrom:
+                          secretKeyRef:
+                            name: firebase-token
+                            key: token
+                    args:
+                      - --project=com-seankhliao
+                      - deploy
+                      - --only=hosting
+              runAfter:
+                - clone
+              workspaces:
+                - name: src
+                  workspace: src
+
+            - name: flush-cache
+              taskRef:
+                name: cloudflare-cache-purge
+              taskSpec:
+                volumes:
+                  - name: cloudflare-secret
+                    secret:
+                      secretName: cloudflare-cache-token
+                steps:
+                  - name: purge
+                    image: curlimages/curl
+                    volumeMounts:
+                      - name: cloudflare-secret
+                        mountPath: /var/secrets
+                    script: |
+                      #!/bin/sh
+                      curl -X POST "https://api.cloudflare.com/client/v4/zones/$(cat /var/secrets/zone)/purge_cache" \
+                        -H "Authorization: Bearer $(cat /var/secrets/token)" \
+                        -H "Content-Type:application/json" \
+                        -d '{"files":["https://seankhliao.com/blog/", "https://seankhliao.com/like/", "https://seankhliao.com/ideas/"]}'
+
         workspaces:
           - name: src
             persistentVolumeClaim:

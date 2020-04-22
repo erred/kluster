@@ -8,7 +8,7 @@ spec:
       description: Root of code
   steps:
     - name: staticcheck
-      image: golang:$(params.version)
+      image: seankhliao/ci-staticcheck
       workingDir: $(workspaces.src.path)
       args:
         - -unused.whole-program
