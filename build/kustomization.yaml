@@ -15,9 +15,15 @@ resources:
   - pipeline-simple-container.yaml
   - trigger-simple-container.yaml
   - trigger-ci.yaml
+  # trigger: seankhliao.com deploy
+  - pipeline-com-deploy.yaml
+  - trigger-com-deploy.yaml
   # tasks
+  - task-cloudflare-cache.yaml
+  - task-firebase-upload.yaml
   - task-github-webhook.yaml
   - task-git-clone.yaml
   - task-go-build.yaml
   - task-go-test.yaml
   - task-kaniko.yaml
+  - task-webstyle.yaml

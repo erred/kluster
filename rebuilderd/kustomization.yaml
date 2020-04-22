@@ -1,11 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 commonLabels:
-  app: calproxy
+  app: rebuilderd
 resources:
   - deployment.yaml
-  - secret.yaml
-  - service.yaml
 images:
-  - name: seankhliao/calproxy
-    newTag: v0.4.5
+  - name: seankhliao/vanity
+    newTag: v0.2.0

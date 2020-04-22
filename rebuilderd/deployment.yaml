@@ -1,0 +1,23 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: rebuilderd
+  labels:
+    app: rebuilderd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rebuilderd
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: rebuilderd
+    spec:
+      containers:
+        - name: rebuilderd
+          image: seankhliao/rebuilderd:latest

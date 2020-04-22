@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: firebase-upload
+spec:
+  workspaces:
+    - name: src
+      description: repo is here
+  params:
+    - name: project
+      description: GCP / Firebase project
+      default: com-seankhliao
+    - name: secret
+      description: Secret with firebase token
+      default: firebase-token
+  steps:
+    - name: upload
+      image: seankhliao/ci-firebase
+      workingDir: $(workspaces.src.path)
+      env:
+        - name: FIREBASE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(params.secret)
+              key: token
+      args:
+        - --project=$(params.project)
+        - deploy
+        - --only=hosting

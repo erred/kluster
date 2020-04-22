@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: webstyle
+spec:
+  params:
+    - name: version
+      description: version of webstyle
+      default: latest
+  workspaces:
+    - name: src
+  steps:
+    - name: render
+      image: seankhliao/webstyle:$(params.version)
+      workingDir: $(workspaces.src.path)

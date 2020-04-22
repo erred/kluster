@@ -1,11 +1,12 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: com-seankhliao-deploy
+  name: com-deploy
 spec:
   params:
     - name: url
       description: url of repo to clone
+      default: https://github.com/seankhliao/com-seankhliao
     - name: revision
       description: revision of repo to clone
   workspaces:
@@ -30,25 +31,15 @@ spec:
       workspaces:
         - name: src
           workspace: src
-    - name: images
-      taskRef:
-        name: site-imagemagick
-      runAfter:
-        - clone
-      workspaces:
-        - name: src
-          workspaces: src
     - name: upload
       taskRef:
         name: firebase-upload
       runAfter:
         - render
-        - images
       workspaces:
         - name: src
           workspace: src
-    - name: flush-caches
+
+    - name: flush-cache
       taskRef:
-        name: cloudflare-cache
-      runAfter:
-        - upload
+        name: cloudflare-cache-purge

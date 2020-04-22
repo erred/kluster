@@ -9,6 +9,7 @@ resources:
   - kube-state-metrics
   - pomerium
   - prometheus
+  - rebuilderd
   - statslogger
   - tekton
   - traefik

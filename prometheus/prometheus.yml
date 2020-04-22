@@ -18,10 +18,6 @@ scrape_configs:
           - sne.seankhliao.com:9100
         labels:
           host: nevers
-      - targets:
-          - sne.seankhliao.com:9101
-        labels:
-          host: eevee
   - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
     job_name: kubernetes-apiservers
     kubernetes_sd_configs:
