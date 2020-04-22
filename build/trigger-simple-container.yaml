@@ -10,8 +10,6 @@ spec:
       description: The git revision
     - name: image
       description: container image name
-    - name: registry
-      description: container registry
     - name: mangledtag
       description: used in naming
       default: $(uid)
@@ -19,18 +17,37 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        name: pr-$(params.image)-$(params.mangledtag)
+        name: z-$(params.image)-$(params.mangledtag)
       spec:
         serviceAccountName: build-bot
-        pipelineRef:
-          name: simple-container
-        params:
-          - name: url
-            value: $(params.url)
-          - name: revision
-            value: $(params.revision)
-          - name: image
-            value: $(params.registry)/$(params.image)
+        pipelineSpec:
+          workspaces:
+            - name: src
+          tasks:
+            - name: clone
+              taskRef:
+                name: git-clone
+              params:
+                - name: url
+                  value: $(params.url)
+                - name: revision
+                  value: $(params.revision)
+              workspaces:
+                - name: src
+                  workspace: src
+            - name: build
+              taskRef:
+                name: kaniko
+              runAfter:
+                - clone
+              params:
+                - name: image
+                  value: seankhliao/$(params.image)
+                - name: tag
+                  value: $(params.revision)
+              workspaces:
+                - name: src
+                  workspace: src
         workspaces:
           - name: src
             persistentVolumeClaim:

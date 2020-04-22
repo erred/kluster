@@ -10,7 +10,6 @@ resources:
   - listener-external.yaml
   # trigger: simple containers
   - binding-simple-container.yaml
-  - pipeline-simple-container.yaml
   - trigger-simple-container.yaml
   # trigger: seankhliao.com deploy
   - trigger-com-deploy.yaml
