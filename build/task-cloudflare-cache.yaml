@@ -13,7 +13,7 @@ spec:
       default: cloudflare-cache-token
     - name: urls
       description: stringified json array of urls to purge
-      default: '["https://seankhliao.com/newtab/", "https://seankhliao.com/blog/"]'
+      default: '["https://seankhliao.com/blog/", "https://seankhliao.com/like/", "https://seankhliao.com/ideas/"]'
   steps:
     - name: purge
       image: curlimages/curl

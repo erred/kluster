@@ -24,6 +24,7 @@ resources:
   - task-github-webhook.yaml
   - task-git-clone.yaml
   - task-go-build.yaml
+  - task-go-staticcheck.yaml
   - task-go-test.yaml
   - task-kaniko.yaml
   - task-webstyle.yaml
