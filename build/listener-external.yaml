@@ -48,7 +48,7 @@ spec:
               secretKey: shared
             eventTypes:
         - cel:
-            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name in ['calproxy', 'http-server', 'rebuilderd', 'statslogger', 'vanity', 'webstyle', 'wggo'])"
+            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name in ['calproxy', 'http-server', 'statslogger', 'vanity', 'webstyle'])"
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"
