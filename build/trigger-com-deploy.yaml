@@ -61,8 +61,6 @@ spec:
                   workspace: src
 
             - name: flush-cache
-              taskRef:
-                name: cloudflare-cache-purge
               taskSpec:
                 volumes:
                   - name: cloudflare-secret
