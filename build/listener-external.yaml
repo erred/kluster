@@ -22,24 +22,6 @@ metadata:
 spec:
   serviceAccountName: tekton-triggers-admin
   triggers:
-    # - name: ci
-    #   interceptors:
-    #     - github:
-    #         secretRef:
-    #           secretName: github-webhook-token
-    #           secretKey: shared
-    #         eventTypes:
-    #     - cel:
-    #         filter: "header.match('X-GitHub-Event', 'push') && (body.repository.name.startsWith('ci-'))"
-    #         overlays:
-    #           - key: extensions.tag_name
-    #             expression: "body.head_commit.id"
-    #           - key: extensions.mangledtag
-    #             expression: "truncate(body.head_commit.id, 7)"
-    #   bindings:
-    #     - name: simple-container
-    #   template:
-    #     name: ci
     - name: simple-container
       interceptors:
         - github:
@@ -48,7 +30,7 @@ spec:
               secretKey: shared
             eventTypes:
         - cel:
-            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name in ['calproxy', 'http-server', 'statslogger', 'vanity', 'webstyle'])"
+            filter: "header.match('X-GitHub-Event', 'push') && (split(body.ref, '/')[1] == 'tags') && (body.repository.name in ['calproxy', 'goproxy', 'http-server', 'statslogger', 'vanity', 'webstyle'])"
             overlays:
               - key: extensions.tag_name
                 expression: "split(body.ref, '/')[2]"

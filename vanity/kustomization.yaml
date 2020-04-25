@@ -11,4 +11,4 @@ resources:
 #     name: vanity
 images:
   - name: seankhliao/vanity
-    newTag: v0.3.7
+    newTag: v0.3.8

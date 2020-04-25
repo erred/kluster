@@ -1,0 +1,30 @@
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: vanity
+# spec:
+#   entryPoints:
+#     - https
+#   routes:
+#     - kind: Rule
+#       match: Host(`goproxy.seankhliao.com`)
+#       services:
+#         - kind: Service
+#           name: goproxy
+#           port: 80
+#   tls: {}
+#
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: goproxy
+  labels:
+    app: goproxy
+spec:
+  type: ClusterIP
+  selector:
+    app: goproxy
+  ports:
+    - port: 80
+      targetPort: 8080
