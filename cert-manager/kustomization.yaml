@@ -1,11 +1,14 @@
-resources:
-- cluster-issuer.yaml
-- crd.yaml
-- deployment.yaml
-- namespace.yaml
-- rbac.yaml
-- secret.yaml
-- service.yaml
-- webhook.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+resources:
+  # curl -LO https://github.com/jetstack/cert-manager/releases/download/v1.0.1/cert-manager.yaml
+  - cert-manager.yaml
+  - secret.yaml
+  - cluster-issuer.yaml
+images:
+  - name: quay.io/jetstack/cert-manager-webhook
+    newTag: v1.0.1
+  - name: quay.io/jetstack/cert-manager-controller
+    newTag: v1.0.1
+  - name: quay.io/jetstack/cert-manager-cainjector
+    newTag: v1.0.1

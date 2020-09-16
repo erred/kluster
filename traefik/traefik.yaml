@@ -23,6 +23,6 @@ ping:
 log:
   level: ERROR
 accessLog: {}
-api:
-  insecure: true
-  dashboard: true
+# api:
+#   insecure: true
+#   dashboard: true

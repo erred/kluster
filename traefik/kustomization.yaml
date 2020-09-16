@@ -1,18 +1,16 @@
-namespace: traefik
-commonLabels:
-  app: traefik
-resources:
-- cert.yaml
-- crd.yaml
-- deployment.yaml
-- namespace.yaml
-- rbac.yaml
-configMapGenerator:
-- files:
-  - traefik.yaml
-  name: traefik
-images:
-- name: traefik
-  newTag: v2.2.0
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: traefik
+resources:
+  - cert.yaml
+  - crd.yaml
+  - daemonset.yaml
+  - namespace.yaml
+  - rbac.yaml
+configMapGenerator:
+  - name: traefik
+    files:
+      - traefik.yaml
+images:
+  - name: traefik
+    newTag: v2.2.11

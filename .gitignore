@@ -1,2 +1,4 @@
 secret*
 !secret*.age
+.terraform
+*tfstate*

@@ -1,16 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespace.yaml
-  - calproxy
+  # - namespace.yaml
+  # - calproxy
   - cert-manager
-  - grafana
-  - ipfs
-  - kube-state-metrics
-  - pomerium
-  - prometheus
-  - rebuilderd
-  - statslogger
-  - tekton
+  # - grafana
+  # - ipfs
+  # - kube-state-metrics
+  # - pomerium
+  # - prometheus
+  # - rebuilderd
+  # - statslogger
+  # - tekton
   - traefik
-  - vanity
+  # - vanity

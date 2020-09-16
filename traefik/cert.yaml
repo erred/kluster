@@ -1,4 +1,4 @@
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: seankhliao-com
@@ -10,7 +10,8 @@ spec:
     - "seankhliao.com"
     - "*.seankhliao.com"
   issuerRef:
-    name: le-issuer
+    name: letsencrypt-staging
+    # name: letsencrypt
     kind: ClusterIssuer
 ---
 apiVersion: traefik.containo.us/v1alpha1

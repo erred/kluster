@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: etcd
+  name: etcd
+spec:
+  podManagementPolicy: Parallel
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: etcd
+  serviceName: etcd-headless
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: etcd
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2381"
+    spec:
+      tolerations:
+        - key: stable
+          operator: Exists
+          effect: NoExecute
+      nodeSelector:
+        pool-type: stable
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+      serviceAccountName: etcd
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: etcd
+          image: bitnami/etcd:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - etcd
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: ETCD_NAME
+              value: "$(POD_NAME)"
+            - name: ETCD_DATA_DIR
+              value: "/etcd/data"
+            - name: ETCD_INITIAL_CLUSTER
+              value: "etcd-0=http://etcd-0.etcd-headless.default.svc.cluster.local:2380,etcd-1=http://etcd-1.etcd-headless.default.svc.cluster.local:2380,etcd-2=http://etcd-2.etcd-headless.default.svc.cluster.local:2380"
+            - name: ETCD_ADVERTISE_CLIENT_URLS
+              value: "http://$(POD_NAME).etcd-headless.default.svc.cluster.local:2379"
+            - name: ETCD_LISTEN_CLIENT_URLS
+              value: "http://0.0.0.0:2379"
+            - name: ETCD_INITIAL_ADVERTISE_PEER_URLS
+              value: "http://$(POD_NAME).etcd-headless.default.svc.cluster.local:2380"
+            - name: ETCD_LISTEN_PEER_URLS
+              value: "http://0.0.0.0:2380"
+            - name: ALLOW_NONE_AUTHENTICATION
+              value: "yes"
+            - name: ETCD_PEER_AUTO_TLS
+              value: "true"
+            - name: ETCD_ROOT_PASSWORD
+              value: "okmniuhbvgy"
+          ports:
+            - name: client
+              protocol: TCP
+              containerPort: 2379
+            - name: peer
+              protocol: TCP
+              containerPort: 2380
+            - name: metrics
+              protocol: TCP
+              containerPort: 2381
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 2381
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 2381
+          volumeMounts:
+            - name: etcd-data
+              mountPath: /etcd/data
+  volumeClaimTemplates:
+    - metadata:
+        name: etcd-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1G
