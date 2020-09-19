@@ -11,7 +11,7 @@ work around terraform not knowing how many instances are in a pool (for DNS)
 source ~/.ssh/clouddlare_key
 gcloud auth application-default login
 terraform init
-terraform apply -target google_container_node_pool.stable -target google_container_node_pool.preempt
+#  terraform apply -target google_container_node_pool.stable -target google_container_node_pool.preempt
 terraform apply
 ```
 
@@ -19,6 +19,7 @@ terraform apply
 
 | Name      | Nodes                                                | Notes                                                              |
 | --------- | ---------------------------------------------------- | ------------------------------------------------------------------ |
+| cluster24 | 1x e2-standard-2                                     | misnamed as cluster23                                              |
 | cluster23 | 3x e2-micro cosd / 0x e2-small preempt scaled 0-3    | 1.16/rapid nodes get stuck on ImagePull without error              |
 | cluster22 | 1x e2-standard-2                                     | 10GiB was not enough for kubelet/node                              |
 | cluster21 | 1x e2-standard-2                                     | less monitoring, back to deployments                               |

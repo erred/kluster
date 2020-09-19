@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-state-metrics
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-state-metrics
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kube-state-metrics
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+    spec:
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      serviceAccountName: kube-state-metrics
+      containers:
+        - name: kube-state-metrics
+          image: bitnami/kube-state-metrics:latest
+          args:
+            - --collectors=certificatesigningrequests
+            - --collectors=configmaps
+            - --collectors=cronjobs
+            - --collectors=daemonsets
+            - --collectors=deployments
+            - --collectors=endpoints
+            - --collectors=horizontalpodautoscalers
+            - --collectors=ingresses
+            - --collectors=jobs
+            - --collectors=limitranges
+            - --collectors=namespaces
+            - --collectors=nodes
+            - --collectors=persistentvolumeclaims
+            - --collectors=persistentvolumes
+            - --collectors=poddisruptionbudgets
+            - --collectors=pods
+            - --collectors=replicasets
+            - --collectors=replicationcontrollers
+            - --collectors=resourcequotas
+            - --collectors=secrets
+            - --collectors=services
+            - --collectors=statefulsets
+            - --collectors=storageclasses
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080

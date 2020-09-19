@@ -1,0 +1,72 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: httpbin
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`httpbin.seankhliao.com`)
+      middlewares:
+        - name: auth-httpbin
+        - name: auth-httpbin-email
+      services:
+        - kind: Service
+          name: httpbin
+          port: 80
+  tls: {}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: auth-httpbin
+spec:
+  forwardAuth:
+    address: http://pomerium.default.svc.cluster.local/?uri=https://httpbin.seankhliao.com
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: auth-httpbin-email
+spec:
+  headers:
+    customRequestHeaders:
+      X-User-Email: pomerium@seankhliao.com
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+  labels:
+    app: httpbin
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: httpbin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: httpbin
+        version: v1
+    spec:
+      containers:
+        - image: docker.io/kennethreitz/httpbin
+          imagePullPolicy: IfNotPresent
+          name: httpbin
+          ports:
+            - containerPort: 80

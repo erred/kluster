@@ -1,0 +1,31 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app.kubernetes.io/name: vanity
+  name: vanity
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`go.seankhliao.com`)
+      services:
+        - kind: Service
+          name: vanity
+          port: 80
+  tls: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: vanity
+  name: vanity
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: vanity
+  ports:
+    - port: 80
+      targetPort: 8080

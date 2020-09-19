@@ -11,6 +11,9 @@ configMapGenerator:
   - name: traefik
     files:
       - traefik.yaml
+  - name: internal-ca
+    files:
+      - ca.crt
 images:
   - name: traefik
     newTag: v2.2.11

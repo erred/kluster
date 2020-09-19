@@ -1,0 +1,38 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: pomerium
+  labels:
+    app.kubernetes.io/name: pomerium
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`auth.seankhliao.com`)
+      services:
+        - kind: Service
+          name: pomerium
+          port: 80
+    - kind: Rule
+      match: PathPrefix(`/.pomerium/`)
+      priority: 100
+      services:
+        - kind: Service
+          name: pomerium
+          port: 80
+  tls: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pomerium
+  labels:
+    app.kubernetes.io/name: pomerium
+spec:
+  ports:
+    - port: 80
+      targetPort: 8443
+  selector:
+    app.kubernetes.io/name: pomerium
+  type: ClusterIP

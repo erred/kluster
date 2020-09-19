@@ -26,3 +26,7 @@ accessLog: {}
 # api:
 #   insecure: true
 #   dashboard: true
+serversTransport:
+  # insecureSkipVerify: true
+  rootCAs:
+    - /etc/internal-ca/ca.crt

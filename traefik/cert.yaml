@@ -1,6 +1,21 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: seankhliao-com-staging
+spec:
+  secretName: seankhliao-com-staging
+  duration: 2160h
+  renewBefore: 360h
+  dnsNames:
+    - "seankhliao.com"
+    - "*.seankhliao.com"
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: seankhliao-com
 spec:
   secretName: seankhliao-com
@@ -10,8 +25,7 @@ spec:
     - "seankhliao.com"
     - "*.seankhliao.com"
   issuerRef:
-    name: letsencrypt-staging
-    # name: letsencrypt
+    name: letsencrypt
     kind: ClusterIssuer
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -20,6 +34,7 @@ metadata:
   name: default
 spec:
   defaultCertificate:
+    # secretName: seankhliao-com-staging
     secretName: seankhliao-com
 ---
 apiVersion: traefik.containo.us/v1alpha1

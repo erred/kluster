@@ -2,8 +2,8 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app.kubernetes.io/name: etcd
-  name: etcd
+    app.kubernetes.io/name: prometheus
+  name: prometheus
 ---
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
@@ -14,8 +14,8 @@ metadata:
     apparmor.security.beta.kubernetes.io/allowedProfileNames: "runtime/default"
     apparmor.security.beta.kubernetes.io/defaultProfileName: "runtime/default"
   labels:
-    app.kubernetes.io/name: etcd
-  name: etcd
+    app.kubernetes.io/name: prometheus
+  name: prometheus
 spec:
   # # user
   runAsGroup:
@@ -58,14 +58,68 @@ spec:
   # # filesystem
   readOnlyRootFilesystem: false
   volumes:
+    - configMap
     - persistentVolumeClaim
+    - secret
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: prometheus
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: default
+---
+# Source: prometheus/templates/server-clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: prometheus
+  name: prometheus
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/proxy
+      - nodes/metrics
+      - services
+      - endpoints
+      - pods
+      - ingresses
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "extensions"
+    resources:
+      - ingresses/status
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - nonResourceURLs:
+      - "/metrics"
+    verbs:
+      - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
-    app.kubernetes.io/name: etcd
-  name: etcd
+    app.kubernetes.io/name: prometheus
+  name: prometheus
 rules:
   - apiGroups:
       - policy
@@ -74,18 +128,18 @@ rules:
     verbs:
       - use
     resourceNames:
-      - etcd
+      - prometheus
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   labels:
-    app.kubernetes.io/name: etcd
-  name: etcd
+    app.kubernetes.io/name: prometheus
+  name: prometheus
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: etcd
+  name: prometheus
 subjects:
   - kind: ServiceAccount
-    name: etcd
+    name: prometheus

@@ -1,0 +1,32 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app.kubernetes.io/name: statslogger
+  name: statslogger
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`statslogger.seankhliao.com`)
+      services:
+        - kind: Service
+          name: statslogger
+          port: 80
+  tls: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: statslogger
+  name: statslogger
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: statslogger
+  ports:
+    - port: 80
+      targetPort: 8080

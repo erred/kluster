@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alpine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alpine
+  template:
+    metadata:
+      labels:
+        app: alpine
+      name: alpine
+    spec:
+      containers:
+        - name: alpine
+          image: alpine
+          command:
+            - sleep
+            - "2073600"
+          volumeMounts:
+            - mountPath: /var/secret/tls
+              name: tlscerts
+      volumes:
+        - name: tlscerts
+          secret:
+            secretName: http-server-internal
