@@ -1,8 +1,25 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
   name: alpine
 spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+  publishNotReadyAddresses: true
+  clusterIP: None
+  selector:
+    app: alpine
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: alpine
+  name: alpine
+spec:
+  serviceName: alpine
   replicas: 1
   selector:
     matchLabels:
@@ -19,10 +36,5 @@ spec:
           command:
             - sleep
             - "2073600"
-          volumeMounts:
-            - mountPath: /var/secret/tls
-              name: tlscerts
-      volumes:
-        - name: tlscerts
-          secret:
-            secretName: http-server-internal
+          ports:
+            - containerPort: 8080

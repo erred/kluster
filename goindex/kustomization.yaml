@@ -5,6 +5,4 @@ resources:
   - service.yaml
   - statefulset.yaml
 images:
-  - name: bitnami/etcd
-    newName: us.gcr.io/com-seankhliao/bitnami-etcd
-    newTag: 3.4.13
+  - name: us.gcr.io/com-seankhliao/goindex

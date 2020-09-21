@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: stream
+  name: stream
+spec:
+  replicas: 1
+  serviceName: stream-headless
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: stream
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+      labels:
+        app.kubernetes.io/name: stream
+    spec:
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      serviceAccountName: stream
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: stream
+          image: us.gcr.io/com-seankhliao/stream:latest
+          args:
+            - -http.addr=:8000
+            - -grpc.addr=:8080
+            - -sqlite=file:/stream/data/stream.sqlite
+          ports:
+            - name: http
+              containerPort: 8000
+            - name: grpc
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+          volumeMounts:
+            - name: stream-data
+              mountPath: /stream/data
+  volumeClaimTemplates:
+    - metadata:
+        name: stream-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1G

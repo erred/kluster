@@ -1,0 +1,47 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app.kubernetes.io/name: goindex
+  name: goindex
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`goindex.seankhliao.com`)
+      services:
+        - kind: Service
+          name: goindex
+          port: 80
+          scheme: h2c
+  tls: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: goindex
+  name: goindex
+spec:
+  selector:
+    app.kubernetes.io/name: goindex
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: goindex
+  name: goindex-headless
+spec:
+  selector:
+    app.kubernetes.io/name: goindex
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 80
+      targetPort: 8080

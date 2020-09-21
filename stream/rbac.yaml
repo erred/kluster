@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/name: stream
+  name: stream
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: "runtime/default"
+    seccomp.security.alpha.kubernetes.io/defaultProfileName: "runtime/default"
+    apparmor.security.beta.kubernetes.io/allowedProfileNames: "runtime/default"
+    apparmor.security.beta.kubernetes.io/defaultProfileName: "runtime/default"
+  labels:
+    app.kubernetes.io/name: stream
+  name: stream
+spec:
+  # # user
+  runAsGroup:
+    rule: "MustRunAs"
+    ranges:
+      - min: 1
+        max: 65535
+  runAsUser:
+    rule: "MustRunAsNonRoot"
+  fsGroup:
+    rule: "MustRunAs"
+    ranges:
+      - min: 1
+        max: 65535
+  supplementalGroups:
+    rule: "MustRunAs"
+    ranges:
+      - min: 1
+        max: 65535
+  # # privilege
+  privileged: false
+  allowPrivilegeEscalation: false
+  defaultAllowPrivilegeEscalation: false
+  # # host
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  hostPorts: []
+  # allowedHostPaths: []
+  # allowedProcMountTypes: []
+  # allowedUnsafeSysctls: []
+  # forbiddenSysctls: []
+  seLinux:
+    rule: "RunAsAny"
+  # # capabilities
+  # allowedCapabilities:
+  # defaultAddCapabilities:
+  requiredDropCapabilities:
+    - ALL
+  # # filesystem
+  readOnlyRootFilesystem: false
+  volumes:
+    - persistentVolumeClaim
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: stream
+  name: stream
+rules:
+  - apiGroups:
+      - policy
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
+    resourceNames:
+      - stream
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: stream
+  name: stream
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: stream
+subjects:
+  - kind: ServiceAccount
+    name: stream

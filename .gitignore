@@ -1,4 +1,3 @@
-secret*
-!secret*.age
-.terraform
-*tfstate*
+secret.yaml
+weechat/ssl/*
+!weechat/ssl/*.age
