@@ -10,10 +10,10 @@ resources:
 configMapGenerator:
   - name: traefik
     files:
-      - traefik.yaml
+      - config/traefik.yaml
   - name: internal-ca
     files:
-      - ca.crt
+      - config/ca.crt
 images:
   - name: traefik
     newTag: v2.2.11

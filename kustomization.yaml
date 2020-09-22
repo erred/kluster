@@ -5,17 +5,11 @@ resources:
   # manually manage cert-manager
   # - cert-manager
   - cockroachdb
-  - com-seankhliao
   - etcd
-  - ghdefaults
-  # - goindex
   - grafana
   - kube-state-metrics
   - node-exporter
   - pomerium
   - prometheus
-  - statslogger
-  - stream
   - traefik
-  - vanity
   - weechat

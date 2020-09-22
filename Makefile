@@ -5,7 +5,6 @@ FILES := \
 	_terraform/terraform.tfstate \
 	_terraform/terraform.tfstate.backup \
 	cert-manager/secret.yaml \
-	ghdefaults/secret.yaml \
 	pomerium/secret.yaml \
 	weechat/ssl/relay.pem \
 	weechat/ssl/freenode.pem \
