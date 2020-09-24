@@ -7,6 +7,12 @@ Config files for my k8s cluster on GKE
 
 work around terraform not knowing how many instances are in a pool (for DNS)
 
+## secrets
+
+need filter setup, see [blog post](https://seankhliao.com/blog/2020-09-24-gitattributes-age-encrypt/)
+
+## terraform
+
 ```sh
 source ~/.ssh/clouddlare_key
 gcloud auth application-default login
