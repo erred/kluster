@@ -54,10 +54,8 @@ spec:
               value: "okmniuhbvgy"
           ports:
             - name: client
-              protocol: TCP
               containerPort: 2379
             - name: metrics
-              protocol: TCP
               containerPort: 2381
           livenessProbe:
             httpGet:

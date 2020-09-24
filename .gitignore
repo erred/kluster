@@ -1,3 +1,0 @@
-secret.yaml
-weechat/ssl/*
-!weechat/ssl/*.age

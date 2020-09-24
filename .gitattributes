@@ -1,0 +1,7 @@
+_terraform/terraform.tfstate  filter=ageencrypt
+_terraform/terraform.tfstate.backup  filter=ageencrypt
+cert-manager/secret.yaml  filter=ageencrypt
+pomerium/secret.yaml  filter=ageencrypt
+weechat/ssl/relay.pem  filter=ageencrypt
+weechat/ssl/freenode.pem  filter=ageencrypt
+weechat/ssl/relay.conf filter=ageencrypt
