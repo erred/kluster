@@ -5,18 +5,19 @@ resources:
   - rbac.yaml
   - service.yaml
 configMapGenerator:
-  - files:
+  - name: grafana
+    files:
       - config/grafana.ini
-    name: grafana
-  - files:
+  - name: grafana-provisioning-datasources
+    files:
       - config/prometheus.yaml
-    name: grafana-provisioning-datasources
-  - files:
+  - name: grafana-provisioning-dashboards
+    files:
       - config/dashboards.yaml
-    name: grafana-provisioning-dashboards
-  - files:
-      - config/glass.json
-    name: grafana-dashboards
+  - name: grafana-dashboards
+    files:
+      # - config/glass.json
+      - config/glassv2.json
 images:
   - name: grafana/grafana
     newTag: 7.1.5

@@ -22,3 +22,18 @@ spec:
   issuerRef:
     name: internal-ca
     kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cockroachdb-client-root
+spec:
+  secretName: cockroachdb-client-root
+  duration: 2160h
+  renewBefore: 360h
+  commonName: root
+  usages:
+    - client auth
+  issuerRef:
+    name: internal-ca
+    kind: ClusterIssuer

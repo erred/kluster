@@ -5,6 +5,8 @@ resources:
   - cert-manager.yaml
   - secret.yaml
   - cluster-issuer.yaml
+patchesStrategicMerge:
+  - namespace_disable_validation.yaml
 images:
   - name: quay.io/jetstack/cert-manager-webhook
     newTag: v1.0.1

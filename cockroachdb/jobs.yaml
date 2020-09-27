@@ -1,0 +1,115 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: saver-init-db
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: saver-init
+          image: cockroachdb/cockroach:latest
+          command:
+            - /bin/bash
+            - -ecx
+            - >
+              mkdir /certs-fixed &&
+              cp /certs/* /certs-fixed &&
+              chmod 0400 /certs-fixed/* &&
+              cockroach sql
+              --host cockroachdb:26257
+              --certs-dir /certs-fixed
+              -e 'CREATE DATABASE IF NOT EXISTS saver;'
+              -e 'CREATE USER IF NOT EXISTS saver;'
+              -e 'GRANT ALL ON DATABASE saver TO saver;'
+          volumeMounts:
+            - name: client-root
+              mountPath: /certs/ca.crt
+              subPath: ca.crt
+            - name: client-root
+              mountPath: /certs/client.root.crt
+              subPath: tls.crt
+            - name: client-root
+              mountPath: /certs/client.root.key
+              subPath: tls.key
+      volumes:
+        - name: client-root
+          secret:
+            secretName: cockroachdb-client-root
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: iglog-init-db
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: iglog-init
+          image: cockroachdb/cockroach:latest
+          command:
+            - /bin/bash
+            - -ecx
+            - >
+              mkdir /certs-fixed &&
+              cp /certs/* /certs-fixed &&
+              chmod 0400 /certs-fixed/* &&
+              cockroach sql
+              --host cockroachdb:26257
+              --certs-dir /certs-fixed
+              -e 'CREATE DATABASE IF NOT EXISTS iglog;'
+              -e 'CREATE USER IF NOT EXISTS iglog;'
+              -e 'GRANT ALL ON DATABASE iglog TO iglog;'
+          volumeMounts:
+            - name: client-root
+              mountPath: /certs/ca.crt
+              subPath: ca.crt
+            - name: client-root
+              mountPath: /certs/client.root.crt
+              subPath: tls.crt
+            - name: client-root
+              mountPath: /certs/client.root.key
+              subPath: tls.key
+      volumes:
+        - name: client-root
+          secret:
+            secretName: cockroachdb-client-root
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: iglog-reset-state
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: iglog-init
+          image: cockroachdb/cockroach:latest
+          command:
+            - /bin/bash
+            - -ecx
+            - >
+              mkdir /certs-fixed &&
+              cp /certs/* /certs-fixed &&
+              chmod 0400 /certs-fixed/* &&
+              cockroach sql
+              --host cockroachdb:26257
+              --certs-dir /certs-fixed
+              -e 'USE iglog;'
+              -e 'DELETE FROM goinsta WHERE id = 1'
+          volumeMounts:
+            - name: client-root
+              mountPath: /certs/ca.crt
+              subPath: ca.crt
+            - name: client-root
+              mountPath: /certs/client.root.crt
+              subPath: tls.crt
+            - name: client-root
+              mountPath: /certs/client.root.key
+              subPath: tls.key
+      volumes:
+        - name: client-root
+          secret:
+            secretName: cockroachdb-client-root
