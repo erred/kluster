@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 4,
   "links": [],
   "panels": [
     {
@@ -33,11 +33,18 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
-        "w": 12,
+        "h": 6,
+        "w": 11,
         "x": 0,
         "y": 0
       },
@@ -55,16 +62,18 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
       "percentage": false,
+      "pluginVersion": "7.1.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [
         {
           "alias": "Mem nevers",
+          "yaxis": 2
+        },
+        {
+          "alias": "Mem ",
           "yaxis": 2
         }
       ],
@@ -146,12 +155,19 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
+        "h": 6,
+        "w": 10,
+        "x": 11,
         "y": 0
       },
       "hiddenSeries": false,
@@ -168,10 +184,8 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
       "percentage": false,
+      "pluginVersion": "7.1.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -190,28 +204,16 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (host) (rate(node_network_transmit_bytes_total{device!~\"wg.*\"}[1m]))",
+          "expr": "sum by (host) (rate(node_network_transmit_bytes_total[1m]))",
           "interval": "",
           "legendFormat": "Send {{host}}",
           "refId": "A"
         },
         {
-          "expr": "- sum by (host) (rate(node_network_receive_bytes_total{device!~\"wg.*\"}[1m]))",
+          "expr": "- sum by (host) (rate(node_network_receive_bytes_total[1m]))",
           "interval": "",
           "legendFormat": "Recv {{host}}",
           "refId": "B"
-        },
-        {
-          "expr": "sum by (host) (rate(node_network_transmit_bytes_total{device=~\"wg.*\"}[1m]))",
-          "interval": "",
-          "legendFormat": "WG Send {{host}}",
-          "refId": "C"
-        },
-        {
-          "expr": "- sum by (host) (rate(node_network_receive_bytes_total{device=~\"wg.*\"}[1m]))",
-          "interval": "",
-          "legendFormat": "WG Recv {{host}}",
-          "refId": "D"
         }
       ],
       "thresholds": [],
@@ -257,92 +259,57 @@
       }
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "fill": 1,
-      "fillGradient": 0,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
       "gridPos": {
         "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 7
+        "w": 3,
+        "x": 21,
+        "y": 0
       },
-      "hiddenSeries": false,
-      "id": 18,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
+      "id": 14,
       "options": {
-        "dataLinks": []
+        "displayMode": "lcd",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
       },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      "pluginVersion": "7.1.5",
       "targets": [
         {
-          "expr": "vanity_module_requests",
+          "expr": "sum by (condition) (certmanager_certificate_ready_status)",
           "interval": "",
-          "legendFormat": "{{module}}",
+          "legendFormat": "{{condition}}",
           "refId": "A"
         }
       ],
-      "thresholds": [],
       "timeFrom": null,
-      "timeRegions": [],
       "timeShift": null,
-      "title": "Vanity",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "title": "Certificate Ready",
+      "type": "bargauge"
     },
     {
       "aliasColors": {},
@@ -350,57 +317,71 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 7
+        "h": 10,
+        "w": 11,
+        "x": 0,
+        "y": 6
       },
       "hiddenSeries": false,
-      "id": 20,
+      "id": 18,
       "legend": {
-        "avg": false,
+        "avg": true,
         "current": false,
         "max": false,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
       "percentage": false,
+      "pluginVersion": "7.1.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "calproxy_in_requests",
-          "interval": "",
-          "legendFormat": "{{status}}",
+          "expr": "sum by (app_kubernetes_io_name) (rate(process_cpu_seconds_total{job=\"kubernetes-pods\"}[1m]))",
+          "instant": false,
+          "interval": "1m",
+          "legendFormat": "{{app_kubernetes_io_name}}",
           "refId": "A"
+        },
+        {
+          "expr": "sum by (app_kubernetes_io_name) (rate(process_cpu_seconds_total{job=\"prometheus\"}[1m]))",
+          "hide": false,
+          "instant": false,
+          "interval": "1m",
+          "legendFormat": "prometheus",
+          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Calproxy",
+      "title": "Pod CPU",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
+      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -447,13 +428,20 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": []
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 12,
-        "y": 7
+        "h": 10,
+        "w": 10,
+        "x": 11,
+        "y": 6
       },
       "hiddenSeries": false,
       "id": 10,
@@ -469,10 +457,8 @@
       "lines": false,
       "linewidth": 1,
       "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
       "percentage": false,
+      "pluginVersion": "7.1.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -521,6 +507,7 @@
         "sort": 0,
         "value_type": "individual"
       },
+      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -553,62 +540,205 @@
       }
     },
     {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 3,
+        "x": 21,
+        "y": 6
+      },
+      "id": 8,
+      "links": [],
+      "options": {
+        "displayMode": "lcd",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["mean"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.1.5",
+      "targets": [
+        {
+          "expr": "prometheus_sd_discovered_targets",
+          "interval": "",
+          "legendFormat": "{{config}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Prometheus Targets",
+      "type": "bargauge"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 3,
+        "x": 21,
+        "y": 13
+      },
+      "id": 20,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.1.5",
+      "targets": [
+        {
+          "expr": "sum (statslogger_beacon_requests)",
+          "interval": "",
+          "legendFormat": "beacons",
+          "refId": "A"
+        },
+        {
+          "expr": "sum (statslogger_csp_requests)",
+          "interval": "",
+          "legendFormat": "csp",
+          "refId": "B"
+        },
+        {
+          "expr": "sum by (page) (seankhliao_com_page_requests)",
+          "interval": "",
+          "legendFormat": "{{page}}",
+          "refId": "C"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Counters",
+      "type": "bargauge"
+    },
+    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 6,
-        "w": 6,
+        "h": 8,
+        "w": 11,
         "x": 0,
-        "y": 13
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 16,
       "legend": {
-        "avg": false,
+        "avg": true,
         "current": false,
         "max": false,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
       "percentage": false,
+      "pluginVersion": "7.1.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "statslogger_trigger_count",
+          "expr": "sum by (app_kubernetes_io_name) (process_resident_memory_bytes{job=\"kubernetes-pods\"})",
           "interval": "",
-          "legendFormat": "{{trigger}}",
+          "legendFormat": "{{app_kubernetes_io_name}}",
           "refId": "A"
+        },
+        {
+          "expr": "sum by (app_kubernetes_io_name) (process_resident_memory_bytes{job=\"prometheus\"})",
+          "interval": "",
+          "legendFormat": "prometheus",
+          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Statslogger",
+      "title": "Pod RSS",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
+      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -619,7 +749,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "bytes",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -641,163 +771,112 @@
       }
     },
     {
-      "datasource": "Prometheus",
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 13
-      },
-      "id": 6,
-      "options": {
-        "colorMode": "value",
-        "fieldOptions": {
-          "calcs": ["mean"],
-          "defaults": {
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                }
-              ]
-            }
-          },
-          "overrides": [],
-          "values": false
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
         },
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto"
+        "overrides": []
       },
-      "pluginVersion": "6.7.2",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 10,
+        "x": 11,
+        "y": 16
+      },
+      "hiddenSeries": false,
+      "id": 22,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "7.1.5",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
       "targets": [
         {
-          "expr": "ipfs_p2p_peers_total",
+          "expr": "histogram_quantile(0.50, sum(rate(usvc_service_latency_s_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "{{transport}}",
+          "legendFormat": "50",
           "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "IPFS Peers",
-      "type": "stat"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "Prometheus",
-      "gridPos": {
-        "h": 6,
-        "w": 3,
-        "x": 12,
-        "y": 13
-      },
-      "id": 8,
-      "links": [],
-      "options": {
-        "displayMode": "lcd",
-        "fieldOptions": {
-          "calcs": ["mean"],
-          "defaults": {
-            "mappings": [
-              {
-                "id": 0,
-                "op": "=",
-                "text": "N/A",
-                "type": 1,
-                "value": "null"
-              }
-            ],
-            "nullValueMode": "connected",
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "none"
-          },
-          "overrides": [],
-          "values": false
         },
-        "orientation": "horizontal",
-        "showUnfilled": true
-      },
-      "pluginVersion": "6.7.2",
-      "targets": [
         {
-          "expr": "prometheus_sd_discovered_targets",
+          "expr": "histogram_quantile(0.90, sum(rate(usvc_service_latency_s_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "{{config}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Prometheus Targets",
-      "type": "bargauge"
-    },
-    {
-      "datasource": "Prometheus",
-      "gridPos": {
-        "h": 6,
-        "w": 3,
-        "x": 15,
-        "y": 13
-      },
-      "id": 14,
-      "options": {
-        "displayMode": "lcd",
-        "fieldOptions": {
-          "calcs": ["lastNotNull"],
-          "defaults": {
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            }
-          },
-          "overrides": [],
-          "values": false
+          "legendFormat": "90",
+          "refId": "B"
         },
-        "orientation": "horizontal",
-        "showUnfilled": true
-      },
-      "pluginVersion": "6.7.2",
-      "targets": [
         {
-          "expr": "sum by (condition) (certmanager_certificate_ready_status)",
+          "expr": "histogram_quantile(0.99, sum(rate(usvc_service_latency_s_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "{{condition}}",
-          "refId": "A"
+          "legendFormat": "99",
+          "refId": "C"
         }
       ],
+      "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
-      "title": "Certificate Ready",
-      "type": "bargauge"
+      "title": "usvc Request Latency",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 10,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
-  "schemaVersion": 22,
+  "schemaVersion": 26,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -811,10 +890,7 @@
     "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"]
   },
   "timezone": "",
-  "title": "Glass",
-  "uid": "FRVc3rjZk",
-  "variables": {
-    "list": []
-  },
-  "version": 1
+  "title": "Glass v4",
+  "uid": "sqYopKKMk",
+  "version": 4
 }

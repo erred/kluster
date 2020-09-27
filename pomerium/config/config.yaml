@@ -28,3 +28,7 @@ policy:
     to: http://example.com
     allowed_users:
       - seankhliao@gmail.com
+  - from: https://jaeger.seankhliao.com
+    to: http://example.com
+    allowed_users:
+      - seankhliao@gmail.com

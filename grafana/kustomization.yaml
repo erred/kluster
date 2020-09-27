@@ -17,7 +17,8 @@ configMapGenerator:
   - name: grafana-dashboards
     files:
       # - config/glass.json
-      - config/glassv2.json
+      # - config/glassv2.json
+      - config/glassv4.json
 images:
   - name: grafana/grafana
     newTag: 7.1.5

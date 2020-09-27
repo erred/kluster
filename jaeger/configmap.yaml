@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: jaeger-sampling-configuration
+    app.kubernetes.io/part-of: jaeger
+  name: jaeger-sampling-configuration
+data:
+  sampling: |
+    {
+      "service_strategies": [
+        {
+          "service": "traefik",
+          "type": "probabilistic",
+          "param": 1.0,
+          "operation_strategies": [
+            {
+              "operation": "EntryPoint traefik 10.205.0.47:9000",
+              "type": "probabilistic",
+              "param": 0.0
+            }
+          ]
+        }
+      ],
+      "default_strategy":{
+        "param": 1.0,
+        "type":"probabilistic"
+      }
+    }

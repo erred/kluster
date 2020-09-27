@@ -16,4 +16,4 @@ configMapGenerator:
       - config/ca.crt
 images:
   - name: traefik
-    newTag: v2.2.11
+    newTag: v2.3.0
