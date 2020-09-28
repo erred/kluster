@@ -23,14 +23,14 @@ ping:
 log:
   level: ERROR
 accessLog: {}
-tracing:
-  jaeger:
-    samplingServerURL: http://jaeger.default.svc.cluster.local:5778/sampling
-    samplingType: remote
-    # samplingParam: 1
-    propagation: b3
-    collector:
-      endpoint: http://jaeger.default.svc.cluster.local:14268/api/traces?format=jaeger.thrift
+# tracing:
+#   jaeger:
+#     samplingServerURL: http://jaeger.default.svc.cluster.local:5778/sampling
+#     samplingType: remote
+#     # samplingParam: 1
+#     propagation: b3
+#     collector:
+#       endpoint: http://jaeger.default.svc.cluster.local:14268/api/traces?format=jaeger.thrift
 # api:
 #   insecure: true
 #   dashboard: true
