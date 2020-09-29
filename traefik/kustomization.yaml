@@ -3,10 +3,10 @@ kind: Kustomization
 namespace: traefik
 resources:
   - cert.yaml
-  - crd.yaml
-  - daemonset.yaml
-  - namespace.yaml
-  - rbac.yaml
+  - crd.k8s.yaml
+  - daemonset.k8s.yaml
+  - namespace.k8s.yaml
+  - rbac.k8s.yaml
 configMapGenerator:
   - name: traefik
     files:

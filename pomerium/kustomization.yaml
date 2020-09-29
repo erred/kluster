@@ -1,10 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - deployment.yaml
-  - rbac.yaml
-  - service.yaml
-  - secret.yaml
+  - deployment.k8s.yaml
+  - rbac.k8s.yaml
+  - service.k8s.yaml
+  - secret.k8s.yaml
 configMapGenerator:
   - files:
       - config/config.yaml

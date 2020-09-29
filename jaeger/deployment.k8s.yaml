@@ -79,9 +79,6 @@ spec:
         - name: sample-conf
           configMap:
             name: jaeger-sampling-configuration
-            items:
-              - key: sampling
-                path: sampling.json
         - name: badger
           persistentVolumeClaim:
             claimName: jaeger-data
