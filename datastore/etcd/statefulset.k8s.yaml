@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: etcd
+  name: etcd
+spec:
+  replicas: 1
+  serviceName: etcd-headless
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: etcd
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2381"
+      labels:
+        app.kubernetes.io/name: etcd
+    spec:
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      serviceAccountName: etcd
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: etcd
+          image: bitnami/etcd:latest
+          command:
+            - etcd
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: ETCD_NAME
+              value: "$(POD_NAME)"
+            - name: ETCD_DATA_DIR
+              value: "/etcd/data"
+            - name: ETCD_ADVERTISE_CLIENT_URLS
+              value: "http://$(POD_NAME).etcd-headless.default.svc.cluster.local:2379"
+            - name: ETCD_LISTEN_CLIENT_URLS
+              value: "http://0.0.0.0:2379"
+            - name: ETCD_LISTEN_METRICS_URLS
+              value: "http://0.0.0.0:2381"
+            - name: ALLOW_NONE_AUTHENTICATION
+              value: "yes"
+            - name: ETCD_ROOT_PASSWORD
+              value: "okmniuhbvgy"
+          ports:
+            - name: client
+              containerPort: 2379
+            - name: metrics
+              containerPort: 2381
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 2381
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 2381
+          volumeMounts:
+            - name: etcd-data
+              mountPath: /etcd/data
+  volumeClaimTemplates:
+    - metadata:
+        name: etcd-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1G

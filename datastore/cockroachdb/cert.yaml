@@ -1,0 +1,39 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cockroachdb-certs
+spec:
+  secretName: cockroachdb-certs
+  duration: 2160h
+  renewBefore: 360h
+  dnsNames:
+    - "node"
+    - "localhost"
+    - "cockroachdb"
+    - "cockroachdb.default"
+    - "cockroachdb.default.svc"
+    - "cockroachdb.default.svc.cluster.local"
+    - "*.cockroachdb-headless"
+    - "*.cockroachdb-headless.default"
+    - "*.cockroachdb-headless.default.svc"
+    - "*.cockroachdb-headless.default.svc.cluster.local"
+  ipAddresses:
+    - "127.0.0.1"
+  issuerRef:
+    name: internal-ca
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cockroachdb-client-root
+spec:
+  secretName: cockroachdb-client-root
+  duration: 2160h
+  renewBefore: 360h
+  commonName: root
+  usages:
+    - client auth
+  issuerRef:
+    name: internal-ca
+    kind: ClusterIssuer
