@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  labels:
+    app.kubernetes.io/name: registry
+  name: registry
+spec:
+  secretName: registry-cert
+  duration: 87600h # 10 years
+  renewBefore: 360h
+  dnsNames:
+    - "registry"
+    - "registry.datastore.svc.cluster.local"
+    - "reg.seankhliao.com"
+  issuerRef:
+    name: internal-ca
+    kind: ClusterIssuer

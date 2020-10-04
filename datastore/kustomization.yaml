@@ -4,4 +4,5 @@ namespace: datastore
 resources:
   - cockroachdb
   # - etcd
+  - registry
   - namespace.k8s.yaml

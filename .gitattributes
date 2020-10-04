@@ -1,5 +1,6 @@
 cert-manager/secret.k8s.yaml  filter=ageencrypt
 ingress/pomerium/secret.k8s.yaml  filter=ageencrypt
+datastore/registry/config/htpasswd filter=ageencrypt
 apps/weechat/ssl/relay.pem  filter=ageencrypt
 apps/weechat/ssl/freenode.pem  filter=ageencrypt
 apps/weechat/ssl/relay.conf filter=ageencrypt

@@ -1,0 +1,22 @@
+# https://docs.docker.com/registry/configuration
+version: 0.1
+log:
+  accesslog:
+    disabled: false
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+auth:
+  htpasswd:
+    realm: r
+    path: /var/secret/registry/htpasswd
+http:
+  addr: 0.0.0.0:8080
+  host: https://reg.seankhliao.com
+  tls:
+    certificate: /var/secret/tls/tls.crt
+    key: /var/secret/tls/tls.key
+  debug:
+    addr: 0.0.0.0:8000
+    prometheus:
+      enabled: true
