@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: jaeger
+  name: jaeger
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jaeger
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "14269"
+        prometheus.io/scrape: "true"
+      labels:
+        app.kubernetes.io/name: jaeger
+    spec:
+      serviceAccountName: jaeger
+      containers:
+        - name: jaeger
+          image: jaegertracing/all-in-one:1.19.2
+          args:
+            - --sampling.strategies-file=/etc/jaeger/sampling/sampling.json
+          env:
+            - name: SPAN_STORAGE_TYPE
+              value: badger
+            - name: BADGER_EPHEMERAL
+              value: "false"
+            - name: BADGER_DIRECTORY_VALUE
+              value: /badger/data
+            - name: BADGER_DIRECTORY_KEY
+              value: /badger/key
+            - name: COLLECTOR_ZIPKIN_HTTP_PORT
+              value: "9411"
+          ports:
+            - containerPort: 5775
+              name: zk-compact-trft
+              protocol: UDP
+            - containerPort: 5778
+              name: config-rest
+            - containerPort: 6831
+              name: jg-compact-trft
+              protocol: UDP
+            - containerPort: 6832
+              name: jg-binary-trft
+              protocol: UDP
+            - containerPort: 9411
+              name: zipkin
+            - containerPort: 14267
+              name: c-tchan-trft
+            - containerPort: 14268
+              name: c-binary-trft
+            - containerPort: 16686
+              name: query
+            - containerPort: 14269
+              name: admin-http
+            - containerPort: 14250
+              name: grpc
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /
+              port: 14269
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 14269
+            initialDelaySeconds: 1
+          volumeMounts:
+            - name: sample-conf
+              mountPath: /etc/jaeger/sampling
+              readOnly: true
+            - name: badger
+              mountPath: /badger
+      volumes:
+        - name: sample-conf
+          configMap:
+            name: jaeger-sampling-configuration
+        - name: badger
+          persistentVolumeClaim:
+            claimName: jaeger-data

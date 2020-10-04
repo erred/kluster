@@ -22,7 +22,7 @@ spec:
         runAsGroup: 65534
         runAsNonRoot: true
         runAsUser: 65534
-      serviceAccountName: etcd
+      serviceAccountName: pomerium
       terminationGracePeriodSeconds: 10
       containers:
         - name: pomerium
@@ -33,18 +33,20 @@ spec:
             - secretRef:
                 name: pomerium
           ports:
-            - name: http
+            - name: https
               containerPort: 8443
             - name: metrics
               containerPort: 9090
           livenessProbe:
             httpGet:
-              path: /metrics
-              port: 9090
+              scheme: HTTPS
+              port: 8443
+              path: /ping
           readinessProbe:
             httpGet:
-              path: /metrics
-              port: 9090
+              scheme: HTTPS
+              port: 8443
+              path: /ping
           volumeMounts:
             - name: config
               mountPath: /etc/pomerium/

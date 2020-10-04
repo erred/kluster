@@ -1,0 +1,11 @@
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - deployment.k8s.yaml
+  - rbac.k8s.yaml
+  - service.k8s.yaml
+  - volume.k8s.yaml
+configMapGenerator:
+  - name: jaeger-sampling-configuration
+    files:
+      - config/sampling.json

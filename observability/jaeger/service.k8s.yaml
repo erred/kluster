@@ -1,0 +1,70 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app.kubernetes.io/name: jaeger
+  name: jaeger
+spec:
+  entryPoints:
+    - https
+  routes:
+    - kind: Rule
+      match: Host(`jaeger.seankhliao.com`)
+      middlewares:
+        - name: auth-jaeger
+      services:
+        - kind: Service
+          name: jaeger-query
+          port: 16686
+  tls: {}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  labels:
+    app.kubernetes.io/name: jaeger
+  name: auth-jaeger
+spec:
+  forwardAuth:
+    address: http://pomerium.default.svc.cluster.local/?uri=https://jaeger.seankhliao.com
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: jaeger-query
+  name: jaeger-query
+spec:
+  type: ClusterIP
+  ports:
+    - name: http-query
+      port: 16686
+      targetPort: 16686
+  selector:
+    app.kubernetes.io/name: jaeger
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: jaeger
+  name: jaeger
+spec:
+  ports:
+    - name: http-zipkin
+      port: 9411
+      targetPort: 9411
+    - name: http-grpc
+      port: 14250
+      targetPort: 14250
+    - name: c-tchan-trft
+      port: 14267
+      targetPort: 14267
+    - name: http-c-binary-trft
+      port: 14268
+      targetPort: 14268
+    - name: config-rest
+      port: 5778
+      targetPort: 5778
+  selector:
+    app.kubernetes.io/name: jaeger

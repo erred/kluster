@@ -1,23 +1,9 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: default
----
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: default-limitrange
-spec:
-  limits:
-    - type: Container
-      default:
-        cpu: 100m
-        memory: 100Mi
-      defaultRequest:
-        cpu: 10m
-        memory: 20Mi
-      # min:
-      # max:
+  labels:
+    app.kubernetes.io/name: node-exporter
+  name: node-exporter
 ---
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
@@ -27,7 +13,9 @@ metadata:
     seccomp.security.alpha.kubernetes.io/defaultProfileName: "runtime/default"
     apparmor.security.beta.kubernetes.io/allowedProfileNames: "runtime/default"
     apparmor.security.beta.kubernetes.io/defaultProfileName: "runtime/default"
-  name: default-security
+  labels:
+    app.kubernetes.io/name: node-exporter
+  name: node-exporter
 spec:
   # # user
   runAsGroup:
@@ -56,7 +44,11 @@ spec:
   hostNetwork: false
   hostPID: false
   hostPorts: []
-  # allowedHostPaths: []
+  allowedHostPaths:
+    - pathPrefix: /proc
+      readOnly: true
+    - pathPrefix: /sys
+      readOnly: true
   # allowedProcMountTypes: []
   # allowedUnsafeSysctls: []
   # forbiddenSysctls: []
@@ -67,28 +59,17 @@ spec:
   # defaultAddCapabilities:
   requiredDropCapabilities:
     - ALL
-    # # Default set from Docker, without DAC_OVERRIDE or CHOWN
-    # - FOWNER
-    # - FSETID
-    # - KILL
-    # - SETGID
-    # - SETUID
-    # - SETPCAP
-    # - NET_BIND_SERVICE
-    # - NET_RAW
-    # - SYS_CHROOT
-    # - MKNOD
-    # - AUDIT_WRITE
-    # - SETFCAP
   # # filesystem
   readOnlyRootFilesystem: false
   volumes:
-    - secret
+    - hostPath
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: default-security
+  labels:
+    app.kubernetes.io/name: node-exporter
+  name: node-exporter
 rules:
   - apiGroups:
       - policy
@@ -97,16 +78,18 @@ rules:
     verbs:
       - use
     resourceNames:
-      - default-security
+      - node-exporter
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: default-security
+  labels:
+    app.kubernetes.io/name: node-exporter
+  name: node-exporter
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: default-security
+  name: node-exporter
 subjects:
   - kind: ServiceAccount
-    name: default
+    name: node-exporter
