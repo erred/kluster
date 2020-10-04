@@ -4,3 +4,4 @@ namespace: apps
 resources:
   - weechat
   - namespace.k8s.yaml
+  - secret.k8s.yaml

@@ -4,3 +4,4 @@ datastore/registry/config/htpasswd filter=ageencrypt
 apps/weechat/ssl/relay.pem  filter=ageencrypt
 apps/weechat/ssl/freenode.pem  filter=ageencrypt
 apps/weechat/ssl/relay.conf filter=ageencrypt
+apps/secret.k8s.yaml filter=ageencrypt
