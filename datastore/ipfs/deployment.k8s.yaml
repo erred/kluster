@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: ipfs
+  name: ipfs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ipfs
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: /debug/metrics/prometheus
+      labels:
+        app.kubernetes.io/name: ipfs
+    spec:
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      serviceAccountName: ipfs
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: ipfs
+          image: ipfs/go-ipfs:latest
+          ports:
+            - name: swarm
+              containerPort: 4001
+            - name: api
+              containerPort: 5001
+            - name: gateway
+              containerPort: 8080
+          env:
+            - name: IPFS_PATH
+              value: /data
+            - name: IPFS_PROFILE
+              value: server
+          livenessProbe:
+            httpGet:
+              path: /debug/metrics/prometheus
+              port: api
+          readinessProbe:
+            httpGet:
+              path: /debug/metrics/prometheus
+              port: api
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: ipfs-data
