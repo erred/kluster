@@ -9,10 +9,10 @@ spec:
       command:
         - sleep
         - "2073600"
-      volumeMounts:
-        - name: x
-          mountPath: /data
-  volumes:
-    - name: x
-      persistentVolumeClaim:
-        claimName: stream-data-stream-0
+  #     volumeMounts:
+  #       - name: x
+  #         mountPath: /data
+  # volumes:
+  #   - name: x
+  #     persistentVolumeClaim:
+  #       claimName: stream-data-stream-0

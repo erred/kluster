@@ -1,0 +1,34 @@
+address: ":8443"
+metrics_address: ":9090"
+
+# insecure_server: true
+autocert: false
+certificates:
+  - cert: /var/secret/tls/tls.crt
+    key: /var/secret/tls/tls.key
+# client_ca_file: ""
+
+# cookie_name: "_pomerium"
+# cookie_domain: ""
+
+log_level: "debug"
+proxy_log_level: "error"
+
+authenticate_service_url: "https://auth.seankhliao.com"
+forward_auth_url: "https://pomerium.ingress.svc.cluster.local"
+
+administrators: "seankhliao@gmail.com"
+
+policy:
+  - from: https://httpbin.seankhliao.com
+    to: http://example.com
+    allowed_users:
+      - seankhliao@gmail.com
+  - from: https://grafana.seankhliao.com
+    to: http://example.com
+    allowed_users:
+      - seankhliao@gmail.com
+  - from: https://jaeger.seankhliao.com
+    to: http://example.com
+    allowed_users:
+      - seankhliao@gmail.com
