@@ -1,0 +1,30 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  labels:
+    app.kubernetes.io/name: weechat
+  name: weechat
+spec:
+  entryPoints:
+    - https
+  routes:
+    - match: HostSNI(`weechat.seankhliao.com`)
+      services:
+        - name: weechat
+          port: 6697
+  tls:
+    passthrough: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: weechat
+  name: weechat
+spec:
+  selector:
+    app.kubernetes.io/name: weechat
+  type: ClusterIP
+  ports:
+    - port: 6697
+      targetPort: 6697

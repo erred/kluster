@@ -1,5 +1,3 @@
-_terraform/terraform.tfstate  filter=ageencrypt
-_terraform/terraform.tfstate.backup  filter=ageencrypt
 cert-manager/secret.k8s.yaml  filter=ageencrypt
 ingress/pomerium/secret.k8s.yaml  filter=ageencrypt
 apps/weechat/ssl/relay.pem  filter=ageencrypt
