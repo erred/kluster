@@ -1,11 +1,12 @@
-address: ":8443"
+address: ":8080"
 metrics_address: ":9090"
 
-# insecure_server: true
+insecure_server: true
 autocert: false
-certificates:
-  - cert: /var/secret/tls/tls.crt
-    key: /var/secret/tls/tls.key
+# # traefik can't skip verification of tls certs :facepalm:
+# certificates:
+#   - cert: /var/secret/tls/tls.crt
+#     key: /var/secret/tls/tls.key
 # client_ca_file: ""
 
 # cookie_name: "_pomerium"

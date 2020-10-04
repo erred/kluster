@@ -32,7 +32,7 @@ metadata:
 spec:
   ports:
     - port: 80
-      targetPort: 8443
+      targetPort: 8080
   selector:
     app.kubernetes.io/name: pomerium
   type: ClusterIP

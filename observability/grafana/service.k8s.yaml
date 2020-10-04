@@ -27,7 +27,7 @@ metadata:
   name: auth-grafana
 spec:
   forwardAuth:
-    address: https://pomerium.ingress.svc.cluster.local/?uri=https://grafana.seankhliao.com
+    address: http://pomerium.ingress.svc.cluster.local/?uri=https://grafana.seankhliao.com
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware

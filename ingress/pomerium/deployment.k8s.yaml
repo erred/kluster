@@ -33,29 +33,27 @@ spec:
             - secretRef:
                 name: pomerium
           ports:
-            - name: https
-              containerPort: 8443
+            - name: http
+              containerPort: 8080
             - name: metrics
               containerPort: 9090
           livenessProbe:
             httpGet:
-              scheme: HTTPS
-              port: 8443
+              port: 8080
               path: /ping
           readinessProbe:
             httpGet:
-              scheme: HTTPS
-              port: 8443
+              port: 8080
               path: /ping
           volumeMounts:
             - name: config
               mountPath: /etc/pomerium/
-            - name: certs
-              mountPath: /var/secret/tls
+            # - name: certs
+            #   mountPath: /var/secret/tls
       volumes:
         - name: config
           configMap:
             name: pomerium
-        - name: certs
-          secret:
-            secretName: pomerium-cert
+        # - name: certs
+        #   secret:
+        #     secretName: pomerium-cert
