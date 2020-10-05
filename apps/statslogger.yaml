@@ -43,7 +43,7 @@ spec:
         app.kubernetes.io/name: statslogger
     spec:
       containers:
-      - image: reg.seankhliao.com/statslogger:4e812ed
+      - image: reg.seankhliao.com/statslogger:62c59cf
         livenessProbe:
           httpGet:
             path: /liveness
