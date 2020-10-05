@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: com-seankhliao
+  name: com-seankhliao
+  namespace: apps
+spec:
+  ports:
+  - port: 443
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: com-seankhliao
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: com-seankhliao
+  name: com-seankhliao
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/managed-by: kustomize
+      app.kubernetes.io/name: com-seankhliao
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "8000"
+        prometheus.io/scrape: "true"
+      labels:
+        app.kubernetes.io/managed-by: kustomize
+        app.kubernetes.io/name: com-seankhliao
+    spec:
+      containers:
+      - image: reg.seankhliao.com/com-seankhliao:3645316
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: 8000
+        name: com-seankhliao
+        ports:
+        - containerPort: 8080
+          name: https
+        - containerPort: 8000
+          name: metric
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 8000
+        volumeMounts:
+        - mountPath: /var/secret/tls
+          name: certs
+      imagePullSecrets:
+      - name: regcred
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: certs
+        secret:
+          secretName: com-seankhliao-cert
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: com-seankhliao
+  name: com-seankhliao
+  namespace: apps
+spec:
+  dnsNames:
+  - com-seankhliao
+  - com-seankhliao.apps.svc.cluster.local
+  duration: 87600h
+  issuerRef:
+    kind: ClusterIssuer
+    name: internal-ca
+  renewBefore: 360h
+  secretName: com-seankhliao-cert
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: com-seankhliao
+  name: com-seankhliao
+  namespace: apps
+spec:
+  entryPoints:
+  - https
+  routes:
+  - kind: Rule
+    match: Host(`seankhliao.com`)
+    services:
+    - kind: Service
+      name: com-seankhliao
+      port: 443
+  tls: {}
