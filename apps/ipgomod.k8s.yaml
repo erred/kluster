@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: ipgomod
+  name: ipgomod
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/managed-by: kustomize
+      app.kubernetes.io/name: ipgomod
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: kustomize
+        app.kubernetes.io/name: ipgomod
+    spec:
+      containers:
+      - args:
+        - -db=postgresql://ipgomod@cockroachdb.datastore.svc.cluster.local:26257/ipgomod?sslmode=verify-full&sslrootcert=/var/secret/cockroachdb/ca.crt&sslcert=/var/secret/cockroachdb/tls.crt&sslkey=/var/secret/cockroachdb/tls.key
+        image: reg.seankhliao.com/ipgomod:e596f8d
+        name: ipgomod
+        volumeMounts:
+        - mountPath: /var/secret/cockroachdb
+          name: client
+      imagePullSecrets:
+      - name: regcred
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: client
+        secret:
+          secretName: cockroachdb-client-ipgomod
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: ipgomod
+  name: cockroachdb-client-ipgomod
+  namespace: apps
+spec:
+  commonName: ipgomod
+  duration: 2160h
+  issuerRef:
+    kind: ClusterIssuer
+    name: internal-ca
+  renewBefore: 360h
+  secretName: cockroachdb-client-ipgomod
+  usages:
+  - client auth
