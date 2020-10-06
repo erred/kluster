@@ -25,7 +25,7 @@ spec:
       containers:
       - args:
         - -db=postgresql://ipgomod@cockroachdb.datastore.svc.cluster.local:26257/ipgomod?sslmode=verify-full&sslrootcert=/var/secret/cockroachdb/ca.crt&sslcert=/var/secret/cockroachdb/tls.crt&sslkey=/var/secret/cockroachdb/tls.key
-        image: reg.seankhliao.com/ipgomod:5c1ab55
+        image: reg.seankhliao.com/ipgomod:4e2bce7
         name: ipgomod
         volumeMounts:
         - mountPath: /var/secret/cockroachdb
