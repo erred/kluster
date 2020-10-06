@@ -43,7 +43,7 @@ spec:
         app.kubernetes.io/name: com-seankhliao
     spec:
       containers:
-      - image: reg.seankhliao.com/com-seankhliao:40f3437
+      - image: reg.seankhliao.com/com-seankhliao:058fbae
         livenessProbe:
           httpGet:
             path: /liveness
