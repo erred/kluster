@@ -23,7 +23,7 @@ spec:
         app.kubernetes.io/name: ipgomod
     spec:
       containers:
-      - image: reg.seankhliao.com/ipgomod:1660b2f
+      - image: reg.seankhliao.com/ipgomod:bead2c4
         name: ipgomod
         volumeMounts:
         - mountPath: /data
