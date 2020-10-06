@@ -23,13 +23,11 @@ spec:
         app.kubernetes.io/name: ipgomod
     spec:
       containers:
-      - args:
-        - -db=postgresql://ipgomod@cockroachdb.datastore.svc.cluster.local:26257/ipgomod?sslmode=verify-full&sslrootcert=/var/secret/cockroachdb/ca.crt&sslcert=/var/secret/cockroachdb/tls.crt&sslkey=/var/secret/cockroachdb/tls.key
-        image: reg.seankhliao.com/ipgomod:fb05803
+      - image: reg.seankhliao.com/ipgomod:1660b2f
         name: ipgomod
         volumeMounts:
-        - mountPath: /var/secret/cockroachdb
-          name: client
+        - mountPath: /data
+          name: storage
       imagePullSecrets:
       - name: regcred
       securityContext:
@@ -39,25 +37,21 @@ spec:
         runAsUser: 65534
       terminationGracePeriodSeconds: 10
       volumes:
-      - name: client
-        secret:
-          secretName: cockroachdb-client-ipgomod
+      - name: storage
+        persistentVolumeClaim:
+          claimName: ipgomod
 ---
-apiVersion: cert-manager.io/v1
-kind: Certificate
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   labels:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: ipgomod
-  name: cockroachdb-client-ipgomod
+  name: ipgomod
   namespace: apps
 spec:
-  commonName: ipgomod
-  duration: 2160h
-  issuerRef:
-    kind: ClusterIssuer
-    name: internal-ca
-  renewBefore: 360h
-  secretName: cockroachdb-client-ipgomod
-  usages:
-  - client auth
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
