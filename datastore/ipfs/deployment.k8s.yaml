@@ -17,7 +17,7 @@ spec:
     metadata:
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "8000"
+        prometheus.io/port: "5001"
         prometheus.io/path: /debug/metrics/prometheus
       labels:
         app.kubernetes.io/name: ipfs

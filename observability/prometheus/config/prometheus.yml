@@ -8,66 +8,75 @@ rule_files:
   - /etc/config/rules
   - /etc/config/alerts
 scrape_configs:
-  - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-    job_name: kubernetes-apiservers
+  - job_name: "kubernetes-apiservers"
     kubernetes_sd_configs:
       - role: endpoints
-    relabel_configs:
-      - action: keep
-        regex: default;kubernetes;https
-        source_labels:
-          - __meta_kubernetes_namespace
-          - __meta_kubernetes_service_name
-          - __meta_kubernetes_endpoint_port_name
     scheme: https
     tls_config:
       ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    relabel_configs:
+      - source_labels:
+          [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: default;kubernetes;https
+  - job_name: "kubernetes-nodes"
+    scheme: https
+    tls_config:
       insecure_skip_verify: true
-  - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-    job_name: kubernetes-nodes
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
     kubernetes_sd_configs:
       - role: node
     relabel_configs:
       - action: labelmap
         regex: __meta_kubernetes_node_label_(.+)
-      - replacement: kubernetes.default.svc:443
-        target_label: __address__
-      - regex: (.+)
-        replacement: /api/v1/nodes/$1/proxy/metrics
-        source_labels:
-          - __meta_kubernetes_node_name
-        target_label: __metrics_path__
+  - job_name: "kubernetes-cadvisor"
     scheme: https
+    metrics_path: /metrics/cadvisor
     tls_config:
-      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
       insecure_skip_verify: true
-  - job_name: kubernetes-pods
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    kubernetes_sd_configs:
+      - role: node
+    relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+
+  - job_name: "kubernetes-pods"
+    tls_config:
+      insecure_skip_verify: true
     kubernetes_sd_configs:
       - role: pod
     relabel_configs:
-      - action: keep
+      # prometheus relabel to scrape only pods that have
+      # "prometheus.io/scrape = true" annotation.
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
         regex: true
-        source_labels:
-          - __meta_kubernetes_pod_annotation_prometheus_io_scrape
-      - action: replace
-        regex: (.+)
-        source_labels:
-          - __meta_kubernetes_pod_annotation_prometheus_io_path
+      # Example relabel to customize metric path based on pod
+      # "prometheus.io/path = <metric path>" annotation.
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
         target_label: __metrics_path__
-      - action: replace
+        regex: (.+)
+      # Example relabel to scrape only single, desired port for the pod
+      # based on pod "prometheus.io/port = <port>" annotation.
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
         regex: ([^:]+)(?::\d+)?;(\d+)
         replacement: $1:$2
-        source_labels:
-          - __address__
-          - __meta_kubernetes_pod_annotation_prometheus_io_port
         target_label: __address__
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+        action: replace
+        target_label: __scheme__
+        regex: (.+)
       - action: labelmap
         regex: __meta_kubernetes_pod_label_(.+)
-      - action: replace
-        source_labels:
-          - __meta_kubernetes_namespace
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
         target_label: kubernetes_namespace
-      - action: replace
-        source_labels:
-          - __meta_kubernetes_pod_name
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
         target_label: kubernetes_pod_name

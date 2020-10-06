@@ -32,6 +32,7 @@ spec:
         - name: prometheus-server
           image: prom/prometheus:latest
           args:
+            - --log.level=debug
             - --storage.tsdb.retention.time=15d
             - --config.file=/etc/config/prometheus.yml
             - --storage.tsdb.path=/data

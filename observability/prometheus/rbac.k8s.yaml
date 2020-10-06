@@ -18,7 +18,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: prometheus
-    namespace: default
+    namespace: observability
 ---
 # Source: prometheus/templates/server-clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -54,7 +54,6 @@ rules:
       - watch
   - nonResourceURLs:
       - "/metrics"
-      - "/_status/vars"
-      - "_status/vars"
+      - "/metrics/cadvisor"
     verbs:
       - get
