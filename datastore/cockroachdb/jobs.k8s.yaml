@@ -40,6 +40,83 @@ spec:
 # apiVersion: batch/v1
 # kind: Job
 # metadata:
+#   name: ipgomod-init-db
+# spec:
+#   template:
+#     spec:
+#       restartPolicy: Never
+#       containers:
+#         - name: ipgomod-init
+#           image: cockroachdb/cockroach:latest
+#           command:
+#             - /bin/bash
+#             - -ecx
+#             - >
+#               mkdir /certs-fixed &&
+#               cp /certs/* /certs-fixed &&
+#               chmod 0400 /certs-fixed/* &&
+#               cockroach sql
+#               --host cockroachdb:26257
+#               --certs-dir /certs-fixed
+#               -e 'CREATE DATABASE IF NOT EXISTS ipgomod;'
+#               -e 'CREATE USER IF NOT EXISTS ipgomod;'
+#               -e 'GRANT ALL ON DATABASE ipgomod TO ipgomod;'
+#           volumeMounts:
+#             - name: client-root
+#               mountPath: /certs/ca.crt
+#               subPath: ca.crt
+#             - name: client-root
+#               mountPath: /certs/client.root.crt
+#               subPath: tls.crt
+#             - name: client-root
+#               mountPath: /certs/client.root.key
+#               subPath: tls.key
+#       volumes:
+#         - name: client-root
+#           secret:
+#             secretName: cockroachdb-client-root
+# ---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: ipgomod-reset-state
+# spec:
+#   template:
+#     spec:
+#       restartPolicy: Never
+#       containers:
+#         - name: ipgomod-init
+#           image: cockroachdb/cockroach:latest
+#           command:
+#             - /bin/bash
+#             - -ecx
+#             - >
+#               mkdir /certs-fixed &&
+#               cp /certs/* /certs-fixed &&
+#               chmod 0400 /certs-fixed/* &&
+#               cockroach sql
+#               --host cockroachdb:26257
+#               --certs-dir /certs-fixed
+#               -e 'USE ipgomod;'
+#               -e 'DELETE FROM latest WHERE id = 1'
+#           volumeMounts:
+#             - name: client-root
+#               mountPath: /certs/ca.crt
+#               subPath: ca.crt
+#             - name: client-root
+#               mountPath: /certs/client.root.crt
+#               subPath: tls.crt
+#             - name: client-root
+#               mountPath: /certs/client.root.key
+#               subPath: tls.key
+#       volumes:
+#         - name: client-root
+#           secret:
+#             secretName: cockroachdb-client-root
+# ---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
 #   name: iglog-init-db
 # spec:
 #   template:
