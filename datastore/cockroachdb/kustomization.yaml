@@ -3,6 +3,7 @@ kind: Kustomization
 commonLabels:
   app.kubernetes.io/name: cockroachdb
   app.kubernetes.io/managed-by: kustomize
+namespace: datastore
 resources:
   - cert.yaml
   - rbac.k8s.yaml

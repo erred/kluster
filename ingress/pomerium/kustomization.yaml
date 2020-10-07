@@ -3,6 +3,7 @@ kind: Kustomization
 commonLabels:
   app.kubernetes.io/name: pomerium
   app.kubernetes.io/managed-by: kustomize
+namespace: ingress
 resources:
   # - cert.yaml
   - deployment.k8s.yaml

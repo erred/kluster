@@ -3,6 +3,7 @@ kind: Kustomization
 commonLabels:
   app.kubernetes.io/name: weechat
   app.kubernetes.io/managed-by: kustomize
+namespace: apps
 resources:
   - deployment.k8s.yaml
   - rbac.k8s.yaml

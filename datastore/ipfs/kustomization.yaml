@@ -3,6 +3,7 @@ kind: Kustomization
 commonLabels:
   app.kubernetes.io/name: ipfs
   app.kubernetes.io/managed-by: kustomize
+namespace: datastore
 resources:
   - deployment.k8s.yaml
   - rbac.k8s.yaml

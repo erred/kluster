@@ -3,6 +3,7 @@ kind: Kustomization
 commonLabels:
   app.kubernetes.io/name: node-exporter
   app.kubernetes.io/managed-by: kustomize
+namespace: observability
 resources:
   - daemonset.k8s.yaml
   - rbac.k8s.yaml

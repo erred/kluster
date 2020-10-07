@@ -4,6 +4,6 @@ namespace: datastore
 resources:
   - cockroachdb
   # - etcd
-  - ipfs
+  # - ipfs
   - registry
   - namespace.k8s.yaml
