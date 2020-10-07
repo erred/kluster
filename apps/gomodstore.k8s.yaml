@@ -23,7 +23,7 @@ spec:
         app.kubernetes.io/name: gomodstore
     spec:
       containers:
-      - image: reg.seankhliao.com/gomodstore:5cf208e
+      - image: reg.seankhliao.com/gomodstore:70a57d9
         name: gomodstore
         volumeMounts:
         - mountPath: /data
