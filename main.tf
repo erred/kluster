@@ -8,6 +8,6 @@ resource "null_resource" "kind" {
   # }
 
   provisioner "local-exec" {
-    command = "kind create cluster --config kind.k8s.yaml --name k"
+    command = "kind create cluster --config kind.k8s.yaml --name cluster26"
   }
 }
