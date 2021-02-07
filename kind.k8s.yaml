@@ -5,6 +5,16 @@ networking:
   podSubnet: 10.244.0.0/16
   serviceSubnet: 10.245.0.0/16
   disableDefaultCNI: false
+kubeadmConfigPatches:
+  - |
+    apiVersion: kubeadm.k8s.io/v1beta2
+    kind: ClusterConfiguration
+    metadata:
+      name: config
+    apiServer:
+      extraArgs:
+        "service-account-issuer": "kubernetes.default.svc"
+        "service-account-signing-key-file": "/etc/kubernetes/pki/sa.key"
 nodes:
   - role: control-plane
     extraPortMappings:
