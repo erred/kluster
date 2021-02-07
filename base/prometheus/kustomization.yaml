@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: prometheus
+commonLabels:
+  app.kubernetes.io/name: prometheus
+resources:
+  - clusterrole.k8s.yaml
+  - clusterrolebinding.k8s.yaml
+  - namespace.k8s.yaml
+  - podsecuritypolicy.k8s.yaml
+  - service.k8s.yaml
+  - serviceaccount.k8s.yaml
+  - statefulset.k8s.yaml

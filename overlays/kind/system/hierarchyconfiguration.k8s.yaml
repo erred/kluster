@@ -1,0 +1,39 @@
+# apiVersion: hnc.x-k8s.io/v1alpha2
+# kind: HierarchyConfiguration
+# metadata:
+#   name: hierarchy
+#   namespace: kube-node-lease
+#   labels:
+#     app.kubernetes.io/name: kube-node-lease
+# spec:
+#   parent: system
+# ---
+# apiVersion: hnc.x-k8s.io/v1alpha2
+# kind: HierarchyConfiguration
+# metadata:
+#   name: hierarchy
+#   namespace: kube-public
+#   labels:
+#     app.kubernetes.io/name: kube-public
+# spec:
+#   parent: system
+# ---
+# apiVersion: hnc.x-k8s.io/v1alpha2
+# kind: HierarchyConfiguration
+# metadata:
+#   name: hierarchy
+#   namespace: kube-system
+#   labels:
+#     app.kubernetes.io/name: kube-system
+# spec:
+#   parent: system
+---
+apiVersion: hnc.x-k8s.io/v1alpha2
+kind: HierarchyConfiguration
+metadata:
+  name: hierarchy
+  namespace: local-path-storage
+  labels:
+    app.kubernetes.io/name: local-path-storage
+spec:
+  parent: system

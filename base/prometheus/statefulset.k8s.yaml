@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus
+  labels:
+    app.kubernetes.io/name: prometheus
+spec:
+  podManagementPolicy: Parallel
+  replicas: 1
+  revisionHistoryLimit: 3
+  serviceName: prometheus
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus
+  updateStrategy:
+    type: OnDelete
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: prometheus
+    spec:
+      enableServiceLinks: false
+      securityContext:
+        fsGroup: 65535
+        runAsGroup: 65535
+        runAsNonRoot: true
+        runAsUser: 65535
+      serviceAccountName: prometheus
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: prometheus
+          image: prom/prometheus:latest
+          args:
+            - --log.level=debug
+            - --log.format=logfmt
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.tsdb.path=/data
+            - --storage.tsdb.retention.size=900MB
+          ports:
+            - name: http
+              containerPort: 9090
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: 9090
+          readinessProbe:
+            httpGet:
+              path: /-/healthy
+              port: 9090
+          resources:
+            requests:
+              cpu: 150m
+              memory: 150Mi
+            limits:
+              cpu: 400m
+              memory: 400Mi
+          volumeMounts:
+            - mountPath: /etc/prometheus
+              name: config
+            - mountPath: /data
+              name: data
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app.kubernetes.io/name: prometheus
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
