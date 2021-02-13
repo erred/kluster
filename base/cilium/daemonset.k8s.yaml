@@ -1,0 +1,366 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app.kubernetes.io/name: cilium
+    app.kubernetes.io/component: agent
+  name: cilium
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cilium
+      app.kubernetes.io/component: agent
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+      labels:
+        app.kubernetes.io/name: cilium
+        app.kubernetes.io/component: agent
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                      - agent
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - args:
+            - --config-dir=/tmp/cilium/config-map
+          command:
+            - cilium-agent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9876
+              scheme: HTTP
+              httpHeaders:
+                - name: "brief"
+                  value: "true"
+            failureThreshold: 10
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9876
+              scheme: HTTP
+              httpHeaders:
+                - name: "brief"
+                  value: "true"
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: CILIUM_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: CILIUM_FLANNEL_MASTER_DEVICE
+              valueFrom:
+                configMapKeyRef:
+                  key: flannel-master-device
+                  name: cilium-config
+                  optional: true
+            - name: CILIUM_FLANNEL_UNINSTALL_ON_EXIT
+              valueFrom:
+                configMapKeyRef:
+                  key: flannel-uninstall-on-exit
+                  name: cilium-config
+                  optional: true
+            - name: CILIUM_CLUSTERMESH_CONFIG
+              value: /var/lib/cilium/clustermesh/
+            - name: CILIUM_CNI_CHAINING_MODE
+              valueFrom:
+                configMapKeyRef:
+                  key: cni-chaining-mode
+                  name: cilium-config
+                  optional: true
+            - name: CILIUM_CUSTOM_CNI_CONF
+              valueFrom:
+                configMapKeyRef:
+                  key: custom-cni-conf
+                  name: cilium-config
+                  optional: true
+          image: quay.io/cilium/cilium:v1.9.4
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "/cni-install.sh"
+                  - "--enable-debug=false"
+            preStop:
+              exec:
+                command:
+                  - /cni-uninstall.sh
+          name: cilium-agent
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - SYS_MODULE
+            privileged: true
+          volumeMounts:
+            - mountPath: /sys/fs/bpf
+              name: bpf-maps
+            - mountPath: /var/run/cilium
+              name: cilium-run
+            - mountPath: /host/opt/cni/bin
+              name: cni-path
+            - mountPath: /host/etc/cni/net.d
+              name: etc-cni-netd
+            - mountPath: /var/lib/cilium/clustermesh
+              name: clustermesh-secrets
+              readOnly: true
+            - mountPath: /tmp/cilium/config-map
+              name: cilium-config-path
+              readOnly: true
+              # Needed to be able to load kernel modules
+            - mountPath: /lib/modules
+              name: lib-modules
+              readOnly: true
+            - mountPath: /run/xtables.lock
+              name: xtables-lock
+            - mountPath: /var/lib/cilium/tls/hubble
+              name: hubble-tls
+              readOnly: true
+      hostNetwork: true
+      initContainers:
+        - name: wait-for-node-init
+          command:
+            [
+              "sh",
+              "-c",
+              'until stat /tmp/cilium-bootstrap-time > /dev/null 2>&1; do echo "Waiting on node-init to run..."; sleep 1; done',
+            ]
+          image: quay.io/cilium/cilium:v1.9.4
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /tmp/cilium-bootstrap-time
+              name: cilium-bootstrap-file
+        - command:
+            - /init-container.sh
+          env:
+            - name: CILIUM_ALL_STATE
+              valueFrom:
+                configMapKeyRef:
+                  key: clean-cilium-state
+                  name: cilium-config
+                  optional: true
+            - name: CILIUM_BPF_STATE
+              valueFrom:
+                configMapKeyRef:
+                  key: clean-cilium-bpf-state
+                  name: cilium-config
+                  optional: true
+            - name: CILIUM_WAIT_BPF_MOUNT
+              valueFrom:
+                configMapKeyRef:
+                  key: wait-bpf-mount
+                  name: cilium-config
+                  optional: true
+          image: quay.io/cilium/cilium:v1.9.4
+          name: clean-cilium-state
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+            privileged: true
+          volumeMounts:
+            - mountPath: /sys/fs/bpf
+              name: bpf-maps
+              mountPropagation: HostToContainer
+            - mountPath: /var/run/cilium
+              name: cilium-run
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+      restartPolicy: Always
+      priorityClassName: system-node-critical
+      serviceAccount: cilium
+      serviceAccountName: cilium
+      terminationGracePeriodSeconds: 1
+      tolerations:
+        - operator: Exists
+      volumes:
+        # To keep state between restarts / upgrades
+        - hostPath:
+            path: /var/run/cilium
+            type: DirectoryOrCreate
+          name: cilium-run
+          # To keep state between restarts / upgrades for bpf maps
+        - hostPath:
+            path: /sys/fs/bpf
+            type: DirectoryOrCreate
+          name: bpf-maps
+        # To install cilium cni plugin in the host
+        - hostPath:
+            path: /opt/cni/bin
+            type: DirectoryOrCreate
+          name: cni-path
+          # To install cilium cni configuration in the host
+        - hostPath:
+            path: /etc/cni/net.d
+            type: DirectoryOrCreate
+          name: etc-cni-netd
+          # To be able to load kernel modules
+        - hostPath:
+            path: /lib/modules
+          name: lib-modules
+          # To access iptables concurrently with other processes (e.g. kube-proxy)
+        - hostPath:
+            path: /run/xtables.lock
+            type: FileOrCreate
+          name: xtables-lock
+        - hostPath:
+            path: /tmp/cilium-bootstrap-time
+            type: FileOrCreate
+          name: cilium-bootstrap-file
+          # To read the clustermesh configuration
+        - name: clustermesh-secrets
+          secret:
+            defaultMode: 420
+            optional: true
+            secretName: cilium-clustermesh
+          # To read the configuration from the config map
+        - configMap:
+            name: cilium-config
+          name: cilium-config-path
+        - name: hubble-tls
+          projected:
+            sources:
+              - secret:
+                  name: hubble-server-certs
+                  items:
+                    - key: tls.crt
+                      path: server.crt
+                    - key: tls.key
+                      path: server.key
+                  optional: true
+              - configMap:
+                  name: hubble-ca-cert
+                  items:
+                    - key: ca.crt
+                      path: client-ca.crt
+                  optional: true
+---
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: cilium-node-init
+  labels:
+    app.kubernetes.io/name: cilium
+    app.kubernetes.io/component: node-init
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cilium
+      app.kubernetes.io/component: node-init
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cilium
+        app.kubernetes.io/component: node-init
+    spec:
+      tolerations:
+        - operator: Exists
+      hostPID: true
+      hostNetwork: true
+      priorityClassName: system-node-critical
+      containers:
+        - name: node-init
+          image: quay.io/cilium/startup-script:62bfbe88c17778aad7bef9fa57ff9e2d4a9ba0d8
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          env:
+            - name: CHECKPOINT_PATH
+              value: /tmp/node-init.cilium.io
+            # STARTUP_SCRIPT is the script run on node bootstrap. Node
+            # bootstrapping can be customized in this script. This script is invoked
+            # using nsenter, so it runs in the host's network and mount namespace using
+            # the host's userland tools!
+            - name: STARTUP_SCRIPT
+              value: |
+                #!/bin/bash
+
+                set -o errexit
+                set -o pipefail
+                set -o nounset
+
+                mount | grep "/sys/fs/bpf type bpf" || {
+                  # Mount the filesystem until next reboot
+                  echo "Mounting BPF filesystem..."
+                  mount bpffs /sys/fs/bpf -t bpf
+
+                  # Configure systemd to mount after next boot
+                  echo "Installing BPF filesystem mount"
+                  cat >/tmp/sys-fs-bpf.mount <<EOF
+                [Unit]
+                Description=Mount BPF filesystem (Cilium)
+                Documentation=http://docs.cilium.io/
+                DefaultDependencies=no
+                Before=local-fs.target umount.target
+                After=swap.target
+
+                [Mount]
+                What=bpffs
+                Where=/sys/fs/bpf
+                Type=bpf
+                Options=rw,nosuid,nodev,noexec,relatime,mode=700
+
+                [Install]
+                WantedBy=multi-user.target
+                EOF
+
+                  if [ -d "/etc/systemd/system/" ]; then
+                    mv /tmp/sys-fs-bpf.mount /etc/systemd/system/
+                    echo "Installed sys-fs-bpf.mount to /etc/systemd/system/"
+                  elif [ -d "/lib/systemd/system/" ]; then
+                    mv /tmp/sys-fs-bpf.mount /lib/systemd/system/
+                    echo "Installed sys-fs-bpf.mount to /lib/systemd/system/"
+                  fi
+
+                  # Ensure that filesystem gets mounted on next reboot
+                  systemctl enable sys-fs-bpf.mount
+                  systemctl start sys-fs-bpf.mount
+                }
+
+                echo "Link information:"
+                ip link
+
+                echo "Routing table:"
+                ip route
+
+                echo "Addressing:"
+                ip -4 a
+                ip -6 a
+                date > /tmp/cilium-bootstrap-time
+
+                # AKS: If azure-vnet is installed on the node, and (still) configured in bridge mode,
+                # configure it as 'transparent' to be consistent with Cilium's CNI chaining config.
+                # If the azure-vnet CNI config is not removed, kubelet will execute CNI CHECK commands
+                # against it every 5 seconds and write 'bridge' to its state file, causing inconsistent
+                # behaviour when Pods are removed.
+                if [ -f /etc/cni/net.d/10-azure.conflist ]; then
+                  echo "Ensuring azure-vnet is configured in 'transparent' mode..."
+                  sed -i 's/"mode":\s*"bridge"/"mode":"transparent"/g' /etc/cni/net.d/10-azure.conflist
+                fi
+                echo "Node initialization complete"

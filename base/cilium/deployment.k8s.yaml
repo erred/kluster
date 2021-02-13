@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: cilium
+    app.kubernetes.io/component: operator
+  name: cilium-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cilium
+      app.kubernetes.io/component: operator
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cilium
+        app.kubernetes.io/component: operator
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                      - operator
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - args:
+            - --config-dir=/tmp/cilium/config-map
+            - --debug=$(CILIUM_DEBUG)
+          command:
+            - cilium-operator-generic
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: CILIUM_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: CILIUM_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  key: debug
+                  name: cilium-config
+                  optional: true
+          image: quay.io/cilium/operator-generic:v1.9.4
+          name: cilium-operator
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9234
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 3
+          volumeMounts:
+            - mountPath: /tmp/cilium/config-map
+              name: cilium-config-path
+              readOnly: true
+      hostNetwork: true
+      restartPolicy: Always
+      priorityClassName: system-cluster-critical
+      serviceAccount: cilium-operator
+      serviceAccountName: cilium-operator
+      tolerations:
+        - operator: Exists
+      volumes:
+        # To read the configuration from the config map
+        - configMap:
+            name: cilium-config
+          name: cilium-config-path
