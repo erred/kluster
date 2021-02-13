@@ -9,7 +9,7 @@ work around terraform not knowing how many instances are in a pool (for DNS)
 
 ## secrets
 
-need filter setup, see [blog post](https://seankhliao.com/blog/2020-09-24-gitattributes-age-encrypt/)
+need filter setup, see [blog post](https://seankhliao.com/blog/12020-09-24-gitattributes-age-encrypt/)
 
 ## terraform
 
