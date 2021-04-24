@@ -1,30 +1,20 @@
 # kluster
 
-Config files for my k8s cluster on GKE
+Config files for my k8s cluster
 
 [![License](https://img.shields.io/github/license/seankhliao/kluster.svg?style=flat-square&maxAge=31536000)](LICENSE)
 ![Version](https://img.shields.io/github/v/tag/seankhliao/kluster?sort=semver&style=flat-square)
-
-work around terraform not knowing how many instances are in a pool (for DNS)
 
 ## secrets
 
 need filter setup, see [blog post](https://seankhliao.com/blog/12020-09-24-gitattributes-age-encrypt/)
 
-## terraform
-
-```sh
-source ~/.ssh/clouddlare_key
-gcloud auth application-default login
-terraform init
-#  terraform apply -target google_container_node_pool.stable -target google_container_node_pool.preempt
-terraform apply
-```
-
 ## (Old) Clusters
 
 | Name      | Nodes                                                | Notes                                                                 |
 | --------- | ---------------------------------------------------- | --------------------------------------------------------------------- |
+| cluster27 | hetzner AX51                                         | "medea"                                                               |
+| cluster26 |                                                      | forever stuck in planning                                             |
 | cluster25 | hetzner AX41                                         | deployed with kind (kubeadm gives me headaches with pod connectivity) |
 | cluster24 | 1x e2-standard-2                                     | misnamed as cluster23                                                 |
 | cluster23 | 3x e2-micro cosd / 0x e2-small preempt scaled 0-3    | 1.16/rapid nodes get stuck on ImagePull without error                 |
