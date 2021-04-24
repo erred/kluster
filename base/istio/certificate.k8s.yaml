@@ -1,0 +1,69 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: medea-staging
+spec:
+  secretName: medea-staging-tls
+  renewBefore: 720h
+  privateKey:
+    algorithm: ECDSA
+  usages:
+    - server auth
+  dnsNames:
+    - "medea.seankhliao.com"
+  issuerRef:
+    name: k-staging
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: k-staging
+spec:
+  secretName: k-staging-tls
+  renewBefore: 720h
+  privateKey:
+    algorithm: ECDSA
+  usages:
+    - server auth
+  dnsNames:
+    - "k.seankhliao.com"
+    - "*.k.seankhliao.com"
+  issuerRef:
+    name: k-staging
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: medea
+spec:
+  secretName: medea-tls
+  renewBefore: 720h
+  privateKey:
+    algorithm: ECDSA
+  usages:
+    - server auth
+  dnsNames:
+    - "medea.seankhliao.com"
+  issuerRef:
+    name: k
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: k
+spec:
+  secretName: k-tls
+  renewBefore: 720h
+  privateKey:
+    algorithm: ECDSA
+  usages:
+    - server auth
+  dnsNames:
+    - "k.seankhliao.com"
+    - "*.k.seankhliao.com"
+  issuerRef:
+    name: k
+    kind: ClusterIssuer

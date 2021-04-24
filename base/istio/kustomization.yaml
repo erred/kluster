@@ -1,10 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-commonLabels:
-  app.kubernetes.io/managed-by: Kustomize
+namespace: istio-system
 resources:
   - namespace.k8s.yaml
+  # istioctl manifest generate
   - istio.k8s.yaml
+  - certificate.k8s.yaml
 patchesJson6902:
   - target:
       group: apps

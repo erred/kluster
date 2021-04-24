@@ -1,0 +1,55 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: k-staging
+spec:
+  acme:
+    email: medea-cert-manager@seankhliao.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: k-staging-key
+    solvers:
+      - dns01:
+          cloudDNS:
+            project: com-seankhliao
+            serviceAccountSecretRef:
+              name: gcp-medea-cert-manager
+              key: key.json
+        selector:
+          dnsZones:
+            - k.seankhliao.com
+      - http01:
+          ingress:
+            class: istio
+            serviceType: ClusterIP
+        selector:
+          dnsNames:
+            - medea.seankhliao.com
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: k
+spec:
+  acme:
+    email: medea-cert-manager@seankhliao.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: k-key
+    solvers:
+      - dns01:
+          cloudDNS:
+            project: com-seankhliao
+            serviceAccountSecretRef:
+              name: gcp-medea-cert-manager
+              key: key.json
+        selector:
+          dnsZones:
+            - k.seankhliao.com
+      - http01:
+          ingress:
+            class: istio
+            serviceType: ClusterIP
+        selector:
+          dnsNames:
+            - medea.seankhliao.com

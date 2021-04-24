@@ -1,0 +1,37 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: defaultservice
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        name: http-defaultservice
+        number: 80
+        protocol: HTTP
+      hosts:
+        - medea.seankhliao.com
+        - k.seankhliao.com
+      tls:
+        httpsRedirect: true
+    - port:
+        name: https-medea
+        number: 443
+        protocol: HTTPS
+      hosts:
+        - medea.seankhliao.com
+      tls:
+        mode: SIMPLE
+        credentialName: medea-tls
+        minProtocolVersion: TLSV1_3
+    - port:
+        name: https-k
+        number: 443
+        protocol: HTTPS
+      hosts:
+        - k.seankhliao.com
+      tls:
+        mode: SIMPLE
+        credentialName: k-tls
+        minProtocolVersion: TLSV1_3
