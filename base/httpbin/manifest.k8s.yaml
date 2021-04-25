@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: httpbin
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: httpbin
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        name: https-k
+        number: 443
+        protocol: HTTPS
+      hosts:
+        - httpbin.k.seankhliao.com
+      tls:
+        mode: SIMPLE
+        credentialName: k-tls
+        minProtocolVersion: TLSV1_3
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: httpbin
+spec:
+  hosts:
+    - httpbin.k.seankhliao.com
+  gateways:
+    - httpbin
+    - mesh
+  http:
+    - route:
+        - destination:
+            host: httpbin.httpbin.svc.cluster.local
+            port:
+              number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app.kubernetes.io/name: httpbin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: httpbin
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: httpbin
+    spec:
+      serviceAccountName: httpbin
+      containers:
+        - image: docker.io/kennethreitz/httpbin
+          name: httpbin
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: httpbin
