@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Issuer
 metadata:
-  name: k-staging
+  name: letsencypt-staging
 spec:
   acme:
-    email: medea-cert-manager@seankhliao.com
+    email: cluster27-istio-system-letsencrypt-staging@seankhliao.com
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: k-staging-key
+      name: letsencrypt-staging
     solvers:
       - dns01:
           cloudDNS:
@@ -27,15 +27,15 @@ spec:
             - medea.seankhliao.com
 ---
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Issuer
 metadata:
-  name: k
+  name: letsencrypt
 spec:
   acme:
-    email: medea-cert-manager@seankhliao.com
+    email: cluster27-istio-system-letsencrypt@seankhliao.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: k-key
+      name: letsencrypt
     solvers:
       - dns01:
           cloudDNS:
@@ -53,3 +53,18 @@ spec:
         selector:
           dnsNames:
             - medea.seankhliao.com
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: private-ca-root
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: private-ca
+spec:
+  ca:
+    secretName: private-ca-root

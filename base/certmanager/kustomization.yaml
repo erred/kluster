@@ -3,11 +3,4 @@ kind: Kustomization
 namespace: cert-manager
 resources:
   #  https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml
-  - clusterissuer.k8s.yaml
-  - certificate.k8s.yaml
-secretGenerator:
-  - name: gcp-medea-cert-manager
-    options:
-      disableNameSuffixHash: true
-    files:
-      - key.json
+  - cert-manager.k8s.yaml

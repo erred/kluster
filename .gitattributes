@@ -1,1 +1,1 @@
-base/certmanager/key.json filter=ageencrypt
+base/istio/key.json filter=ageencrypt

@@ -1,11 +1,25 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: istio-system
+bases:
+  - crds
 resources:
-  - namespace.k8s.yaml
-  # istioctl manifest generate
-  - istio.k8s.yaml
   - certificate.k8s.yaml
+  - clusterrole.k8s.yaml
+  - clusterrolebinding.k8s.yaml
+  - configmap.k8s.yaml
+  - deployment.k8s.yaml
+  - envoyfilter.k8s.yaml
+  - horizontalpodautoscaler.k8s.yaml
+  - issuer.k8s.yaml
+  - mutatingwebhookconfiguration.k8s.yaml
+  - namespace.k8s.yaml
+  - poddisruptionbudget.k8s.yaml
+  - role.k8s.yaml
+  - rolebinding.k8s.yaml
+  - service.k8s.yaml
+  - serviceaccount.k8s.yaml
+  - validatingwebhookconfiguration.k8s.yaml
 patchesJson6902:
   - target:
       group: apps
@@ -19,3 +33,14 @@ patchesJson6902:
       - op: add
         path: /spec/template/spec/containers/0/ports/2/hostPort
         value: 443
+secretGenerator:
+  - name: gcp-medea-cert-manager
+    options:
+      disableNameSuffixHash: true
+    files:
+      - key.json
+  - name: p12-password
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - password=password
