@@ -1,1 +1,1 @@
-base/istio/key.json filter=ageencrypt
+overlays/cluster27/istio-system/key.json filter=ageencrypt
