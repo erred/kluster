@@ -1,17 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: istio-system
+namespace: vela-system
 bases:
-  - crds
+  - oam
+  - definitions
 resources:
-  - clusterrole.k8s.yaml
+  - certs.yaml
   - clusterrolebinding.k8s.yaml
-  - configmap.k8s.yaml
   - deployment.k8s.yaml
-  - envoyfilter.k8s.yaml
-  - horizontalpodautoscaler.k8s.yaml
   - mutatingwebhookconfiguration.k8s.yaml
-  - poddisruptionbudget.k8s.yaml
   - role.k8s.yaml
   - rolebinding.k8s.yaml
   - service.k8s.yaml

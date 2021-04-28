@@ -1,0 +1,98 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: kubevela-vela-core-admission
+  namespace: vela-system
+  annotations:
+    cert-manager.io/inject-ca-from: "vela-system/kubevela-vela-core-root-cert"
+webhooks:
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: vela-core-webhook
+        namespace: vela-system
+        path: /mutating-core-oam-dev-v1alpha2-applicationconfigurations
+    failurePolicy: Ignore
+    name: mutating.core.oam.dev.v1alpha2.applicationconfigurations
+    sideEffects: None
+    rules:
+      - apiGroups:
+          - core.oam.dev
+        apiVersions:
+          - v1alpha2
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - applicationconfigurations
+        scope: Namespaced
+    admissionReviewVersions:
+      - v1beta1
+    timeoutSeconds: 5
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: vela-core-webhook
+        namespace: vela-system
+        path: /mutating-core-oam-dev-v1beta1-approllout
+    failurePolicy: Ignore
+    name: mutating.core.oam.dev.v1beta1.approllouts
+    sideEffects: None
+    rules:
+      - apiGroups:
+          - core.oam.dev
+        apiVersions:
+          - v1beta1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - approllouts
+        scope: Namespaced
+    admissionReviewVersions:
+      - v1beta1
+    timeoutSeconds: 5
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: vela-core-webhook
+        namespace: vela-system
+        path: /mutating-core-oam-dev-v1alpha2-components
+    failurePolicy: Ignore
+    name: mutating.core.oam-dev.v1alpha2.components
+    sideEffects: None
+    rules:
+      - apiGroups:
+          - core.oam.dev
+        apiVersions:
+          - v1alpha2
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - components
+        scope: Namespaced
+    admissionReviewVersions:
+      - v1beta1
+    timeoutSeconds: 5
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: vela-core-webhook
+        namespace: vela-system
+        path: /mutate-standard-oam-dev-v1alpha1-podspecworkload
+    failurePolicy: Ignore
+    name: mcontainerized.kb.io
+    sideEffects: None
+    admissionReviewVersions:
+      - v1beta1
+    rules:
+      - apiGroups:
+          - standard.oam.dev
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - podspecworkloads

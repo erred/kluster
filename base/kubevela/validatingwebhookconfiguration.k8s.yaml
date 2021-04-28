@@ -1,0 +1,121 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: kubevela-vela-core-admission
+  namespace: vela-system
+  annotations:
+    cert-manager.io/inject-ca-from: "vela-system/kubevela-vela-core-root-cert"
+webhooks:
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: vela-core-webhook
+        namespace: vela-system
+        path: /validating-core-oam-dev-v1alpha2-applicationconfigurations
+    failurePolicy: Ignore
+    name: validating.core.oam.dev.v1alpha2.applicationconfigurations
+    sideEffects: None
+    rules:
+      - apiGroups:
+          - core.oam.dev
+        apiVersions:
+          - v1alpha2
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - applicationconfigurations
+        scope: Namespaced
+    admissionReviewVersions:
+      - v1beta1
+    timeoutSeconds: 5
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: vela-core-webhook
+        namespace: vela-system
+        path: /validating-core-oam-dev-v1beta1-approllout
+    failurePolicy: Ignore
+    name: validating.core.oam.dev.v1beta1.approllouts
+    sideEffects: None
+    rules:
+      - apiGroups:
+          - core.oam.dev
+        apiVersions:
+          - v1beta1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - approllouts
+        scope: Namespaced
+    admissionReviewVersions:
+      - v1beta1
+    timeoutSeconds: 5
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: vela-core-webhook
+        namespace: vela-system
+        path: /validating-core-oam-dev-v1alpha2-components
+    failurePolicy: Ignore
+    name: validating.core.oam.dev.v1alpha2.components
+    sideEffects: None
+    rules:
+      - apiGroups:
+          - core.oam.dev
+        apiVersions:
+          - v1alpha2
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - components
+        scope: Namespaced
+    admissionReviewVersions:
+      - v1beta1
+    timeoutSeconds: 5
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: vela-core-webhook
+        namespace: vela-system
+        path: /validating-core-oam-dev-v1alpha2-traitdefinitions
+    failurePolicy: Ignore
+    name: validating.core.oam.dev.v1alpha2.traitdefinitions
+    sideEffects: None
+    rules:
+      - apiGroups:
+          - core.oam.dev
+        apiVersions:
+          - v1alpha2
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - traitdefinitions
+        scope: Cluster
+    admissionReviewVersions:
+      - v1beta1
+    timeoutSeconds: 5
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: vela-core-webhook
+        namespace: vela-system
+        path: /validate-standard-oam-dev-v1alpha1-podspecworkload
+    failurePolicy: Fail
+    name: vcontainerized.kb.io
+    admissionReviewVersions:
+      - v1beta1
+    sideEffects: None
+    rules:
+      - apiGroups:
+          - standard.oam.dev
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - podspecworkloads

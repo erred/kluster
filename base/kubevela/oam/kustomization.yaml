@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - core.oam.dev_appdeployments.yaml
+  - core.oam.dev_applicationconfigurations.yaml
+  - core.oam.dev_applicationcontexts.yaml
+  - core.oam.dev_applicationrevisions.yaml
+  - core.oam.dev_applications.yaml
+  - core.oam.dev_approllouts.yaml
+  - core.oam.dev_clusters.yaml
+  - core.oam.dev_componentdefinitions.yaml
+  - core.oam.dev_components.yaml
+  - core.oam.dev_containerizedworkloads.yaml
+  - core.oam.dev_definitionrevisions.yaml
+  - core.oam.dev_healthscopes.yaml
+  - core.oam.dev_manualscalertraits.yaml
+  - core.oam.dev_resourcetrackers.yaml
+  - core.oam.dev_scopedefinitions.yaml
+  - core.oam.dev_traitdefinitions.yaml
+  - core.oam.dev_workloaddefinitions.yaml
+  - standard.oam.dev_podspecworkloads.yaml
+  - standard.oam.dev_rollouttraits.yaml

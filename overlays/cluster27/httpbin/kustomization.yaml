@@ -1,4 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: httpbin
+bases:
+  - ../../../base/httpbin
 resources:
-  - application.yaml
+  - namespace.k8s.yaml

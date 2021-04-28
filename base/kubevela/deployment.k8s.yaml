@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubevela-vela-core
+  namespace: vela-system
+  labels:
+    app.kubernetes.io/name: vela-core
+    app.kubernetes.io/instance: kubevela
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vela-core
+      app.kubernetes.io/instance: kubevela
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vela-core
+        app.kubernetes.io/instance: kubevela
+    spec:
+      serviceAccountName: kubevela-vela-core
+      containers:
+        - name: kubevela
+          args:
+            - "--metrics-addr=:8080"
+            - "--enable-leader-election"
+            - "--use-webhook=true"
+            - "--webhook-port=9443"
+            - "--webhook-cert-dir=/etc/k8s-webhook-certs"
+            - "--health-addr=:9440"
+            - "--apply-once-only=off"
+            - "--disable-caps=metrics"
+            - "--system-definition-namespace=vela-system"
+            - "--application-revision-limit=10"
+          image: oamdev/vela-core:v1.0.3
+          ports:
+            - containerPort: 9443
+              name: webhook-server
+              protocol: TCP
+            - containerPort: 9440
+              name: healthz
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: healthz
+            initialDelaySeconds: 90
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
+            initialDelaySeconds: 90
+            periodSeconds: 5
+          volumeMounts:
+            - mountPath: /etc/k8s-webhook-certs
+              name: tls-cert-vol
+              readOnly: true
+      volumes:
+        - name: tls-cert-vol
+          secret:
+            defaultMode: 420
+            secretName: kubevela-vela-core-admission
