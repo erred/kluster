@@ -2,21 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kubevela-vela-core
-  namespace: vela-system
-  labels:
-    app.kubernetes.io/name: vela-core
-    app.kubernetes.io/instance: kubevela
 spec:
   replicas: 1
+  revisionHistoryLimit: 1
   selector:
-    matchLabels:
-      app.kubernetes.io/name: vela-core
-      app.kubernetes.io/instance: kubevela
+    matchLabels: {}
   template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: vela-core
-        app.kubernetes.io/instance: kubevela
     spec:
       serviceAccountName: kubevela-vela-core
       containers:

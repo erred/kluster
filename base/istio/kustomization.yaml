@@ -3,17 +3,5 @@ kind: Kustomization
 namespace: istio-system
 bases:
   - crds
-resources:
-  - clusterrole.k8s.yaml
-  - clusterrolebinding.k8s.yaml
-  - configmap.k8s.yaml
-  - deployment.k8s.yaml
-  - envoyfilter.k8s.yaml
-  - horizontalpodautoscaler.k8s.yaml
-  - mutatingwebhookconfiguration.k8s.yaml
-  - poddisruptionbudget.k8s.yaml
-  - role.k8s.yaml
-  - rolebinding.k8s.yaml
-  - service.k8s.yaml
-  - serviceaccount.k8s.yaml
-  - validatingwebhookconfiguration.k8s.yaml
+  - ingressgateway
+  - istiod

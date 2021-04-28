@@ -1,6 +1,3 @@
-# Source: vela-core/templates/certmanager.yaml
-# The following manifests contain a self-signed issuer CR and a certificate CR.
-# More document can be found at https://docs.cert-manager.io
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -8,8 +5,6 @@ metadata:
 spec:
   selfSigned: {}
 ---
-# Source: vela-core/templates/certmanager.yaml
-# Create an Issuer that uses the above generated CA certificate to issue certs
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -19,8 +14,6 @@ spec:
   ca:
     secretName: kubevela-vela-core-root-cert
 ---
-# Source: vela-core/templates/certmanager.yaml
-# Generate a CA Certificate used to sign certificates for the webhook
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -33,13 +26,10 @@ spec:
   commonName: "ca.webhook.kubevela"
   isCA: true
 ---
-# Source: vela-core/templates/certmanager.yaml
-# generate a serving certificate for the apiservices to use
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: kubevela-vela-core-admission
-  namespace: vela-system
 spec:
   secretName: kubevela-vela-core-admission
   duration: 8760h # 1y

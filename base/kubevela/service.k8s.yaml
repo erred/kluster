@@ -2,17 +2,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: vela-core-webhook
-  namespace: vela-system
-  labels:
-    app.kubernetes.io/name: vela-core
-    app.kubernetes.io/instance: kubevela
 spec:
-  type: ClusterIP
   ports:
     - port: 443
       targetPort: 9443
       protocol: TCP
       name: https
-  selector:
-    app.kubernetes.io/name: vela-core
-    app.kubernetes.io/instance: kubevela
+  selector: {}

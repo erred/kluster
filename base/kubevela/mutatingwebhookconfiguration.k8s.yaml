@@ -2,12 +2,10 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: kubevela-vela-core-admission
-  namespace: vela-system
   annotations:
     cert-manager.io/inject-ca-from: "vela-system/kubevela-vela-core-root-cert"
 webhooks:
   - clientConfig:
-      caBundle: Cg==
       service:
         name: vela-core-webhook
         namespace: vela-system
@@ -30,7 +28,6 @@ webhooks:
       - v1beta1
     timeoutSeconds: 5
   - clientConfig:
-      caBundle: Cg==
       service:
         name: vela-core-webhook
         namespace: vela-system
@@ -53,7 +50,6 @@ webhooks:
       - v1beta1
     timeoutSeconds: 5
   - clientConfig:
-      caBundle: Cg==
       service:
         name: vela-core-webhook
         namespace: vela-system
@@ -76,7 +72,6 @@ webhooks:
       - v1beta1
     timeoutSeconds: 5
   - clientConfig:
-      caBundle: Cg==
       service:
         name: vela-core-webhook
         namespace: vela-system
