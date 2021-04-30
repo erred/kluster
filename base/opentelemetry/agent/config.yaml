@@ -1,0 +1,68 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+  hostmetrics:
+    scrapers:
+      cpu:
+      disk:
+      # filesystem:
+      load:
+      memory:
+      network:
+      # processes:
+      # process:
+  kubeletstats:
+    collection_interval: 20s
+    auth_type: serviceAccount
+    endpoint: "${K8S_NODE_NAME}:10250"
+    insecure_skip_verify: true
+    k8s_api_config:
+      auth_type: serviceAccount
+
+processors:
+  batch:
+  memory_limiter:
+    ballast_size_mib: 200
+    check_interval: 5s
+    limit_mib: 400
+    spike_limit_mib: 50
+
+exporters:
+  otlp:
+    endpoint: opentelemetry-gateway.opentelemetry.svc.cluster.local:4317
+    insecure: true
+
+extensions:
+  health_check:
+    port: 13133
+  pprof:
+    endpoint: :1777
+  zpages:
+    endpoint: :55679
+
+service:
+  extensions:
+    - health_check
+    - pprof
+    - zpages
+  pipelines:
+    metrics:
+      receivers:
+        - otlp
+        - hostmetrics
+        - kubeletstats
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - otlp
+
+    traces:
+      receivers:
+        - otlp
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - otlp

@@ -23,6 +23,9 @@ spec:
             - --storage.tsdb.path=/data
             - --storage.tsdb.retention.size=50GB
             - --storage.tsdb.allow-overlapping-blocks
+            # experimental features
+            # https://prometheus.io/docs/prometheus/latest/disabled_features/
+            - --enable-feature=remote-write-receiver
           ports:
             - name: http-prometheus
               containerPort: 9090

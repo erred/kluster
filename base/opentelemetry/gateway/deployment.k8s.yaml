@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opentelemetry-gateway
+spec:
+  revisionHistoryLimit: 1
+  template:
+    spec:
+      enableServiceLinks: false
+      serviceAccountName: opentelemetry-gateway
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: opentelemetry-gateway
+          image: otel/opentelemetry-collector-contrib:latest
+          args:
+            - --config=/config/config.yaml
+            - --metrics-addr=:8888
+            - --mem-ballast-size-mib=200
+          ports:
+            - name: pprof
+              containerPort: 1777
+            - name: otlp
+              containerPort: 4317
+            - name: metrics
+              containerPort: 8888
+            - name: health
+              containerPort: 13133
+            - name: zpages
+              containerPort: 55679
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      volumes:
+        - name: config
+          configMap:
+            name: opentelemetry-gateway

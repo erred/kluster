@@ -5,6 +5,7 @@ metadata:
 webhooks:
   - name: sidecar-injector.istio.io
     clientConfig:
+      caBundle: ""
       service:
         name: istiod
         namespace: istio-system
