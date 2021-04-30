@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: jaeger
+spec:
+  selector:
+    app.kubernetes.io/name: ingressgateway
+  servers:
+    - port:
+        name: http-jaeger
+        number: 80
+        protocol: HTTP
+      hosts:
+        - jaeger.k.seankhliao.com
+      tls:
+        httpsRedirect: true
+    - port:
+        name: https-jaeger
+        number: 443
+        protocol: HTTPS
+      hosts:
+        - jaeger.k.seankhliao.com
+      tls:
+        mode: MUTUAL
+        credentialName: k-mtls
+        minProtocolVersion: TLSV1_3

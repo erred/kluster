@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger
+spec:
+  ports:
+    - name: zipkin-compact
+      protocol: UDP
+      port: 5775
+    - name: config
+      protocol: TCP
+      port: 5778
+    - name: jaeger-compact
+      protocol: UDP
+      port: 6831
+    - name: jaeger-binary
+      protocol: UDP
+      port: 6832
+    - name: zipkin
+      protocol: TCP
+      port: 9411
+    - name: jaeger-proto
+      protocol: TCP
+      port: 14250
+    - name: jaeger-thrift
+      protocol: TCP
+      port: 14268
+    - name: admin
+      protocol: TCP
+      port: 14269
+    - name: query
+      protocol: TCP
+      port: 16686

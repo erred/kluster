@@ -1,8 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: kube-system
+namespace: prometheus
 bases:
-  - ../../../base/cilium
-  - ../../../base/cluster
+  - ../../../base/prometheus
 resources:
   - namespace.k8s.yaml

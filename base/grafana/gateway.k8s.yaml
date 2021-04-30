@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: grafana
+spec:
+  selector:
+    app.kubernetes.io/name: ingressgateway
+  servers:
+    - port:
+        name: http-grafana
+        number: 80
+        protocol: HTTP
+      hosts:
+        - grafana.k.seankhliao.com
+      tls:
+        httpsRedirect: true
+    - port:
+        name: https-grafana
+        number: 443
+        protocol: HTTPS
+      hosts:
+        - grafana.k.seankhliao.com
+      tls:
+        mode: SIMPLE
+        credentialName: k-tls
+        minProtocolVersion: TLSV1_3
