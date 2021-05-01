@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hubble-relay
+spec:
+  template:
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app.kubernetes.io/name"
+                    operator: In
+                    values:
+                      - operator
+                  - key: "app.kubernetes.io/instance"
+                    operator: In
+                    values:
+                      - cilium
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: hubble-relay
+          image: "quay.io/cilium/hubble-relay:v1.9.6@sha256:2ea804c454b660d474feae96c01da1b9193dfce6809b4d3825e7b6efc6ade8c7"
+          imagePullPolicy: IfNotPresent
+          command:
+            - hubble-relay
+          args:
+            - serve
+          ports:
+            - name: grpc
+              containerPort: 4245
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+          volumeMounts:
+            - mountPath: /var/run/cilium
+              name: hubble-sock-dir
+              readOnly: true
+            - mountPath: /etc/hubble-relay
+              name: config
+              readOnly: true
+            - mountPath: /var/lib/hubble-relay/tls
+              name: tls
+              readOnly: true
+      restartPolicy: Always
+      serviceAccount: hubble-relay
+      serviceAccountName: hubble-relay
+      terminationGracePeriodSeconds: 0
+      volumes:
+        - configMap:
+            name: hubble-relay-config
+            items:
+              - key: config.yaml
+                path: config.yaml
+          name: config
+        - hostPath:
+            path: /var/run/cilium
+            type: Directory
+          name: hubble-sock-dir
+        - projected:
+            sources:
+              - secret:
+                  name: hubble-relay-client-certs
+                  items:
+                    - key: tls.crt
+                      path: client.crt
+                    - key: tls.key
+                      path: client.key
+              - configMap:
+                  name: hubble-ca-cert
+                  items:
+                    - key: ca.crt
+                      path: hubble-server-ca.crt
+          name: tls

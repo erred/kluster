@@ -1,25 +1,25 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: grafana
+  name: hubble
 spec:
   selector:
     app.kubernetes.io/name: ingressgateway
   servers:
     - port:
-        name: http-grafana
+        name: http-hubble
         number: 80
         protocol: HTTP
       hosts:
-        - grafana.k.seankhliao.com
+        - hubble.k.seankhliao.com
       tls:
         httpsRedirect: true
     - port:
-        name: https-grafana
+        name: https-hubble
         number: 443
         protocol: HTTPS
       hosts:
-        - grafana.k.seankhliao.com
+        - hubble.k.seankhliao.com
       tls:
         mode: MUTUAL
         credentialName: k-mtls

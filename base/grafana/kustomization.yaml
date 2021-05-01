@@ -11,3 +11,7 @@ resources:
   - serviceaccount.k8s.yaml
   - statefulset.k8s.yaml
   - virtualservice.k8s.yaml
+configMapGenerator:
+  - name: grafana
+    files:
+      - grafana.ini

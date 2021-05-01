@@ -16,6 +16,8 @@ spec:
       containers:
         - name: grafana
           image: grafana/grafana:latest
+          args:
+            - -config=/config/grafana.ini
           ports:
             - name: http-grafana
               containerPort: 3000
@@ -38,9 +40,14 @@ spec:
               port: 3000
             timeoutSeconds: 1
           volumeMounts:
+            - mountPath: /config
+              name: config
             - mountPath: /var/lib/grafana
-              name: grafana
+              name: data
       volumes:
-        - name: grafana
+        - name: config
+          configMap:
+            name: grafana
+        - name: data
           persistentVolumeClaim:
             claimName: grafana

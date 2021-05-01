@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- clusterrole.k8s.yaml
+- configmap.k8s.yaml
+- deployment.k8s.yaml
+- gateway.k8s.yaml
+- mutatingwebhookconfiguration.k8s.yaml
+- peerauthentication.k8s.yaml
+- secret.k8s.yaml
+- service.k8s.yaml
+- validatingwebhookconfiguration.k8s.yaml

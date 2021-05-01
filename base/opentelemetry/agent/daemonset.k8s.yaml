@@ -17,7 +17,7 @@ spec:
             - --metrics-addr=:8888
             - --mem-ballast-size-mib=200
           env:
-            - name: K8S_NODE_NAME
+            - name: K8S_NODE_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
@@ -25,10 +25,6 @@ spec:
               value: /host/proc
             - name: HOST_SYS
               value: /host/sys
-            - name: HOST_ETC
-              value: /host/etc
-            - name: HOST_VAR
-              value: /host/var
             - name: HOST_RUN
               value: /host/run
             - name: HOST_DEV
@@ -53,19 +49,12 @@ spec:
             - mountPath: /host/sys
               name: sys
               readOnly: true
-            - mountPath: /host/etc
-              name: etc
-              readOnly: true
-            - mountPath: /host/var
-              name: var
-              readOnly: true
             - mountPath: /host/run
               name: run
               readOnly: true
             - mountPath: /host/dev
               name: dev
               readOnly: true
-      hostPID: true
       volumes:
         - name: config
           configMap:
@@ -76,12 +65,6 @@ spec:
         - name: sys
           hostPath:
             path: /sys
-        - name: etc
-          hostPath:
-            path: /etc
-        - name: var
-          hostPath:
-            path: /var
         - name: run
           hostPath:
             path: /run

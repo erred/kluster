@@ -3,7 +3,10 @@ kind: Kustomization
 bases:
   - cert-manager
   - grafana
+  - httpbin
+  - iperf3
   - istio-system
+  - jaeger
   - kube-system
+  - opentelemetry
   - prometheus
-  - vela-system

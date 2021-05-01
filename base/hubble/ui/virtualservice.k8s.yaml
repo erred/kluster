@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: hubble
+spec:
+  hosts:
+    - hubble.k.seankhliao.com
+  gateways:
+    - hubble
+  http:
+    - route:
+        - destination:
+            host: hubble-ui.kube-system.svc.cluster.local
+            port:
+              number: 80

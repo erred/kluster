@@ -6,10 +6,12 @@ rules:
   - apiGroups:
       - ""
     resources:
+      - endpoints
       - events
       - namespaces
       - namespaces/status
       - nodes
+      - nodes/metrics
       - nodes/spec
       - pods
       - pods/status
@@ -28,16 +30,6 @@ rules:
       - deployments
       - replicasets
       - statefulsets
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - extensions
-    resources:
-      - daemonsets
-      - deployments
-      - replicasets
     verbs:
       - get
       - list

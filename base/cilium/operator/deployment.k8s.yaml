@@ -3,15 +3,7 @@ kind: Deployment
 metadata:
   name: cilium-operator
 spec:
-  replicas: 1
   revisionHistoryLimit: 1
-  selector:
-    matchLabels: {}
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
   template:
     spec:
       # In HA mode, cilium-operator pods must not be scheduled on the same
