@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: gitolite
+spec:
+  selector:
+    app.kubernetes.io/name: ingressgateway
+  servers:
+    - port:
+        name: http-gitolite
+        number: 80
+        protocol: HTTP
+      hosts:
+        - gitolite.k.seankhliao.com
+      tls:
+        httpsRedirect: true
+    - port:
+        name: https-gitolite
+        number: 443
+        protocol: HTTPS
+      hosts:
+        - gitolite.k.seankhliao.com
+      tls:
+        mode: MUTUAL
+        credentialName: k-mtls
+        minProtocolVersion: TLSV1_3

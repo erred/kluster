@@ -13,6 +13,7 @@ need filter setup, see [blog post](https://seankhliao.com/blog/12020-09-24-gitat
 
 | Name      | Nodes                                                | Notes                                                                 |
 | --------- | ---------------------------------------------------- | --------------------------------------------------------------------- |
+| cluster28 | hetzner AX51                                         | "medea"                                                               |
 | cluster27 | hetzner AX51                                         | "medea"                                                               |
 | cluster26 |                                                      | forever stuck in planning                                             |
 | cluster25 | hetzner AX41                                         | deployed with kind (kubeadm gives me headaches with pod connectivity) |

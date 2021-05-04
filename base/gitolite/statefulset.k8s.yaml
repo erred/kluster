@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gitolite
+spec:
+  revisionHistoryLimit: 1
+  serviceName: gitolite
+  template:
+    spec:
+      enableServiceLinks: false
+      serviceAccountName: gitolite
+      securityContext:
+        fsGroup: 100
+      containers:
+        - name: gitolite
+          image: seankhliao/gitolite:latest
+          args:
+            - ssh
+          env:
+            - name: ADMIN_USER
+              value: arccy
+            - name: ADMIN_KEY
+              value: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnAmz4u5/51kPPsebDCiYTXvuftUORh/TJ4pvN3NvQa arccy@eevee"
+          ports:
+            - name: ssh
+              containerPort: 22
+              hostPort: 28022
+          volumeMounts:
+            - mountPath: /var/lib/git
+              name: data
+        - name: fgci
+          image: seankhliao/gitolite:latest
+          args:
+            - fcgi
+          volumeMounts:
+            - mountPath: /var/lib/git
+              name: data
+        - name: nginx
+          image: seankhliao/gitolite:latest
+          args:
+            - nginx
+          ports:
+            - name: http
+              containerPort: 80
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: gitolite
