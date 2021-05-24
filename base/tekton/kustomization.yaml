@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - dashboard/v0.17.0
+  - pipeline/v0.24.1
+  - triggers/v0.14.1

@@ -1,0 +1,26 @@
+# WireGuard
+
+[NetDev]
+Name = wg0
+Kind = wireguard
+
+[WireGuard]
+PrivateKey = 8N8HPJ7Q0w1V+MSuLXXCsY/ny9OAWf0IVTLCX04xi14=
+# PublicKey = lombY0b15giOmoM9t0xBi+UgVkZDoOKDaEV9+ONwH1U=
+ListenPort = 51820
+
+# eevee
+[WireGuardPeer]
+PublicKey = YvSLDXl3NX1ySTX2C8D72+fCVBcqSs+fmAX3uySCDAQ=
+AllowedIPs = 192.168.100.13/32
+
+# pixel 3
+[WireGuardPeer]
+PublicKey = 3xpGlOORQb9/yg545KX+odrup3YaslxO9ie+ztJ3Y3E=
+AllowedIPs = 192.168.100.3/32
+
+# arch
+[WireGuardPeer]
+PublicKey = Lr17jGvc7uwjn9LNRR+IkCkjuP8nkHTOMHbVV+onMn0=
+AllowedIPs = 192.168.100.1/24
+Endpoint = 34.90.235.32:51820

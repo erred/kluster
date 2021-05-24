@@ -3,5 +3,10 @@ kind: Kustomization
 bases:
   - ../../base/cert-manager
   - ../../base/cilium
+  - ../../base/cluster
+  # - ../../base/containerized-disk-importer
+  - ../../base/coredns
   - ../../base/istio
-  - ../../base/kubevirt
+  - ../../base/longhorn
+  - ../../base/minio
+  # - ../../base/kubevirt

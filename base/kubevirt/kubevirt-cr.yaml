@@ -5,10 +5,15 @@ metadata:
   name: kubevirt
   namespace: kubevirt
 spec:
-  certificateRotateStrategy: {}
-  configuration:
-    developerConfiguration:
-      featureGates: []
-  customizeComponents: {}
-  imagePullPolicy: IfNotPresent
-  workloadUpdateStrategy: {}
+  customizeComponents:
+    patches:
+      - resourceName: virt-api
+        resourceType: Deployment
+        type: strategic
+        patch: |
+          {"spec": {"replicas":1}}
+      - resourceName: virt-controller
+        resourceType: Deployment
+        type: strategic
+        patch: |
+          {"spec": {"replicas":1}}

@@ -1,0 +1,16 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: arch-20210505
+  namespace: default
+spec:
+  pvc:
+    storageClassName: longhorn
+    accessModes:
+      - ReadWriteMany
+    resources:
+      requests:
+        storage: 3Gi
+  source:
+    http:
+      url: "https://mirror.pkgbuild.com/images/v20210505.21690/Arch-Linux-x86_64-cloudimg-20210505.21690.qcow2"

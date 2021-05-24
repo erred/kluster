@@ -10,4 +10,4 @@ spec:
       command:
         - /bin/sh
         - -c
-        - sleep 1000000
+        - while true ; do ping -c 20 www.google.com ; done

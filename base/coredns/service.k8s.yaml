@@ -8,6 +8,7 @@ metadata:
   labels:
     kubernetes.io/cluster-service: "true"
 spec:
+  clusterIP: 10.240.0.10
   ports:
     - name: dns
       port: 53
