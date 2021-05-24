@@ -1,130 +1,130 @@
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: private-ca-root
-spec:
-  secretName: private-ca-root
-  duration: 87600h # 10y
-  renewBefore: 8760h # 1y
-  privateKey:
-    algorithm: ECDSA
-  isCA: true
-  commonName: cluster27-private-ca
-  issuerRef:
-    name: private-ca-root
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: k-mtls
-spec:
-  secretName: k-mtls
-  duration: 2160h # 3m
-  renewBefore: 720h # 1m
-  privateKey:
-    algorithm: ECDSA
-  usages:
-    - server auth
-  dnsNames:
-    - "k.seankhliao.com"
-    - "*.k.seankhliao.com"
-  issuerRef:
-    name: private-ca
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: client-eevee
-spec:
-  secretName: client-eevee
-  keystores:
-    pkcs12:
-      create: true
-      passwordSecretRef:
-        name: p12-password
-        key: password
-  duration: 8760h # 1y
-  renewBefore: 2160h # 3m
-  privateKey:
-    algorithm: ECDSA
-  usages:
-    - client auth
-  emailAddresses:
-    - eevee@seankhliao.com
-  issuerRef:
-    name: private-ca
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: client-pixel3
-spec:
-  secretName: client-pixel3
-  keystores:
-    pkcs12:
-      create: true
-      passwordSecretRef:
-        name: p12-password
-        key: password
-  duration: 8760h # 1y
-  renewBefore: 2160h # 3m
-  privateKey:
-    algorithm: ECDSA
-  usages:
-    - client auth
-  emailAddresses:
-    - pixel3@seankhliao.com
-  issuerRef:
-    name: private-ca
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: medea-staging
-spec:
-  secretName: medea-staging-tls
-  renewBefore: 720h
-  privateKey:
-    algorithm: ECDSA
-  usages:
-    - server auth
-  dnsNames:
-    - "medea.seankhliao.com"
-  issuerRef:
-    name: letsencrypt-staging
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: k-staging
-spec:
-  secretName: k-staging-tls
-  renewBefore: 720h
-  privateKey:
-    algorithm: ECDSA
-  usages:
-    - server auth
-  dnsNames:
-    - "k.seankhliao.com"
-    - "*.k.seankhliao.com"
-  issuerRef:
-    name: letsencrypt-staging
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: medea
-spec:
-  secretName: medea-tls
-  renewBefore: 720h
-  privateKey:
-    algorithm: ECDSA
-  usages:
-    - server auth
-  dnsNames:
-    - "medea.seankhliao.com"
-  issuerRef:
-    name: letsencrypt
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: private-ca-root
+# spec:
+#   secretName: private-ca-root
+#   duration: 87600h # 10y
+#   renewBefore: 8760h # 1y
+#   privateKey:
+#     algorithm: ECDSA
+#   isCA: true
+#   commonName: cluster27-private-ca
+#   issuerRef:
+#     name: private-ca-root
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: k-mtls
+# spec:
+#   secretName: k-mtls
+#   duration: 2160h # 3m
+#   renewBefore: 720h # 1m
+#   privateKey:
+#     algorithm: ECDSA
+#   usages:
+#     - server auth
+#   dnsNames:
+#     - "k.seankhliao.com"
+#     - "*.k.seankhliao.com"
+#   issuerRef:
+#     name: private-ca
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: client-eevee
+# spec:
+#   secretName: client-eevee
+#   keystores:
+#     pkcs12:
+#       create: true
+#       passwordSecretRef:
+#         name: p12-password
+#         key: password
+#   duration: 8760h # 1y
+#   renewBefore: 2160h # 3m
+#   privateKey:
+#     algorithm: ECDSA
+#   usages:
+#     - client auth
+#   emailAddresses:
+#     - eevee@seankhliao.com
+#   issuerRef:
+#     name: private-ca
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: client-pixel3
+# spec:
+#   secretName: client-pixel3
+#   keystores:
+#     pkcs12:
+#       create: true
+#       passwordSecretRef:
+#         name: p12-password
+#         key: password
+#   duration: 8760h # 1y
+#   renewBefore: 2160h # 3m
+#   privateKey:
+#     algorithm: ECDSA
+#   usages:
+#     - client auth
+#   emailAddresses:
+#     - pixel3@seankhliao.com
+#   issuerRef:
+#     name: private-ca
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: medea-staging
+# spec:
+#   secretName: medea-staging-tls
+#   renewBefore: 720h
+#   privateKey:
+#     algorithm: ECDSA
+#   usages:
+#     - server auth
+#   dnsNames:
+#     - "medea.seankhliao.com"
+#   issuerRef:
+#     name: letsencrypt-staging
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: k-staging
+# spec:
+#   secretName: k-staging-tls
+#   renewBefore: 720h
+#   privateKey:
+#     algorithm: ECDSA
+#   usages:
+#     - server auth
+#   dnsNames:
+#     - "k.seankhliao.com"
+#     - "*.k.seankhliao.com"
+#   issuerRef:
+#     name: letsencrypt-staging
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: medea
+# spec:
+#   secretName: medea-tls
+#   renewBefore: 720h
+#   privateKey:
+#     algorithm: ECDSA
+#   usages:
+#     - server auth
+#   dnsNames:
+#     - "medea.seankhliao.com"
+#   issuerRef:
+#     name: letsencrypt
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: tekton
+  namespace: istio-system
+spec:
+  hosts:
+    - tekton.k.seankhliao.com
+  gateways:
+    - k
+  http:
+    - match:
+        - authority:
+            exact: tekton.k.seankhliao.com
+      route:
+        - destination:
+            host: tekton-dashboard.tekton-pipelines.svc.cluster.local
+            port:
+              number: 9097

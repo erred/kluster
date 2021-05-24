@@ -1,33 +1,33 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: istio-system
-bases:
-  - ../../../base/istio
+# bases:
+#   - ../../../base/istio
 resources:
   - certificate.k8s.yaml
   - issuer.k8s.yaml
-  - namespace.k8s.yaml
-patchesJson6902:
-  - target:
-      group: apps
-      version: v1
-      kind: Deployment
-      name: istio-ingressgateway
-    patch: |
-      - op: add
-        path: /spec/template/spec/containers/0/ports/1/hostPort
-        value: 80
-      - op: add
-        path: /spec/template/spec/containers/0/ports/2/hostPort
-        value: 443
+  # - namespace.k8s.yaml
+# patchesJson6902:
+#   - target:
+#       group: apps
+#       version: v1
+#       kind: Deployment
+#       name: istio-ingressgateway
+#     patch: |
+#       - op: add
+#         path: /spec/template/spec/containers/0/ports/1/hostPort
+#         value: 80
+#       - op: add
+#         path: /spec/template/spec/containers/0/ports/2/hostPort
+#         value: 443
 secretGenerator:
   - name: gcp-medea-cert-manager
     options:
       disableNameSuffixHash: true
     files:
       - key.json
-  - name: p12-password
-    options:
-      disableNameSuffixHash: true
-    literals:
-      - password=password
+  # - name: p12-password
+  #   options:
+  #     disableNameSuffixHash: true
+  #   literals:
+  #     - password=password

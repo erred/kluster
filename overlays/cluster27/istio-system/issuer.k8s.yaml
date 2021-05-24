@@ -1,31 +1,31 @@
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: letsencypt-staging
-spec:
-  acme:
-    email: cluster27-istio-system-letsencrypt-staging@seankhliao.com
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
-    privateKeySecretRef:
-      name: letsencrypt-staging
-    solvers:
-      - dns01:
-          cloudDNS:
-            project: com-seankhliao
-            serviceAccountSecretRef:
-              name: gcp-medea-cert-manager
-              key: key.json
-        selector:
-          dnsZones:
-            - k.seankhliao.com
-      - http01:
-          ingress:
-            class: istio
-            serviceType: ClusterIP
-        selector:
-          dnsNames:
-            - medea.seankhliao.com
----
+# apiVersion: cert-manager.io/v1
+# kind: Issuer
+# metadata:
+#   name: letsencypt-staging
+# spec:
+#   acme:
+#     email: cluster27-istio-system-letsencrypt-staging@seankhliao.com
+#     server: https://acme-staging-v02.api.letsencrypt.org/directory
+#     privateKeySecretRef:
+#       name: letsencrypt-staging
+#     solvers:
+#       - dns01:
+#           cloudDNS:
+#             project: com-seankhliao
+#             serviceAccountSecretRef:
+#               name: gcp-medea-cert-manager
+#               key: key.json
+#         selector:
+#           dnsZones:
+#             - k.seankhliao.com
+#       - http01:
+#           ingress:
+#             class: istio
+#             serviceType: ClusterIP
+#         selector:
+#           dnsNames:
+#             - medea.seankhliao.com
+# ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -46,25 +46,25 @@ spec:
         selector:
           dnsZones:
             - k.seankhliao.com
-      - http01:
-          ingress:
-            class: istio
-            serviceType: ClusterIP
-        selector:
-          dnsNames:
-            - medea.seankhliao.com
+      # - http01:
+      #     ingress:
+      #       class: istio
+      #       serviceType: ClusterIP
+      #   selector:
+      #     dnsNames:
+      #       - medea.seankhliao.com
 ---
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: private-ca-root
-spec:
-  selfSigned: {}
----
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: private-ca
-spec:
-  ca:
-    secretName: private-ca-root
+# apiVersion: cert-manager.io/v1
+# kind: Issuer
+# metadata:
+#   name: private-ca-root
+# spec:
+#   selfSigned: {}
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: Issuer
+# metadata:
+#   name: private-ca
+# spec:
+#   ca:
+#     secretName: private-ca-root
