@@ -1,1 +1,1 @@
-overlays/cluster27/istio-system/key.json filter=ageencrypt
+init/40-wg0.netdev filter=ageencrypt

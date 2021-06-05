@@ -1,7 +1,0 @@
-apiVersion: triggers.tekton.dev/v1alpha1
-kind: EventListener
-metadata:
-  name: github-listener-interceptor
-spec:
-  triggers:
-    - name: github-listener
