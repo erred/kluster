@@ -1,9 +1,0 @@
-kind: Service
-apiVersion: v1
-metadata:
-  name: hubble-relay
-spec:
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 4245

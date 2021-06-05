@@ -15,9 +15,5 @@ networking:
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-# enableServer: true
 clusterDNS:
   - 10.240.0.1
-# logging:
-#   format: text
-#   sanitization: false

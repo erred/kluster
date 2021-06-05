@@ -6,6 +6,12 @@ bases:
   - controller
   - webhook
 resources:
-  # https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.crds.yaml
   - crds/cert-manager.crds.yaml
   - namespace.yaml
+images:
+  - name: quay.io/jetstack/cert-manager-cainjector
+    newTag: v1.3.1
+  - name: quay.io/jetstack/cert-manager-controller
+    newTag: v1.3.1
+  - name: quay.io/jetstack/cert-manager-webhook
+    newTag: v1.3.1
