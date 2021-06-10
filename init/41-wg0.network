@@ -2,4 +2,12 @@
 Name = wg0
 
 [Network]
-Address = 192.168.100.2/24
+Address = 192.168.100.33/24
+Address = 192.168.100.34/24
+Address = 192.168.100.35/24
+
+[Route]
+Destination = 2a01:4f9:3b:4e2f:13::/80
+
+[Route]
+Destination = 2a01:4f9:3b:4e2f:1::/80

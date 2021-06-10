@@ -1,1 +1,2 @@
-init/40-wg0.netdev filter=ageencrypt
+init/40-wg0.netdev              filter=ageencrypt
+cluster/skaffold/kaniko-secret  filter=ageencrypt

@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: skaffold
+generatorOptions:
+  disableNameSuffixHash: true
+resources:
+  - namespace.k8s.yaml
+secretGenerator:
+- name: kaniko-secret
+  files:
+    - kaniko-secret
