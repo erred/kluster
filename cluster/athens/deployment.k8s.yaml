@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: athens
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    spec:
+      containers:
+        - name: athens
+          image: docker.io/gomods/athens:v0.11.0
+          env:
+            - name: ATHENS_STORAGE_TYPE
+              value: disk
+            - name: ATHENS_DISK_STORAGE_ROOT
+              value: /data
+            - name: ATHENS_INDEX_TYPE
+              value: memory
+            - name: ATHENS_PORT
+              value: :8080
+          envFrom:
+            - secretRef:
+                name: athens
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      enableServiceLinks: false
+      serviceAccountName: athens
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: athens

@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: athens
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`athens.seankhliao.com`)
+    kind: Rule
+    services:
+    - name: athens
+      port: 80
+  tls:
+    certResolver: default
