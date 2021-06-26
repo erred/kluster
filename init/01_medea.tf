@@ -14,8 +14,7 @@ resource "null_resource" "medea" {
       "systemctl enable --now systemd-timesyncd docker",
       "curl -Lo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64",
       "chmod +x /usr/local/bin/kind",
-      "mkdir -p /opt/store",
-      "mkdir -p /opt/kind",
+      "mkdir -p /opt/kind/cluster30",
     ]
   }
   provisioner "file" {
@@ -48,7 +47,11 @@ resource "null_resource" "medea" {
     content     = file("41-wg0.network")
   }
   provisioner "file" {
-    destination = "/opt/kind/kind.k8s.yaml"
-    content     = file("kind.k8s.yaml")
+    destination = "/opt/kind/cluster30.k8s.yaml"
+    content     = file("cluster30.k8s.yaml")
+  }
+  provisioner "file" {
+    destination = "/opt/kind/dockerconfig.json"
+    content     = file("dockerconfig.json")
   }
 }
