@@ -14,5 +14,5 @@ resources:
 - serviceaccount.k8s.yaml
 secretGenerator:
   - name: traefik
-    files:
-      - google.json
+    envs:
+      - secret.env

@@ -20,11 +20,9 @@ spec:
       - image: "traefik:2.4.8"
         imagePullPolicy: IfNotPresent
         name: traefik
-        env:
-          - name: GCE_SERVICE_ACCOUNT_FILE
-            value: /var/run/secrets/google/google.json
-          # - name: GCE_PROJECT
-          #   value: com-seankhliao
+        envFrom:
+          - secretRef:
+              name: traefik
         readinessProbe:
           httpGet:
             path: /ping
@@ -64,8 +62,6 @@ spec:
         volumeMounts:
           - name: data
             mountPath: /data
-          - name: google
-            mountPath: /var/run/secrets/google
         args:
           - --entryPoints.traefik.address=:9000/tcp
           - --entryPoints.web.address=:8080/tcp
@@ -76,18 +72,20 @@ spec:
           - --providers.kubernetesingress
           # - --experimental.kubernetesgateway=true
           # - --providers.kubernetesgateway=true
-          - --certificatesresolvers.default.acme.email=letsencrypt-cluster30@seankhliao.com
-          - --certificatesresolvers.default.acme.storage=/data/acme.json
-          - --certificatesresolvers.default.acme.keyType=EC256
+          # - --certificatesresolvers.default.acme.email=letsencrypt-cluster30@seankhliao.com
+          # - --certificatesresolvers.default.acme.storage=/data/letsencrypt.json
+          # - --certificatesresolvers.default.acme.keyType=EC256
+          - --certificatesresolvers.default.acme.httpchallenge.entrypoint=web
           # - --certificatesresolvers.default.acme.tlschallenge=true
-          # - --certificatesresolvers.default.acme.httpchallenge.entrypoint=web
-          - --certificatesresolvers.default.acme.dnschallenge.provider=gcloud
+          - --certificatesresolvers.default.acme.email=zerossl-cluster30@seankhliao.com
+          - --certificatesresolvers.default.acme.storage=/data/zerossl.json
+          - --certificatesresolvers.default.acme.caserver=https://acme.zerossl.com/v2/DV90
+          - --certificatesresolvers.default.acme.keyType=EC256
+          - --certificatesresolvers.default.acme.eab.kid=$(ZEROSSL_KID)
+          - --certificatesresolvers.default.acme.eab.hmacencoded=$(ZEROSSL_HMAC)
           - --tracing.jaeger=true
           - --tracing.jaeger.collector.endpoint=http://jaeger.jaeger.svc.cluster.local:14268/api/traces?format=jaeger.thrift
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: traefik-tls
-        - name: google
-          secret:
-            secretName: traefik
