@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: medea
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`medea.seankhliao.com`)
+    kind: Rule
+    services:
+    - name: medea
+      port: 80
+  tls:
+    certResolver: default

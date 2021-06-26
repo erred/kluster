@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: medea
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    spec:
+      containers:
+        - name: medea
+          image: europe-north1-docker.pkg.dev/com-seankhliao/kluster/singlepage:v15.1.0-18-g179548b-dirty
+          args:
+            - -canonical=https://medea.seankhliao.com
+            - -file=/etc/singlepage/index.md
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - mountPath: /etc/singlepage
+              name: config
+      enableServiceLinks: false
+      serviceAccountName: medea
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: medea
