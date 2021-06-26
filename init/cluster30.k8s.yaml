@@ -11,7 +11,7 @@ nodes:
     extraMounts:
       - containerPath: /var/lib/kubelet/config.json
         hostPath: /opt/kind/dockerconfig.json
-      - containerPath: /var/local-path-storage
+      - containerPath: /var/local-path-provisioner
         hostPath: /opt/kind/cluster30
     extraPortMappings:
       - containerPort: 30080

@@ -73,7 +73,7 @@ spec:
           - --certificatesresolvers.default.acme.email=letsencrypt-cluster30@seankhliao.com
           - --certificatesresolvers.default.acme.storage=/data/acme.json
           - --certificatesresolvers.default.acme.keyType=EC256
-          - --certificatesresolvers.default.acme.tlschallenge=true
+          # - --certificatesresolvers.default.acme.tlschallenge=true
           - --certificatesresolvers.default.acme.httpchallenge.entrypoint=web
       volumes:
         - name: data

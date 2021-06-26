@@ -1,3 +1,4 @@
 init/40-wg0.netdev              filter=ageencrypt
-init/dockerconfig.json        filter=ageencrypt
+init/dockerconfig.json          filter=ageencrypt
+cluster/athens/secret.env       filter=ageencrypt
 cluster/skaffold/kaniko-secret  filter=ageencrypt
