@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: grafana
+commonLabels:
+  app.kubernetes.io/name: grafana
+resources:
+  - deployment.k8s.yaml
+  - ingressroute.k8s.yaml
+  - namespace.k8s.yaml
+  - persistentvolumeclaim.k8s.yaml
+  - service.k8s.yaml
+  - serviceaccount.k8s.yaml
+configMapGenerator:
+  - name: grafana
+    files:
+      - grafana.ini
+secretGenerator:
+  - name: grafana
+    envs:
+      - secret.env

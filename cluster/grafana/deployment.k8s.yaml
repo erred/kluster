@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  template:
+    spec:
+      enableServiceLinks: false
+      serviceAccountName: grafana
+      terminationGracePeriodSeconds: 10
+      securityContext:
+        fsGroup: 472
+        supplementalGroups:
+        - 0
+      containers:
+        - name: grafana
+          image: grafana/grafana:8.0.3
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: grafana
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /robots.txt
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 250m
+              memory: 750Mi
+          volumeMounts:
+            - mountPath: /etc/grafana/provisioning/dashboards
+              name: dashboards
+            - mountPath: /etc/grafana/provisioning/notifiers
+              name: notifiers
+            - mountPath: /etc/grafana/provisioning/plugins
+              name: plugins
+            - mountPath: /etc/grafana/provisioning/datasources
+              name: datasources
+            - mountPath: /etc/grafana/grafana.ini
+              name: config
+              subPath: grafana.ini
+            - mountPath: /var/lib/grafana
+              name: data
+      volumes:
+        - name: config
+          configMap:
+            name: grafana
+        - name: data
+          persistentVolumeClaim:
+            claimName: grafana
+        - name: notifiers
+          emptyDir: {}
+        - name: plugins
+          emptyDir: {}
+        - name: dashboards
+          emptyDir: {}
+        - name: datasources
+          emptyDir: {}
