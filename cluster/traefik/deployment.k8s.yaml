@@ -14,11 +14,17 @@ spec:
       serviceAccountName: traefik
       terminationGracePeriodSeconds: 60
       hostNetwork: false
+      securityContext:
+        fsGroup: 65532
       containers:
       - image: "traefik:2.4.8"
         imagePullPolicy: IfNotPresent
         name: traefik
-        resources:
+        env:
+          - name: GCE_SERVICE_ACCOUNT_FILE
+            value: /var/run/secrets/google/google.json
+          # - name: GCE_PROJECT
+          #   value: com-seankhliao
         readinessProbe:
           httpGet:
             path: /ping
@@ -58,8 +64,8 @@ spec:
         volumeMounts:
           - name: data
             mountPath: /data
-          - name: tmp
-            mountPath: /tmp
+          - name: google
+            mountPath: /var/run/secrets/google
         args:
           - --entryPoints.traefik.address=:9000/tcp
           - --entryPoints.web.address=:8080/tcp
@@ -74,11 +80,14 @@ spec:
           - --certificatesresolvers.default.acme.storage=/data/acme.json
           - --certificatesresolvers.default.acme.keyType=EC256
           # - --certificatesresolvers.default.acme.tlschallenge=true
-          - --certificatesresolvers.default.acme.httpchallenge.entrypoint=web
+          # - --certificatesresolvers.default.acme.httpchallenge.entrypoint=web
+          - --certificatesresolvers.default.acme.dnschallenge.provider=gcloud
+          - --tracing.jaeger=true
+          - --tracing.jaeger.collector.endpoint=http://jaeger.jaeger.svc.cluster.local:14268/api/traces?format=jaeger.thrift
       volumes:
         - name: data
-          emptyDir: {}
-        - name: tmp
-          emptyDir: {}
-      securityContext:
-        fsGroup: 65532
+          persistentVolumeClaim:
+            claimName: traefik-tls
+        - name: google
+          secret:
+            secretName: traefik

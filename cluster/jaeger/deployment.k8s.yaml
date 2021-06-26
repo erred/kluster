@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    spec:
+      enableServiceLinks: false
+      serviceAccountName: jaeger
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: jaeger
+          image: jaegertracing/all-in-one:1.23
+          args:
+            - --collector.zipkin.host-port=:9411
+          env:
+            - name: SPAN_STORAGE_TYPE
+              value: badger
+            - name: BADGER_EPHEMERAL
+              value: "false"
+            - name: BADGER_DIRECTORY_VALUE
+              value: /data/data
+            - name: BADGER_DIRECTORY_KEY
+              value: /data/key
+          ports:
+            - name: zipkin-compact
+              protocol: UDP
+              containerPort: 5775
+            - name: config
+              protocol: TCP
+              containerPort: 5778
+            - name: jaeger-compact
+              protocol: UDP
+              containerPort: 6831
+            - name: jaeger-binary
+              protocol: UDP
+              containerPort: 6832
+            - name: zipkin
+              protocol: TCP
+              containerPort: 9411
+            - name: jaeger-proto
+              protocol: TCP
+              containerPort: 14250
+            - name: jaeger-thrift
+              protocol: TCP
+              containerPort: 14268
+            - name: admin
+              protocol: TCP
+              containerPort: 14269
+            - name: query
+              protocol: TCP
+              containerPort: 16686
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: jaeger

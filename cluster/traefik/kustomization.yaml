@@ -9,5 +9,10 @@ resources:
 - crds.yaml
 - deployment.k8s.yaml
 - namespace.k8s.yaml
+- persistentvolumeclaim.k8s.yaml
 - service.k8s.yaml
 - serviceaccount.k8s.yaml
+secretGenerator:
+  - name: traefik
+    files:
+      - google.json

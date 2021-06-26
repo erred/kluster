@@ -19,6 +19,10 @@ spec:
               value: memory
             - name: ATHENS_PORT
               value: :8080
+            - name: ATHENS_TRACE_EXPORTER
+              value: jaeger
+            - name: ATHENS_TRACE_EXPORTER_URL
+              value: http://jaeger.jaeger.svc.cluster.local:14268
           envFrom:
             - secretRef:
                 name: athens

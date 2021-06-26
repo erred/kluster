@@ -63,14 +63,15 @@ spec:
         - name: config
           configMap:
             name: grafana
+        - name: dashboards
+          emptyDir: {}
         - name: data
           persistentVolumeClaim:
             claimName: grafana
+        - name: datasources
+          configMap:
+            name: datasources
         - name: notifiers
           emptyDir: {}
         - name: plugins
-          emptyDir: {}
-        - name: dashboards
-          emptyDir: {}
-        - name: datasources
           emptyDir: {}
