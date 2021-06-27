@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
         - name: medea
-          image: europe-north1-docker.pkg.dev/com-seankhliao/kluster/singlepage:v15.1.0-18-g179548b-dirty
+          image: europe-north1-docker.pkg.dev/com-seankhliao/kluster/singlepage:v16.0.0-9-g9cd026d
           args:
             - -canonical=https://medea.seankhliao.com
             - -file=/etc/singlepage/index.md
