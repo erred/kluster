@@ -1,6 +1,71 @@
 receivers:
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/filelogreceiver
-  # filelog
+  filelog:
+    include:
+      - /var/log/pods/*/*/*.log
+    # Exclude collector container's logs. The file format is /var/log/pods/<namespace_name>_<pod_name>_<pod_uid>/<container_name>/<run_id>.log
+    exclude:
+      - /var/log/pods/otelcol_otelcol*_*/otelcol/*.log
+    start_at: beginning
+    include_file_path: true
+    include_file_name: false
+    operators:
+      # Find out which format is used by kubernetes
+      - type: router
+        id: get-format
+        routes:
+          - output: parser-docker
+            expr: '$$body matches "^\\{"'
+          - output: parser-crio
+            expr: '$$body matches "^[^ Z]+ "'
+          - output: parser-containerd
+            expr: '$$body matches "^[^ Z]+Z"'
+      # Parse CRI-O format
+      - type: regex_parser
+        id: parser-crio
+        regex: '^(?P<time>[^ Z]+) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) (?P<log>.*)$'
+        # output: extract_metadata_from_filepath
+        timestamp:
+          parse_from: time
+          layout_type: gotime
+          layout: '2006-01-02T15:04:05.000000000-07:00'
+      # Parse CRI-Containerd format
+      - type: regex_parser
+        id: parser-containerd
+        regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) (?P<log>.*)$'
+        # output: extract_metadata_from_filepath
+        timestamp:
+          parse_from: time
+          layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+      # Parse Docker format
+      - type: json_parser
+        id: parser-docker
+        # output: extract_metadata_from_filepath
+        timestamp:
+          parse_from: time
+          layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+      # 2021-06-27T22:11:44.497Z	error	Failed to process entry	{"kind": "receiver", "name": "filelog", "operator_id": "$.extract_metadata_from_filepath", "operator_type": "regex_parser", "error": "regex pattern does not match", "action": "send", "entry": {"timestamp":"2021-06-27T22:11:44.374778482Z","body":{"log":"2021-06-27 22:11:44.374715 I | mvcc: finished scheduled compaction at 193953 (took 41.961352ms)","logtag":"F","stream":"stderr"},"attributes":{"file_path":"/var/log/pods/kube-system_etcd-cluster30-control-plane_22369ba3a4740516aace7ec9dfeb44f7/etcd/0.log"},"severity":0}}
+      # # Extract metadata from file path
+      # - type: regex_parser
+      #   id: extract_metadata_from_filepath
+      #   regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<run_id>\d+)\.log$'
+      #   parse_from: $$attributes.file_path
+      # # Move out attributes to Attributes
+      # - type: metadata
+      #   labels:
+      #     stream: 'EXPR($.stream)'
+      #     k8s.container.name: 'EXPR($.container_name)'
+      #     k8s.namespace.name: 'EXPR($.namespace)'
+      #     k8s.pod.name: 'EXPR($.pod_name)'
+      #     run_id: 'EXPR($.run_id)'
+      #     k8s.pod.uid: 'EXPR($.uid)'
+      # # Clean up log body
+      # - type: restructure
+      #   id: clean-up-log-body
+      #   ops:
+      #     - move:
+      #         from: log
+      #         to: $
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/receiver/hostmetricsreceiver
   hostmetrics:
     collection_interval: 15s
@@ -47,9 +112,11 @@ receivers:
       - node
       - pod
       - volume
+
   otlp:
     protocols:
       grpc:
+
   prometheus:
     config:
       scrape_configs:
@@ -107,11 +174,25 @@ exporters:
   jaeger:
     endpoint: jaeger.jaeger.svc.cluster.local:14250
     insecure: true
+
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/lokiexporter
+  loki:
+    endpoint: http://loki.loki.svc.cluster.local/loki/api/v1/push
+    # required? copied from example
+    labels:
+      resource:
+        container.name: "container_name"
+        k8s.cluster.name: "k8s_cluster_name"
+      attributes:
+        severity: ""
+        http.status_code: "http_status_code"
+
   prometheusremotewrite:
     endpoint: http://prometheus.prometheus.svc.cluster.local/api/v1/write
     insecure: true
     resource_to_telemetry_conversion:
       enabled: true
+
   prometheus:
     endpoint: :8080
     resource_to_telemetry_conversion:
@@ -128,6 +209,22 @@ service:
     - pprof
     - zpages
   pipelines:
+    # logs/agent:
+    #   receivers:
+    #     - filelog
+    #   processors:
+    #     - memory_limiter
+    #     - batch
+    #   exporters:
+    #     - loki
+    # logs/gateway:
+    #   receivers:
+    #     - otlp
+    #   processors:
+    #     - memory_limiter
+    #     - batch
+    #   exporters:
+    #     - loki
     metrics/agent:
       receivers:
         - hostmetrics

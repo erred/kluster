@@ -80,6 +80,12 @@ spec:
             - mountPath: /host/dev
               name: dev
               readOnly: true
+            - name: varlogpods
+              mountPath: /var/log/pods
+              readOnly: true
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
       enableServiceLinks: false
       serviceAccountName: otelcol
       terminationGracePeriodSeconds: 10
@@ -105,3 +111,9 @@ spec:
         - name: dev
           hostPath:
             path: /dev
+        - name: varlogpods
+          hostPath:
+            path: /var/log/pods
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers

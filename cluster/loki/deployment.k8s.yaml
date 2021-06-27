@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    spec:
+      containers:
+        - name: loki
+          image: docker.io/grafana/loki:2.2.0
+          args:
+            - -config.file=/etc/loki/loki.yaml
+          env:
+            - name: JAEGER_AGENT_HOST
+              value: otelcol.otelcol.svc.cluster.local:14250
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - mountPath: /etc/loki
+              name: config
+            - mountPath: /data
+              name: data
+      enableServiceLinks: false
+      serviceAccountName: loki
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: loki
+        - name: data
+          persistentVolumeClaim:
+            claimName: loki

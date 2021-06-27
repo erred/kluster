@@ -17,6 +17,7 @@ configMapGenerator:
   - name: datasources
     files:
       - jaeger.yaml
+      - loki.yaml
       - prometheus.yaml
 secretGenerator:
   - name: grafana
