@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    spec:
+      containers:
+        - name: prometheus
+          image: docker.io/prom/prometheus:v2.28.0
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --web.listen-address=:8080
+            - --storage.tsdb.path=/data
+            - --storage.tsdb.retention.size=50GB
+            # https://prometheus.io/docs/prometheus/latest/disabled_features/
+            - --enable-feature=remote-write-receiver,exemplar-storage
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - mountPath: /etc/prometheus
+              name: config
+            - mountPath: /data
+              name: data
+      enableServiceLinks: false
+      serviceAccountName: prometheus
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus
+        - name: data
+          persistentVolumeClaim:
+            claimName: prometheus
