@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otelcol
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  template:
+    spec:
+      containers:
+        - name: otelcol
+          image: docker.io/otel/opentelemetry-collector-contrib:0.29.0
+          args:
+            - --config=/etc/otelcol/config.yaml
+            - --mem-ballast-size-mib=512
+            - --metrics-addr=:8888
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: HOST_PROC
+              value: /host/proc
+            - name: HOST_SYS
+              value: /host/sys
+            - name: HOST_ETC
+              value: /host/etc
+            - name: HOST_VAR
+              value: /host/var
+            - name: HOST_RUN
+              value: /host/run
+            - name: HOST_DEV
+              value: /host/dev
+          ports:
+            - name: pprof
+              protocol: TCP
+              containerPort: 1777
+            - name: otlpgrpc
+              protocol: TCP
+              containerPort: 4317
+            - name: jaeger-compact
+              protocol: UDP
+              containerPort: 6831
+            - name: prometheus
+              protocol: TCP
+              containerPort: 8080
+            - name: metrics
+              protocol: TCP
+              containerPort: 8888
+            - name: health
+              protocol: TCP
+              containerPort: 13133
+            - name: jaeger-proto
+              protocol: TCP
+              containerPort: 14250
+            - name: jaeger-thrift
+              protocol: TCP
+              containerPort: 14268
+            - name: zpages
+              protocol: TCP
+              containerPort: 55679
+          volumeMounts:
+            - mountPath: /etc/otelcol
+              name: config
+            - mountPath: /host/proc
+              name: proc
+              readOnly: true
+            - mountPath: /host/sys
+              name: sys
+              readOnly: true
+            - mountPath: /host/etc
+              name: etc
+              readOnly: true
+            - mountPath: /host/var
+              name: var
+              readOnly: true
+            - mountPath: /host/run
+              name: run
+              readOnly: true
+            - mountPath: /host/dev
+              name: dev
+              readOnly: true
+      enableServiceLinks: false
+      serviceAccountName: otelcol
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: otelcol
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: etc
+          hostPath:
+            path: /etc
+        - name: var
+          hostPath:
+            path: /var
+        - name: run
+          hostPath:
+            path: /run
+        - name: dev
+          hostPath:
+            path: /dev

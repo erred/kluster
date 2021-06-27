@@ -1,0 +1,160 @@
+receivers:
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/filelogreceiver
+  # filelog
+  # https://github.com/open-telemetry/opentelemetry-collector/tree/main/receiver/hostmetricsreceiver
+  hostmetrics:
+    collection_interval: 15s
+    scrapers:
+      cpu: {}
+      disk: {}
+      load: {}
+      # filesystem: {}
+      memory: {}
+      network: {}
+      paging: {}
+      processes: {}
+      # 2021-06-27T20:46:24.704Z	error	scraperhelper/scrapercontroller.go:205	Error scraping metrics	{"kind": "receiver", "name": "hostmetrics", "error": "error reading username for process \"otelcontribcol\" (pid 1): open /etc/passwd: no such file or directory"}
+      # process: {}
+  jaeger:
+    protocols:
+      thrift_compact: # 6831
+      grpc: # 14250
+      thrift_http: # 14268
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sclusterreceiver
+  k8s_cluster:
+    auth_type: serviceAccount
+    collection_interval: 15s
+    node_conditions_to_report:
+      - Ready
+      - DiskPressure
+      - MemoryPressure
+      - PIDPressure
+      - NetworkUnavailable
+
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kubeletstatsreceiver
+  kubeletstats:
+    auth_type: serviceAccount
+    endpoint: ${K8S_NODE_NAME}:10250
+    collection_interval: 15s
+    insecure_skip_verify: true
+    extra_metadata_labels:
+      - container.id
+      - k8s.volume.type
+    k8s_api_config:
+      auth_type: serviceAccount
+    metric_groups:
+      - container
+      - node
+      - pod
+      - volume
+  otlp:
+    protocols:
+      grpc:
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: endpoints
+          scrape_interval: 15s
+          kubernetes_sd_configs:
+            - role: endpoints
+          relabel_configs:
+            - source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scrape
+              action: keep
+              regex: "true"
+            - source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_scheme
+              action: replace
+              target_label: __scheme__
+              regex: (https?)
+            - source_labels:
+                - __meta_kubernetes_service_annotation_prometheus_io_path
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - source_labels:
+                - __address__
+                - __meta_kubernetes_service_annotation_prometheus_io_port
+              action: replace
+              target_label: __address__
+              regex: ([^:]+)(?::\d+)?;(\d+)
+              # escape env subst in otelcol config
+              replacement: $$1:$$2
+            - action: labelmap
+              regex: __meta_kubernetes_service_label_(.+)
+            - source_labels:
+                - __meta_kubernetes_namespace
+              action: replace
+              target_label: kubernetes_namespace
+            - source_labels:
+                - __meta_kubernetes_service_name
+              action: replace
+              target_label: kubernetes_name
+            - source_labels:
+                - __meta_kubernetes_pod_node_name
+              action: replace
+              target_label: kubernetes_node
+
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    ballast_size_mib: 512
+  batch: {}
+
+exporters:
+  jaeger:
+    endpoint: jaeger.jaeger.svc.cluster.local:14250
+    insecure: true
+  prometheusremotewrite:
+    endpoint: http://prometheus.prometheus.svc.cluster.local/api/v1/write
+    insecure: true
+    resource_to_telemetry_conversion:
+      enabled: true
+  prometheus:
+    endpoint: :8080
+    resource_to_telemetry_conversion:
+      enabled: true
+
+extensions:
+  health_check: {}
+  pprof: {}
+  zpages: {}
+
+service:
+  extensions:
+    - health_check
+    - pprof
+    - zpages
+  pipelines:
+    metrics/agent:
+      receivers:
+        - hostmetrics
+        - kubeletstats
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - prometheusremotewrite
+        - prometheus
+    metrics/gateway:
+      receivers:
+        - k8s_cluster
+        - otlp
+        - prometheus
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - prometheusremotewrite
+        # - prometheus
+    traces/gateway:
+      receivers:
+        - otlp
+        - jaeger
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - jaeger

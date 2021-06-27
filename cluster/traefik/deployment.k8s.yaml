@@ -42,15 +42,15 @@ spec:
           successThreshold: 1
           timeoutSeconds: 2
         ports:
-        - name: "traefik"
+        - name: traefik
           containerPort: 9000
-          protocol: "TCP"
-        - name: "web"
+          protocol: TCP
+        - name: web
           containerPort: 8080
-          protocol: "TCP"
-        - name: "websecure"
+          protocol: TCP
+        - name: websecure
           containerPort: 8443
-          protocol: "TCP"
+          protocol: TCP
         securityContext:
           capabilities:
             drop:
@@ -83,8 +83,9 @@ spec:
           - --certificatesresolvers.default.acme.keyType=EC256
           - --certificatesresolvers.default.acme.eab.kid=$(ZEROSSL_KID)
           - --certificatesresolvers.default.acme.eab.hmacencoded=$(ZEROSSL_HMAC)
+          - --metrics.prometheus=true
           - --tracing.jaeger=true
-          - --tracing.jaeger.collector.endpoint=http://jaeger.jaeger.svc.cluster.local:14268/api/traces?format=jaeger.thrift
+          - --tracing.jaeger.collector.endpoint=http://otelcol.otelcol.svc.cluster.local:14268/api/traces?format=jaeger.thrift
       volumes:
         - name: data
           persistentVolumeClaim:

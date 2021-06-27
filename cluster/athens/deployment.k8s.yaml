@@ -22,7 +22,7 @@ spec:
             - name: ATHENS_TRACE_EXPORTER
               value: jaeger
             - name: ATHENS_TRACE_EXPORTER_URL
-              value: http://jaeger.jaeger.svc.cluster.local:14268
+              value: http://otelcol.otelcol.svc.cluster.local:14268
           envFrom:
             - secretRef:
                 name: athens
