@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: weechat
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  serviceName: weechat
+  template:
+    spec:
+      containers:
+        - name: weechat
+          image: docker.io/seankhliao/weechat:latest
+          # tty: true
+          # stdin: true
+          envFrom:
+            - secretRef:
+                name: weechat
+          volumeMounts:
+            - mountPath: /home/user/.config/weechat
+              name: weechat
+      enableServiceLinks: false
+      serviceAccountName: weechat
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: weechat
+          hostPath:
+          persistentVolumeClaim:
+            claimName: weechat

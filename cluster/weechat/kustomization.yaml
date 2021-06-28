@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: weechat
+commonLabels:
+  app.kubernetes.io/name: weechat
+resources:
+- namespace.k8s.yaml
+- persistentvolumeclaim.k8s.yaml
+- serviceaccount.k8s.yaml
+- statefulset.k8s.yaml
+secretGenerator:
+  - name: weechat
+    envs:
+      - secret.env

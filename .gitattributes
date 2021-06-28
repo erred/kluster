@@ -4,3 +4,4 @@ cluster/athens/secret.env       filter=ageencrypt
 cluster/grafana/secret.env      filter=ageencrypt
 cluster/skaffold/kaniko-secret  filter=ageencrypt
 cluster/traefik/secret.env      filter=ageencrypt
+cluster/weechat/secret.env      filter=ageencrypt
