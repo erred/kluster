@@ -1,3 +1,5 @@
+# moved to monorepo: https://github.com/seankhliao/mono
+
 # kluster
 
 Config files for my k8s cluster
